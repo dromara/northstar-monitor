@@ -1,0 +1,55 @@
+* {
+  touch-action: pan-y;
+}
+html, body {
+  font-family: STZhongsong, "Microsoft YaHei UI", Avenir, Helvetica, Arial, sans-serif;
+  font-size: 12px;
+  margin: 0px;
+  height: 100%;
+  background-color: #545c64;
+  color: white;
+}
+
+.trade-red-back {
+  background-color: rgba(196, 68, 66, 1);
+  color: white;
+}
+
+.trade-red-front {
+  color: rgba(230, 4, 0, 1);
+}
+
+.trade-green-back {
+  background-color: rgba(64, 158, 95, 1);
+  color: white;
+}
+
+.trade-green-front {
+  color: rgba(0, 240, 0, 1);
+}
+
+.trade-normal-back {
+  background-color: white;
+  color: black;
+}
+
+.message-custom {
+  font-size: 0.8rem;
+}
+
+.vux-table{
+  line-height: 2em !important;
+}
+
+.view-common{
+  height: 100%;
+}
+
+.el-select-dropdown__wrap{
+  max-height: 150px;
+  margin-bottom: 0px;
+}
+
+.el-select .el-input__inner{
+  padding-right: 0px;
+}
