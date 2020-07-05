@@ -22,9 +22,9 @@
 </template>
 
 <script>
-  import TableView from '../components/Table'
-  import ControlView from './ControlView'
-  import '../assets/index.css'
+  import TableView from '../../components/Table'
+  import ControlView from '../ControlView'
+  import '../../assets/index.css'
   import TraderButton from '../components/TraderButton'
   import { Tab, TabItem } from 'vux'
   // import TradeButton from '../components/TradeButton'

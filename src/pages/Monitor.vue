@@ -1,7 +1,7 @@
 <template>
   <div class="monitor">
     <x-header :left-options="{showBack: false}" :right-options="{showMore: true}" @on-click-more="showMenu = true">{{ currentHeader }}</x-header>
-    <trade-view v-if="currentHeader==='交易与账户-旧'"></trade-view>
+    <!--<trade-view v-if="currentHeader==='交易与账户-旧'"></trade-view>-->
     <trader-view v-else-if="currentHeader==='交易与账户'"></trader-view>
     <div>
       <actionsheet :menus="menus" v-model="showMenu" @on-click-menu="switchView" :close-on-clicking-mask="false"></actionsheet>
@@ -10,13 +10,11 @@
 </template>
 
 <script>
-  import TradeView from '../views/TradeView'
   import TraderView from '../views/TraderView'
 
   export default {
     components: {
       TraderView,
-      TradeView
     },
     name: 'monitor',
     data () {
