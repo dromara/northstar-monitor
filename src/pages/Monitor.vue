@@ -14,7 +14,7 @@
 
   export default {
     components: {
-      TraderView,
+      TraderView
     },
     name: 'monitor',
     data () {
