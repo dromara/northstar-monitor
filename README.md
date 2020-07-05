@@ -1,30 +1,23 @@
 # northstar-monitor
 
-> A Vue.js project
+> 北极星交易平台监控端
 
-## Build Setup
+## Linux下基于Docker的部署方法
+
+以下代码运行之前，先确保系统环境已经有docker
 
 ``` bash
-# install dependencies
+# 先下载代码
+git clone xxx
+cd northstar-monitor
+
+# 安装依赖项
 npm install
 
-# serve with hot reload at localhost:8080
-npm run dev
+# 打包构建
+npm run dockerbuild
 
-# build for production with minification
-npm run build
-
-# build for production and view the bundle analyzer report
-npm run build --report
-
-# run unit tests
-npm run unit
-
-# run e2e tests
-npm run e2e
-
-# run all tests
-npm test
+# 启动容器，命名为Monitor
+docker run -d --net host --name Monitor northstar-monitor
 ```
 
-For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
