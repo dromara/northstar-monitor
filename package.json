@@ -12,7 +12,7 @@
     "test": "npm run unit && npm run e2e",
     "lint": "eslint --ext .js,.vue src test/unit/specs test/e2e/specs",
     "build": "rm -rf dist && node build/build.js",
-    "dockerbuild": "rm -rf dist && node build/build.js && cp nginx.conf dist/ && docker build --rm -f Dockerfile -t northstar-monitor ./dist"
+    "dockerbuild": "rm -rf dist && node build/build.js && cp nginx.conf Dockerfile dist/ && cd dist && docker build --rm -f Dockerfile -t northstar-monitor ."
   },
   "dependencies": {
     "axios": "^0.19.2",
