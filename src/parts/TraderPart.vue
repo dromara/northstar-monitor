@@ -97,10 +97,11 @@
         }
       },
       closingPrice () {
-        if (!this.selectedPosition) {
+        console.log('平仓价格')
+        if (!this.$store.state.marketData.selectedPosition) {
           return '未有持仓'
         }
-        let isLong = this.selectedPosition.direction === '多'
+        let isLong = this.$store.state.marketData.selectedPosition.direction === '多'
         switch (this.priceType.label) {
           case '对手价':
           case '最优价':
