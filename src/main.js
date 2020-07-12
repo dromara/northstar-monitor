@@ -58,6 +58,15 @@ Vue.use(FormItem)
 Vue.use(Form)
 Vue.use(ToastPlugin)
 
+let originFunc = FastClick.prototype.focus
+FastClick.prototype.focus = function () {
+  try {
+    originFunc()
+  } catch (e) {
+    console.log(e)
+  }
+}
+
 FastClick.attach(document.body)
 
 Vue.config.productionTip = false
