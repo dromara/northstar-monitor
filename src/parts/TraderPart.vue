@@ -22,7 +22,7 @@
         </el-select>
       </flexbox-item>
       <flexbox-item :span="3/10">
-        <x-input title='手数'  v-model="volume" class="input-wrapper" type="number" :max="2"></x-input>
+        <x-input title='手数'  v-model="volume" class="input-wrapper" :max="2"></x-input>
       </flexbox-item>
     </flexbox>
     <div class="market-board">
