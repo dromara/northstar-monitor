@@ -60,9 +60,13 @@ Vue.use(ToastPlugin)
 
 let originFunc = FastClick.prototype.focus
 FastClick.prototype.focus = function (el) {
+  vm.$vux.toast.text('666')
   try {
     if (el['selectionStart'] === undefined) {
       el['selectionStart'] = 0
+    }
+    if (el['selectionEnd'] === undefined) {
+      el['selectionEnd'] = 0
     }
     originFunc(el)
   } catch (e) {
