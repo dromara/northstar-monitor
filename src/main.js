@@ -61,7 +61,7 @@ Vue.use(ToastPlugin)
 let originFunc = FastClick.prototype.focus
 FastClick.prototype.focus = function (el) {
   try {
-    if(el['selectionStart'] === undefined){
+    if (el['selectionStart'] === undefined) {
       el['selectionStart'] = 0
     }
     originFunc(el)
