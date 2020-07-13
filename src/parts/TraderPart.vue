@@ -1,7 +1,7 @@
 <template>
   <div>
     <flexbox>
-      <flexbox-item :span="4/11">
+      <flexbox-item :span="4/10">
         <el-select name="合约" v-model="focusSymbol" filterable placeholder="选择合约" style="margin-left: 1em;" @change="chooseContract">
           <el-option
             v-for="item, i in $store.getters.contracts"
@@ -11,7 +11,7 @@
           </el-option>
         </el-select>
       </flexbox-item>
-      <flexbox-item :span="3/12">
+      <flexbox-item :span="3/11">
         <el-select name="价格类型" v-model="priceType" placeholder="请选择">
           <el-option
             v-for="item,i in priceTypeOptions"
@@ -21,8 +21,15 @@
           </el-option>
         </el-select>
       </flexbox-item>
-      <flexbox-item :span="3/10">
-        <x-input ref="tradeQty" title='手数'  v-model="volume" class="input-wrapper" type="number" :max="2"></x-input>
+      <flexbox-item :span="3/13">
+        <el-select name="手数" v-model="volume" filterable placeholder="选择手数" >
+          <el-option
+            v-for="val, i in tradeVol"
+            :key="i"
+            :label="val"
+            :value="val">
+          </el-option>
+        </el-select>
       </flexbox-item>
     </flexbox>
     <div class="market-board">
@@ -71,13 +78,22 @@
           this.focusSymbol = val.unifiedSymbol
           this.chooseContract(this.focusSymbol)
         }
+      },
+      '$store.state.account.positions.length': function () {
+        this.$store.commit('updateSelectPosition', null)
       }
     },
     computed: {
+      tradeVol () {
+        let arr = []
+        for (let i = 1; i < 100; i++) {
+          arr.push(i)
+        }
+        return arr
+      },
       biddingPrice () {
         switch (this.priceType.label) {
           case '对手价':
-          case '最优价':
             return this.$store.state.marketData.askPrice
           case '排队价':
             return this.$store.state.marketData.bidPrice
@@ -88,7 +104,6 @@
       askingPrice () {
         switch (this.priceType.label) {
           case '对手价':
-          case '最优价':
             return this.$store.state.marketData.bidPrice
           case '排队价':
             return this.$store.state.marketData.askPrice
@@ -97,20 +112,22 @@
         }
       },
       closingPrice () {
-        console.log('平仓价格')
         if (!this.$store.state.marketData.selectedPosition) {
           return '未有持仓'
         }
         let isLong = this.$store.state.marketData.selectedPosition.direction === '多'
         switch (this.priceType.label) {
           case '对手价':
-          case '最优价':
             return isLong ? this.$store.state.marketData.bidPrice : this.$store.state.marketData.askPrice
           case '排队价':
             return isLong ? this.$store.state.marketData.askPrice : this.$store.state.marketData.bidPrice
           case '市价':
             return isLong ? this.$store.state.marketData.sellLimitPrice : this.$store.state.marketData.buyLimitPrice
         }
+      },
+      priceTypeVal () {
+        // 全部都用限价代替
+        return 'OPT_LimitPrice'
       }
     },
     data () {
@@ -126,9 +143,6 @@
         }, {
           value: 'OPT_AnyPrice',
           label: '市价'
-        }, {
-          value: 'OPT_BestPrice',
-          label: '最优价'
         }, {
           value: 'CST_QueuePrice',
           label: '排队价'
@@ -158,25 +172,21 @@
       buy () {
         this.validateOpen()
         let accountId = this.$store.state.account.currentAccount[0]
-        return tradeService.buyOpen(accountId, this.focusSymbol, this.$store.state.marketData.askPrice, this.volume, this.priceType.value)
+        return tradeService.buyOpen(accountId, this.focusSymbol, this.biddingPrice, this.volume, this.priceTypeVal)
       },
       sell () {
         this.validateOpen()
         let accountId = this.$store.state.account.currentAccount[0]
-        return tradeService.sellOpen(accountId, this.focusSymbol, this.$store.state.marketData.bidPrice, this.volume, this.priceType.value)
+        return tradeService.sellOpen(accountId, this.focusSymbol, this.askingPrice, this.volume, this.priceTypeVal)
       },
       close () {
         this.validateClose()
         let position = this.$store.state.marketData.selectedPosition
-        if (position.direction === '多') {
-          let dir = 'D_Sell'
-          return tradeService.closePosition(position, dir, this.$store.state.marketData.bidPrice, this.volume, this.priceType.value)
-        } else if (position.direction === '空') {
-          let dir = 'D_Buy'
-          return tradeService.closePosition(position, dir, this.$store.state.marketData.askPrice, this.volume, this.priceType.value)
-        } else {
+        let dir = position.direction === '多' ? 'D_Sell' : position.direction === '空' ? 'D_Buy' : ''
+        if (!dir) {
           throw new Error('未知方向：', position.direction)
         }
+        return tradeService.closePosition(position, dir, this.closingPrice, this.volume, this.priceTypeVal)
       },
       chooseContract (contract) {
         this.$store.commit('setFocus', contract)

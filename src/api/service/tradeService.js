@@ -35,6 +35,7 @@ export default {
    */
   buyOpen (accountId, unifiedSymbol, price, vol, priceType) {
     let symbol = unifiedSymbol.split('@')[0]
+    console.log(`买开，合约${symbol}，价格${price}，手数${vol}，类型${priceType}`)
     return submitOrder(accountId, symbol, 'D_Buy', price, 'OF_Open', vol, priceType)
   },
   /**
@@ -47,6 +48,7 @@ export default {
    */
   sellOpen (accountId, unifiedSymbol, price, vol, priceType) {
     let symbol = unifiedSymbol.split('@')[0]
+    console.log(`卖开，合约${symbol}，价格${price}，手数${vol}，类型${priceType}`)
     return submitOrder(accountId, symbol, 'D_Sell', price, 'OF_Open', vol, priceType)
   },
   /**
@@ -63,6 +65,7 @@ export default {
       throw new Error('持仓不足')
     }
     // 当合约为非上期所合约时，直接下单
+    console.log(`平仓，方向${dir}，合约${symbol}，价格${price}，手数${vol}，类型${priceType}`)
     if (position.exchange !== 'SHFE') {
       return submitOrder(accountId, symbol, dir, price, 'OF_Close', vol, priceType)
     }

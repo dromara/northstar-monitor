@@ -58,22 +58,6 @@ Vue.use(FormItem)
 Vue.use(Form)
 Vue.use(ToastPlugin)
 
-let originFunc = FastClick.prototype.focus
-FastClick.prototype.focus = function (el) {
-  Vue.$vux.toast.text('666')
-  try {
-    if (el['selectionStart'] === undefined) {
-      el['selectionStart'] = 0
-    }
-    if (el['selectionEnd'] === undefined) {
-      el['selectionEnd'] = 0
-    }
-    originFunc(el)
-  } catch (e) {
-    console.log(e)
-  }
-}
-
 FastClick.attach(document.body)
 
 Vue.config.productionTip = false
