@@ -31,6 +31,7 @@ const marketData = {
       state.bidVolume = tick.bidvolumeList[0]
       state.buyLimitPrice = tick.upperlimit
       state.sellLimitPrice = tick.lowerlimit
+      console.log(`${state.focusSymbol}: p ${state.lastPrice} v ${tick.volumedelta} c ${state.openInterestChange}`)
     },
     setFocus (state, val) {
       state.focusSymbol = val
