@@ -1,4 +1,8 @@
 import axios from 'axios'
+import loginService from './loginService'
+
+axios.defaults.headers.post['Content-Type'] = 'application/json'
+
 // 业务层的统一处理
 const resolveResult = (response) => {
   if (response && response.status === 200 && response.data.rtnCode === 200) {
@@ -19,13 +23,15 @@ const handleError = (e) => {
 }
 
 let request = axios.create({
-  baseURL: process.env.TRADER_ENDPOINT,
-  withCredentials: true,
-  headers: {
-    'Content-Type': 'application/json;charset=UTF-8'
-  }
+  baseURL: process.env.TRADER_ENDPOINT
 })
 
 request.interceptors.response.use(resolveResult, handleError)
+request.interceptors.request.use(async config => {
+  console.log('使用权限拦截器')
+  let header = await loginService.genHeader()
+  Object.assign(config.headers, header)
+  return config
+})
 
 export default request

@@ -9,11 +9,12 @@
     </div>
 
     <x-button @click.native="confirm">登陆</x-button>
-    <toast v-model="errHint" type="warn">用户或密码不正确</toast>
+    <toast v-model="showErrMsg" type="warn">用户或密码不正确</toast>
   </div>
 </template>
 
 <script>
+  import loginService from '../api/service/loginService'
   export default {
     name: 'login',
     data () {
@@ -22,21 +23,19 @@
           userName: '',
           password: ''
         },
-        errHint: false
+        showErrMsg: false
       }
     },
     methods: {
-      confirm () {
+      async confirm () {
         console.log('confirm')
-        let pass = this.form.userName === 'admin' && this.form.password === '123456'
-        if (pass) {
+        loginService.setUserInfo(this.form.userName, this.form.password)
+        try {
+          await loginService.auth()
           this.$router.push('monitor')
-          return
+        } catch (e) {
+          this.showErrMsg = true
         }
-        this.errHint = true
-        setTimeout(() => {
-          this.errHint = false
-        }, 2000)
       }
     }
   }
