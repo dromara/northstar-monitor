@@ -11,8 +11,7 @@
 
 <script>
   import TraderView from '../views/TraderView'
-  import accountService from '../api/service/accountService'
-  import { TickField } from '../api/pb/core_field_pb'
+  import { TickField, AccountField, PositionField, TradeField, OrderField } from '../api/pb/core_field_pb'
   import SocketIO from 'socket.io-client'
 
   export default {
@@ -29,7 +28,8 @@
         },
         showMenu: false,
         socket: null,
-        currentRoom: 'default'
+        currentUnifiedSymbol: '',
+        currentGatewayId: ''
       }
     },
     mounted () {
@@ -42,18 +42,48 @@
           let tick = TickField.deserializeBinary(data).toObject()
           this.$store.commit('updateTick', tick)
         })
+        this.socket.on('AccountData', (data) => {
+          let account = AccountField.deserializeBinary(data).toObject()
+          this.$store.commit('updateAccount', account)
+        })
+        this.socket.on('PositionData', (data) => {
+          let position = PositionField.deserializeBinary(data).toObject()
+          this.$store.commit('updatePosition', position)
+        })
+        this.socket.on('TradeData', (data) => {
+          let trade = TradeField.deserializeBinary(data).toObject()
+          this.$store.commit('updateTrade', trade)
+        })
+        this.socket.on('OrderData', (data) => {
+          let order = OrderField.deserializeBinary(data).toObject()
+          console.log(order)
+          this.$store.commit('updateOrder', order)
+        })
       } else {
         console.log('禁用行情连接')
       }
     },
     watch: {
       '$store.state.marketData.focusSymbol': function (val) {
-        console.log('切换订阅合约：', val)
-        if (this.currentRoom) {
-          this.socket.emit('logout', this.currentRoom)
+        let unifiedSymbol = val
+        console.log('切换订阅合约：', unifiedSymbol)
+        if (this.currentUnifiedSymbol) {
+          this.socket.emit('logout', this.currentUnifiedSymbol)
         }
-        this.socket.emit('login', val)
-        this.currentRoom = val
+        this.socket.emit('login', unifiedSymbol)
+        this.currentUnifiedSymbol = unifiedSymbol
+      },
+      '$store.state.account.currentGateway': function (val) {
+        if (!val.length) {
+          return
+        }
+        let gateway = val[0]
+        console.log('切换账户：', gateway)
+        if (this.currentGatewayId) {
+          this.socket.emit('logout', this.currentGatewayId)
+        }
+        this.socket.emit('login', gateway.gatewayId)
+        this.currentGatewayId = gateway.gatewayId
       }
     },
     methods: {
@@ -61,11 +91,6 @@
         this.currentHeader = menuItem
       },
       async init () {
-        // 初始化账户列表
-        let accountList = await accountService.getAccountList()
-        this.$store.commit('updateAccountDetailList', accountList)
-        let simpleAccountList = accountList.map(a => a.accountId)
-        this.$store.commit('updateAccountList', simpleAccountList)
       }
     }
   }

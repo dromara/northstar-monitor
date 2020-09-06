@@ -26,6 +26,13 @@
         showErrMsg: false
       }
     },
+    mounted () {
+      document.onkeydown = (e) => {
+        if (e.key === 'Enter') {
+          this.confirm()
+        }
+      }
+    },
     methods: {
       async confirm () {
         console.log('confirm')

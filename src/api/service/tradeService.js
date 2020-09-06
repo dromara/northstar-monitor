@@ -11,7 +11,7 @@ import service from './commonRequest'
  * @returns {Promise<AxiosResponse<T>>}
  */
 const submitOrder = (accountId, symbol, dir, price, kpType, vol, priceType) => {
-  return service.post(`/trade/order?accountId=${accountId}&contractSymbol=${symbol}&direction=${dir}&price=${price}&transactionType=${kpType}&volume=${vol}&priceType=${priceType}`)
+  return service.post(`/submit?gatewayId=${accountId}&symbol=${symbol}&dir=${dir}&price=${price}&dealType=${kpType}&volume=${vol}&priceType=${priceType}`)
 }
 
 /**
@@ -21,7 +21,7 @@ const submitOrder = (accountId, symbol, dir, price, kpType, vol, priceType) => {
  * @returns {Promise<AxiosResponse<T>>}
  */
 const cancelOrder = (accountId, orderId) => {
-  return service.post(`/trade/cancel?accountId=${accountId}&orderId=${orderId}`)
+  return service.post(`/cancel?gatewayId=${accountId}&orderId=${orderId}`)
 }
 
 export default {
@@ -57,7 +57,7 @@ export default {
    * @param position
    */
   closePosition (position, dir, price, vol, priceType) {
-    let accountId = position.accountId
+    let gatewayid = position.gatewayId
     let symbol = position.unifiedSymbol.split('@')[0]
     let tdAvailable = position.tdPosition - position.tdFrozen
     let totalAvailable = position.totalPosition - position.tdFrozen - position.ydFrozen
@@ -67,7 +67,7 @@ export default {
     // 当合约为非上期所合约时，直接下单
     console.log(`平仓，方向${dir}，合约${symbol}，价格${price}，手数${vol}，类型${priceType}`)
     if (position.exchange !== 'SHFE') {
-      return submitOrder(accountId, symbol, dir, price, 'OF_Close', vol, priceType)
+      return submitOrder(gatewayid, symbol, dir, price, 'OF_Close', vol, priceType)
     }
     let dealTd = tdAvailable > vol ? vol : tdAvailable
     let dealYd = vol - dealTd
@@ -75,11 +75,11 @@ export default {
     let promises = []
     // 当有今仓时，先平今
     if (dealTd) {
-      let p = submitOrder(accountId, symbol, dir, price, 'OF_CloseToday', dealTd, priceType)
+      let p = submitOrder(gatewayid, symbol, dir, price, 'OF_CloseToday', dealTd, priceType)
       promises.push(p)
     }
     if (dealYd) {
-      let p = submitOrder(accountId, symbol, dir, price, 'OF_CloseYesterday', dealYd, priceType)
+      let p = submitOrder(gatewayid, symbol, dir, price, 'OF_CloseYesterday', dealYd, priceType)
       promises.push(p)
     }
     return Promise.all(promises)
@@ -94,12 +94,10 @@ export default {
     let orderId = order.orderId
     return cancelOrder(accountId, orderId)
   },
-  /**
-   * 获取网关合约
-   * @param gatewayId
-   * @returns {Promise<AxiosResponse<T>>}
-   */
-  getAvailableFutureContract (gatewayId) {
-    return service.get(`/market/available/future?gatewayId=${gatewayId}`)
+  getTradableAccountList () {
+    return service.get(`/accountList`)
+  },
+  getContracts () {
+    return service.get('/contracts')
   }
 }

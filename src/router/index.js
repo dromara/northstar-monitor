@@ -1,7 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Login from '../pages/Login'
-import Monitor from '../pages/Monitor'
 import loginService from '../api/service/loginService'
 
 Vue.use(Router)
@@ -11,7 +9,7 @@ let router = new Router({
     {
       path: '/',
       name: 'login',
-      component: Login
+      component: () => import('../pages/Login')
     },
     {
       path: '/monitor',
@@ -19,7 +17,7 @@ let router = new Router({
       meta: {
         requireAuth: true
       },
-      component: Monitor
+      component: () => import('../pages/Monitor')
     }
   ]
 })
@@ -31,7 +29,7 @@ router.beforeEach(async (to, from, next) => {
     try {
       auth = await loginService.auth()
     } catch (e) {
-      console.log(e)
+      console.log('未获得登陆权限')
     }
     if (auth) { // 判断本地是否存在access_token
       next()
