@@ -90,9 +90,9 @@ export default {
    * @param order
    */
   cancelOrder (order) {
-    let accountId = order.accountId
+    let gatewayId = order.gatewayId
     let orderId = order.orderId
-    return cancelOrder(accountId, orderId)
+    return cancelOrder(gatewayId, orderId)
   },
   getTradableAccountList () {
     return service.get(`/accountList`)

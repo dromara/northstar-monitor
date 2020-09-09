@@ -107,12 +107,15 @@ const account = {
         const contract = v.contract
         const obj = {
           name: contract.name,
+          gatewayId: v.gatewayid,
+          orderId: v.orderid,
           state: orderState[v.orderstatus],
           action: `${orderDir[v.direction]}${v.offsetflag === 1 ? '开' : '平'}`,
           orderPrice: v.price,
           totalOrderVolume: v.totalvolume,
           tradedOrderVolume: v.tradedvolume,
-          canceledOrderVolume: v.canceltime ? v.totalvolume - v.tradedvolume : 0,
+          waitingOrderVolume: v.totalvolume - v.tradedvolume,
+          canceledOrderVolume: v.orderstatus === 6 ? v.totalvolume - v.tradedvolume : 0,
           orderTime: v.ordertime
         }
         arr.push(obj)
