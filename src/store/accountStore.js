@@ -57,6 +57,14 @@ const account = {
       state.available = account ? parseInt(account.available) : 0
       state.account = account
     },
+    reset (state) {
+      state.positions = []
+      state.positionMap = {}
+      state.transactions = []
+      state.transactionMap = {}
+      state.orders = []
+      state.orderMap = {}
+    },
     updatePosition (state, position) {
       state.positionMap[position.positionid] = position
       const arr = []
@@ -124,6 +132,7 @@ const account = {
     },
     setCurrentGateway (state, val) {
       state.currentGateway = val
+      this.commit('reset')
     },
     updateContracts (state, contracts) {
       state.availableContracts = contracts

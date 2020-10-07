@@ -1,9 +1,10 @@
 <template>
   <div class="common frame">
+    <img class="deco" src="@/assets/northstar.png"/>
     <div class="title">北极星交易平台</div>
     <div class="title">监控端</div>
 
-    <div  class="info">
+    <div class="info">
         <x-input title="用户" v-model="form.userName"></x-input>
         <x-input title="密码" v-model="form.password" type="password"></x-input>
     </div>
@@ -52,10 +53,13 @@
   .title {
     font-size: 2rem;
     text-align: center;
-    margin-top: 1em;
   }
   .frame {
-    padding: 5rem;
+    padding: 2rem 5rem;
+    text-align: center;
+  }
+  .deco{
+    max-width: 100%;
   }
   .info {
     border-radius: 5px;
@@ -63,5 +67,6 @@
     margin-top: 2.5em;
     margin-bottom: 3em;
     padding-right: 1em;
+    text-indent: 1em;
   }
 </style>

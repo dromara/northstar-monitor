@@ -56,7 +56,6 @@
         })
         this.socket.on('OrderData', (data) => {
           let order = OrderField.deserializeBinary(data).toObject()
-          console.log(order)
           this.$store.commit('updateOrder', order)
         })
       } else {
