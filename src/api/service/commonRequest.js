@@ -8,7 +8,7 @@ const resolveResult = (response) => {
   if (response && response.status === 200 && response.data.rtnCode === 200) {
     return response.data.data
   }
-  let errMsg = response.message || '遇到未知异常'
+  let errMsg = response.data.msg || '遇到未知异常'
   console.warn(errMsg)
   console.warn(response)
   throw new Error(errMsg)

@@ -18,7 +18,7 @@ export default {
     t = now
     let response = await axios.post(`${process.env.TRADER_ENDPOINT}/auth?t=${t}`, CryptoJS.MD5(`${_username}&${_password}&${t}`).toString())
     if (response.status !== 200 || response.data.rtnCode !== 200) {
-      throw new Error(response.message || '遇到未知异常')
+      throw new Error(response.data.msg || '遇到未知异常')
     }
     token = response.data.data
     return token

@@ -242,8 +242,7 @@
         console.log('取消订单选择')
         this.selectedOrder = null
       },
-      onWithdraw (val) {
-        console.log(val)
+      onWithdraw () {
         return tradeService.cancelOrder(this.selectedOrder)
       },
       validateOpen () {
