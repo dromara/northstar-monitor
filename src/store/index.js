@@ -1,14 +1,11 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
-import marketData from './marketDataStore'
-import account from './accountStore'
+import Vue from "vue";
+import Vuex from "vuex";
 
-Vue.use(Vuex)
-const store = new Vuex.Store({
-  modules: {
-    marketData,
-    account
-  }
-})
+Vue.use(Vuex);
 
-export default store
+export default new Vuex.Store({
+  state: {},
+  mutations: {},
+  actions: {},
+  modules: {},
+});

@@ -1,23 +1,29 @@
 # northstar-monitor
 
-> 北极星交易平台监控端
-
-## Linux下基于Docker的部署方法
-
-以下代码运行之前，先确保系统环境已经有docker
-
-``` bash
-# 先下载代码
-git clone xxx
-cd northstar-monitor
-
-# 安装依赖项
+## Project setup
+```
 npm install
-
-# 打包构建
-npm run dockerbuild
-
-# 启动容器，命名为Monitor
-docker run -d --net host --name Monitor northstar-monitor
 ```
 
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Run your unit tests
+```
+npm run test:unit
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).

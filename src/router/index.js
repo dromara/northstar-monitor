@@ -1,45 +1,28 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import loginService from '../api/service/loginService'
+import Vue from "vue";
+import VueRouter from "vue-router";
+import Home from "../views/Home.vue";
 
-Vue.use(Router)
+Vue.use(VueRouter);
 
-let router = new Router({
-  routes: [
-    {
-      path: '/',
-      name: 'login',
-      component: () => import('../pages/Login')
-    },
-    {
-      path: '/monitor',
-      name: 'monitor',
-      meta: {
-        requireAuth: true
-      },
-      component: () => import('../pages/Monitor')
-    }
-  ]
-})
+const routes = [
+  {
+    path: "/",
+    name: "Home",
+    component: Home,
+  },
+  {
+    path: "/about",
+    name: "About",
+    // route level code-splitting
+    // this generates a separate chunk (about.[hash].js) for this route
+    // which is lazy-loaded when the route is visited.
+    component: () =>
+      import(/* webpackChunkName: "about" */ "../views/About.vue"),
+  },
+];
 
-// 配置路由权限
-router.beforeEach(async (to, from, next) => {
-  if (to.meta.requireAuth) { // 判断该路由是否需要登录权限
-    let auth
-    try {
-      auth = await loginService.auth()
-    } catch (e) {
-      console.log('未获得登陆权限')
-    }
-    if (auth) { // 判断本地是否存在access_token
-      next()
-    } else {
-      // 未登录,跳转到登陆页面，并且带上 将要去的地址，方便登陆后跳转。
-      next('/')
-    }
-  } else {
-    next()
-  }
-})
+const router = new VueRouter({
+  routes,
+});
 
-export default router
+export default router;
