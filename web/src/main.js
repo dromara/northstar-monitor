@@ -3,9 +3,11 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-import Element from 'element-ui'
+import ElementUI from 'element-ui'
+import './assets/style/index.css'
+import './assets/style/theme/index.css'
 
-Vue.use(Element)
+Vue.use(ElementUI, { size: 'small' })
 
 Vue.config.productionTip = false
 
