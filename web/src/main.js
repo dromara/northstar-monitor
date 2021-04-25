@@ -7,8 +7,6 @@ import ElementUI from 'element-ui'
 import './assets/style/index.css'
 import './assets/style/theme/index.css'
 
-import 'animate.css/animate.css'
-
 Vue.use(ElementUI, { size: 'small' })
 
 Vue.config.productionTip = false
