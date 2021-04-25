@@ -16,7 +16,7 @@
       <el-table-column label="连接状态" prop="name"> </el-table-column>
       <el-table-column label="自动连接" prop="name"> </el-table-column>
       <el-table-column label="是否启用" prop="name"> </el-table-column>
-      <el-table-column align="center" min-width="150px">
+      <el-table-column align="center" width="180px">
         <template slot="header">
           <el-button
             size="mini"

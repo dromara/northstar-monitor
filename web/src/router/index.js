@@ -6,6 +6,10 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
+    redirect: '/login'
+  },
+  {
+    path: '/login',
     name: 'login',
     component: () => import('../views/Login.vue')
   },
@@ -18,6 +22,16 @@ const routes = [
     path: '/workspace',
     name: 'workspace',
     component: () => import('../views/Workspace.vue')
+  },
+  {
+    path: '/mktdata',
+    name: 'marketData',
+    component: () => import('../views/MarketData.vue')
+  },
+  {
+    path: '/trade',
+    name: 'trade',
+    component: () => import('../views/Trade.vue')
   },
   {
     path: '/gateway/mkt',
