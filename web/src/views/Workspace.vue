@@ -35,8 +35,8 @@
 
 <script>
 const PAGE = {
-  1: '/#/gateway/mkt',
-  2: '/#/gateway/trd',
+  1: '/#/gateway?type=mkt',
+  2: '/#/gateway?type=trd',
   4: '/#/trade'
 }
 export default {

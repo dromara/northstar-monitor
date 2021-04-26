@@ -1,5 +1,12 @@
 <template>
   <div class="ns-page">
+    <NsGatewayForm
+      :visible.sync="dialogFormVisible"
+      :gatewayDescription="curGatewayDescription"
+      :gatewayUsage="gatewayUsage"
+      :isUpdateMode="curTableIndex > -1"
+      @onSave="handleSave"
+    />
     <el-table
       :data="
         tableData.filter(
@@ -10,18 +17,20 @@
       height="100%"
     >
       <el-table-column label="网关ID" prop="gatewayId"> </el-table-column>
-      <el-table-column label="描述" prop="name"> </el-table-column>
-      <el-table-column label="类型" prop="name"> </el-table-column>
-      <el-table-column label="类型" prop="name"> </el-table-column>
-      <el-table-column label="连接状态" prop="name"> </el-table-column>
-      <el-table-column label="自动连接" prop="name"> </el-table-column>
-      <el-table-column label="是否启用" prop="name"> </el-table-column>
+      <el-table-column label="网关描述" prop="description"> </el-table-column>
+      <el-table-column label="网关类型" prop="gatewayType" width="80px">
+      </el-table-column>
+      <el-table-column label="连接状态" prop="connectionState" width="80px">
+      </el-table-column>
+      <el-table-column label="自动连接" prop="autoConnect" width="80px">
+      </el-table-column>
+      <el-table-column label="是否启用" prop="disabled" width="80px">
+      </el-table-column>
+      <el-table-column label="适配器类型" prop="gatewayAdapterType">
+      </el-table-column>
       <el-table-column align="center" width="180px">
         <template slot="header">
-          <el-button
-            size="mini"
-            type="primary"
-            @click="handleEdit(scope.$index, scope.row)"
+          <el-button size="mini" type="primary" @click="handleCreate"
             >新建</el-button
           >
         </template>
@@ -42,103 +51,52 @@
 </template>
 
 <script>
+import NsGatewayForm from '@/components/GatewayForm'
+
 export default {
+  components: {
+    NsGatewayForm
+  },
   data() {
     return {
-      tableData: [
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        },
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        },
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        },
-        {
-          date: '2016-05-02',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1518 弄'
-        },
-        {
-          date: '2016-05-04',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1517 弄'
-        },
-        {
-          date: '2016-05-01',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1519 弄'
-        },
-        {
-          date: '2016-05-03',
-          name: '王小虎',
-          address: '上海市普陀区金沙江路 1516 弄'
-        }
-      ],
+      pageType: '',
+      dialogFormVisible: false,
+      curTableIndex: -1,
+      curGatewayDescription: {},
+      tableData: [],
       search: ''
+    }
+  },
+  computed: {
+    gatewayUsage() {
+      return this.pageType === 'trd' ? 'TRADE' : 'MARKET_DATA'
     }
   },
   mounted() {
     console.log(this.$route.query.type)
+    this.pageType = this.$route.query.type
   },
   methods: {
+    handleCreate() {
+      this.dialogFormVisible = true
+      this.curTableIndex = -1
+    },
     handleEdit(index, row) {
       console.log(index, row)
+      this.curTableIndex = index
+      this.curGatewayDescription = row
+      this.dialogFormVisible = true
     },
     handleDelete(index, row) {
       console.log(index, row)
+    },
+    handleSave(obj) {
+      console.log(obj)
+      if (this.curTableIndex > -1) {
+        this.tableData[this.curTableIndex] = obj
+        return
+      }
+      this.tableData.push(obj)
     }
   }
 }

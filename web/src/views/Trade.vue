@@ -87,160 +87,20 @@
         <NsButton :price="'优先平今'" :reverseColor="true" />
       </div>
     </div>
-    <div class="ns-trade__account-detail">
-      <el-tabs v-model="curTab" @tab-click="onPositionChosen" :stretch="true">
-        <el-tab-pane label="持仓" name="position" :style="{ overflow: 'auto' }"
-          ><el-table :data="positionDescription" style="width: 100%">
-            <el-table-column prop="symbol" label="合约名称" align="center">
-            </el-table-column>
-            <el-table-column
-              prop="direction"
-              label="方向"
-              width="50px"
-              align="center"
-            >
-            </el-table-column>
-            <el-table-column
-              prop="volume"
-              label="总仓"
-              width="50px"
-              align="center"
-            >
-            </el-table-column>
-            <el-table-column
-              prop="availableVol"
-              label="可用"
-              width="50px"
-              align="center"
-            >
-            </el-table-column>
-            <el-table-column prop="openPrice" label="开仓均价" align="center">
-            </el-table-column>
-            <el-table-column
-              prop="positionProfit"
-              label="持仓盈亏"
-              align="center"
-            >
-            </el-table-column> </el-table
-        ></el-tab-pane>
-        <el-tab-pane label="挂单" name="activeOrder"
-          ><el-table :data="orderDescription" style="width: 100%">
-            <el-table-column prop="symbol" label="合约名称" align="center">
-            </el-table-column>
-            <el-table-column
-              prop="dirOpenClose"
-              label="开平"
-              width="50px"
-              align="center"
-            >
-            </el-table-column>
-            <el-table-column prop="price" label="委托价" align="center">
-            </el-table-column>
-            <el-table-column
-              prop="orderVolTotal"
-              label="委托量"
-              width="80px"
-              align="center"
-            >
-            </el-table-column>
-            <el-table-column
-              prop="orderVolPending"
-              label="挂单量"
-              align="center"
-            >
-            </el-table-column> </el-table
-        ></el-tab-pane>
-        <el-tab-pane label="委托" name="order"
-          ><el-table :data="orderDescription" style="width: 100%">
-            <el-table-column prop="symbol" label="合约名称" align="center">
-            </el-table-column>
-            <el-table-column
-              prop="orderStatus"
-              label="状态"
-              width="50px"
-              align="center"
-            >
-            </el-table-column>
-            <el-table-column
-              prop="dirOpenClose"
-              label="开平"
-              width="40px"
-              align="center"
-            >
-            </el-table-column>
-            <el-table-column prop="price" label="委托价" align="center">
-            </el-table-column>
-            <el-table-column
-              prop="orderVolTotal"
-              label="委托量"
-              width="50px"
-              align="center"
-            >
-            </el-table-column>
-            <el-table-column
-              prop="tradeVol"
-              label="已成交"
-              width="50px"
-              align="center"
-            >
-            </el-table-column>
-            <el-table-column
-              prop="cancelVol"
-              label="已撤单"
-              width="50px"
-              align="center"
-            >
-            </el-table-column>
-            <el-table-column prop="orderTime" label="委托时间" align="center">
-            </el-table-column> </el-table
-        ></el-tab-pane>
-        <el-tab-pane label="成交" name="transaction"
-          ><el-table
-            :data="transactionDescription"
-            style="width: 100%"
-            align="center"
-          >
-            <el-table-column prop="symbol" label="合约名称" align="center">
-            </el-table-column>
-            <el-table-column
-              prop="orderStatus"
-              label="状态"
-              align="center"
-              width="50px"
-            >
-            </el-table-column>
-            <el-table-column
-              prop="dirOpenClose"
-              label="开平"
-              align="center"
-              width="50px"
-            >
-            </el-table-column>
-            <el-table-column prop="tradePrice" label="成交价" align="center">
-            </el-table-column>
-            <el-table-column
-              prop="tradeVol"
-              label="成交量"
-              align="center"
-              width="50px"
-            >
-            </el-table-column>
-            <el-table-column prop="tradeTime" label="成交时间" align="center">
-            </el-table-column> </el-table
-        ></el-tab-pane>
-      </el-tabs>
-    </div>
+    <NsAccountDetail :tableContentHeight="flexibleTblHeight" />
   </div>
 </template>
 
 <script>
 import NsButton from '@/components/TradeButton'
 import NsPriceBoard from '@/components/PriceBoard'
+import NsAccountDetail from '@/components/AccountDetail'
 export default {
   name: 'Trade',
   components: {
     NsButton,
-    NsPriceBoard
+    NsPriceBoard,
+    NsAccountDetail
   },
   data() {
     return {
@@ -294,60 +154,18 @@ export default {
             positionProfit: '1234'
           }
         ]
-      },
-      positionDescription: [
-        {
-          symbol: 'rb2103',
-          volume: '5',
-          direction: '多',
-          availableVol: '3',
-          openPrice: '1234',
-          positionProfit: '1234'
-        },
-        {
-          symbol: 'rb2103',
-          volume: '5',
-          direction: '多',
-          availableVol: '3',
-          openPrice: '1234',
-          positionProfit: '1234'
-        },
-        {
-          symbol: 'rb2103',
-          volume: '5',
-          direction: '多',
-          availableVol: '3',
-          openPrice: '1234',
-          positionProfit: '1234'
-        },
-        {
-          symbol: 'rb2103',
-          volume: '5',
-          availableVol: '3',
-          openPrice: '1234',
-          positionProfit: '1234'
-        },
-        {
-          symbol: 'rb2103',
-          volume: '5',
-          availableVol: '3',
-          openPrice: '1234',
-          positionProfit: '1234'
-        },
-        {
-          symbol: 'rb2103',
-          volume: '5',
-          availableVol: '3',
-          openPrice: '1234',
-          positionProfit: '1234'
-        }
-      ],
-      orderDescription: [],
-      transactionDescription: []
+      }
     }
   },
   methods: {
     onPositionChosen() {}
+  },
+  created() {},
+  mounted() {},
+  computed: {
+    flexibleTblHeight() {
+      return document.body.clientHeight - 400
+    }
   }
 }
 </script>
@@ -408,12 +226,6 @@ export default {
   width: 80%;
   padding: 10px 20px;
   min-height: 200px;
-}
-.ns-trade__account-detail {
-  height: 100%;
-  min-height: 300px;
-  margin: 0 20px;
-  overflow: hidden;
 }
 .ns-account-table {
   text-align: center;

@@ -34,13 +34,8 @@ const routes = [
     component: () => import('../views/Trade.vue')
   },
   {
-    path: '/gateway/mkt',
+    path: '/gateway',
     name: 'gateway',
-    component: () => import('../views/GatewayMgmt.vue')
-  },
-  {
-    path: '/gateway/trd',
-    name: 'account',
     component: () => import('../views/GatewayMgmt.vue')
   }
 ]
