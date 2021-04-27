@@ -16,15 +16,37 @@
       "
       height="100%"
     >
-      <el-table-column label="网关ID" prop="gatewayId"> </el-table-column>
+      <el-table-column label="网关ID" prop="gatewayId" width="200px">
+      </el-table-column>
       <el-table-column label="网关描述" prop="description"> </el-table-column>
       <el-table-column label="网关类型" prop="gatewayType" width="80px">
       </el-table-column>
       <el-table-column label="连接状态" prop="connectionState" width="80px">
+        <template slot-scope="scope">
+          {{
+            {
+              CONNECTING: '连接中',
+              CONNECTED: '已连接',
+              DISCONNECTING: '断开中',
+              DISCONNECTED: '已断开'
+            }[scope.row.connectionState]
+          }}
+        </template>
       </el-table-column>
       <el-table-column label="自动连接" prop="autoConnect" width="80px">
+        <template slot-scope="scope">
+          {{ scope.row.autoConnect ? '是' : '否' }}
+        </template>
       </el-table-column>
-      <el-table-column label="是否启用" prop="disabled" width="80px">
+      <el-table-column
+        v-if="pageType === 'trd'"
+        label="账户类型"
+        prop="simulated"
+        width="80px"
+      >
+        <template slot-scope="scope">
+          {{ scope.row.simulated ? '模拟' : '真实' }}
+        </template>
       </el-table-column>
       <el-table-column label="适配器类型" prop="gatewayAdapterType">
       </el-table-column>
@@ -72,7 +94,7 @@ export default {
       return this.pageType === 'trd' ? 'TRADE' : 'MARKET_DATA'
     }
   },
-  mounted() {
+  created() {
     console.log(this.$route.query.type)
     this.pageType = this.$route.query.type
   },

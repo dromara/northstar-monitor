@@ -11,10 +11,16 @@
       :ctpSettingsSrc="form.settings"
       @onSave="(ctpSettings) => (form.settings = ctpSettings)"
     />
-    <el-form ref="gatewayForm" :model="form" label-width="100px" width="200px">
+    <el-form
+      ref="gatewayForm"
+      :model="form"
+      label-width="100px"
+      width="200px"
+      :rules="formRules"
+    >
       <el-row>
         <el-col :span="8">
-          <el-form-item label="网关ID" :required="true" prop="gatewayId">
+          <el-form-item label="网关ID" prop="gatewayId">
             <el-input
               v-model="form.gatewayId"
               autocomplete="off"
@@ -23,7 +29,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="7">
-          <el-form-item label="网关类型" :required="true" prop="gatewayType">
+          <el-form-item label="网关类型" prop="gatewayType">
             <el-select
               v-model="form.gatewayType"
               placeholder="请选择"
@@ -81,6 +87,12 @@ const GATEWAY_ADAPTER = {
   CTP: 'xyz.redtorch.gateway.ctp.x64v6v3v15v.CtpGatewayAdapter',
   IB: ''
 }
+const CONNECTION_STATE = {
+  CONNECTING: 'CONNECTING',
+  CONNECTED: 'CONNECTED',
+  DISCONNECTING: 'DISCONNECTING',
+  DISCONNECTED: 'DISCONNECTED'
+}
 export default {
   components: {
     NsCtpForm
@@ -105,6 +117,10 @@ export default {
   },
   data() {
     return {
+      formRules: {
+        gatewayId: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        gatewayType: [{ required: true, message: '不能为空', trigger: 'blur' }]
+      },
       ctpFormVisible: false,
       form: {
         gatewayId: '',
@@ -112,7 +128,7 @@ export default {
         gatewayType: '',
         gatewayUsage: this.gatewayUsage,
         gatewayAdapterType: '',
-        connectionState: '',
+        connectionState: CONNECTION_STATE.DISCONNECTED,
         autoConnect: true,
         simulated: false,
         settings: {}

@@ -69,7 +69,11 @@
           </el-select>
         </div>
         <div class="ns-trade-action__item">
-          <el-input v-model="dealPrice" placeholder="委托价"></el-input>
+          <el-input
+            v-model="dealPrice"
+            placeholder="委托价"
+            :disabled="dealPriceType !== 'CUSTOM_PRICE'"
+          ></el-input>
         </div>
       </div>
       <div class="ns-trade-info">

@@ -13,6 +13,7 @@
       :model="ctpSettings"
       label-width="100px"
       width="200px"
+      :rules="formRules"
     >
       <el-row>
         <el-col :span="8">
@@ -27,7 +28,9 @@
           <el-form-item label="网关密码" :required="true" prop="password">
             <el-input
               v-model="ctpSettings.password"
+              type="password"
               autocomplete="off"
+              show-password
             ></el-input>
           </el-form-item>
         </el-col>
@@ -54,7 +57,11 @@
         </el-col>
         <el-col :span="6">
           <el-form-item label="网关端口" :required="true" prop="port">
-            <el-input v-model="ctpSettings.port" autocomplete="off"></el-input>
+            <el-input
+              v-model="ctpSettings.port"
+              autocomplete="off"
+              type="number"
+            ></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="10">
@@ -112,6 +119,18 @@ export default {
   },
   data() {
     return {
+      formRules: {
+        userId: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        password: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        brokerId: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        host: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        port: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        authCode: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        userProductInfo: [
+          { required: true, message: '不能为空', trigger: 'blur' }
+        ],
+        appId: [{ required: true, message: '不能为空', trigger: 'blur' }]
+      },
       ctpSettings: {
         userId: '',
         password: '',
@@ -141,11 +160,15 @@ export default {
         this.ctpSettings.tdHost = this.ctpSettings.host
         this.ctpSettings.tdPort = this.ctpSettings.port
       }
-      let obj = {}
-      Object.assign(obj, this.ctpSettings)
-      this.$emit('onSave', obj)
-      this.$emit('update:visible', false)
-      this.$refs.ctpSettings.resetFields()
+      this.$refs.ctpSettings.validate((valid) => {
+        if (valid) {
+          let obj = {}
+          Object.assign(obj, this.ctpSettings)
+          this.$emit('onSave', obj)
+          this.$emit('update:visible', false)
+          this.$refs.ctpSettings.resetFields()
+        }
+      })
     }
   }
 }
@@ -154,5 +177,13 @@ export default {
 <style>
 .el-dialog__body {
   padding: 10px 20px 0px;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+input[type='number'] {
+  -moz-appearance: textfield;
 }
 </style>
