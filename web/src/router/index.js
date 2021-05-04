@@ -14,11 +14,6 @@ const routes = [
     component: () => import('../views/Login.vue')
   },
   {
-    path: '/icon',
-    name: 'icon',
-    component: () => import('../views/Icon.vue')
-  },
-  {
     path: '/workspace',
     name: 'workspace',
     component: () => import('../views/Workspace.vue')

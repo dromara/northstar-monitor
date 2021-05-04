@@ -40,3 +40,10 @@ tr:hover {
     background-color: yellow;
 }
 
+.negative {
+    color: #ee9090;
+}
+
+.positive {
+    color:#93c57a;
+}

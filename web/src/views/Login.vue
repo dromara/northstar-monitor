@@ -1,22 +1,22 @@
 <template>
   <div class="wrapper">
     <div class="logo"></div>
-    <div class="panel">
+    <div class="panel" v-on:keydown.enter="login">
       <el-form
         :model="userForm"
         status-icon
-        :rules="rules"
         label-width="80px"
         class="demo-userForm"
       >
         <el-form-item label="用户名">
-          <el-input v-model="userForm.name"></el-input>
+          <el-input v-model="userForm.name" clearable></el-input>
         </el-form-item>
         <el-form-item label="密码">
           <el-input
             type="password"
             v-model="userForm.pass"
             autocomplete="off"
+            clearable
           ></el-input>
         </el-form-item>
         <el-form-item>
@@ -28,6 +28,7 @@
 </template>
 
 <script>
+import loginServiceApi from '@/api/loginServiceApi'
 export default {
   data() {
     return {
@@ -38,7 +39,12 @@ export default {
     }
   },
   methods: {
-    login() {},
+    login() {
+      loginServiceApi.login(this.userForm.name, this.userForm.pass).then(() => {
+        console.log('登陆成功')
+        this.$router.push({ name: 'workspace' })
+      })
+    },
     resetForm() {}
   }
 }

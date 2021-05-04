@@ -8,6 +8,7 @@
         background-color="#545c64"
         text-color="#fff"
         active-text-color="#ffd04b"
+        :default-active="curPage"
       >
         <el-menu-item index="1">网关管理</el-menu-item>
         <el-menu-item index="2">账户管理</el-menu-item>
@@ -16,42 +17,37 @@
       </el-menu>
     </div>
     <div class="ns-body">
-      <iframe
-        v-if="showIframe"
-        ref="iframe"
-        width="100%"
-        height="100%"
-        frameborder="no"
-        border="0"
-        marginwidth="0"
-        marginheight="0"
-        scrolling="no"
-        allowtransparency="yes"
-        src="/#/icon"
+      <GatewayManagement
+        v-if="curPage === '1'"
+        :gatewayUsage="'MARKET_DATA'"
+        :key="1"
       />
+      <GatewayManagement
+        v-if="curPage === '2'"
+        :gatewayUsage="'TRADE'"
+        :key="2"
+      />
+      <Trade v-if="curPage === '4'" :key="4" />
     </div>
   </div>
 </template>
 
 <script>
-const PAGE = {
-  1: '/#/gateway?type=mkt',
-  2: '/#/gateway?type=trd',
-  4: '/#/trade'
-}
+import GatewayManagement from './GatewayMgmt'
+import Trade from './Trade'
 export default {
+  components: {
+    GatewayManagement,
+    Trade
+  },
   data() {
     return {
-      showIframe: true
+      curPage: '1'
     }
   },
   methods: {
     handleSelect(index) {
-      this.showIframe = false
-      this.$nextTick(() => {
-        this.showIframe = true
-        this.$nextTick(() => (this.$refs.iframe.src = PAGE[`${index}`]))
-      })
+      this.curPage = index
     }
   }
 }
@@ -71,6 +67,7 @@ export default {
   height: 100%;
   width: 100%;
   display: flex;
+  overflow: hidden;
 }
 
 .el-menu.el-menu--horizontal {

@@ -168,7 +168,7 @@ export default {
   mounted() {},
   computed: {
     flexibleTblHeight() {
-      return document.body.clientHeight - 400
+      return document.body.clientHeight - 460
     }
   }
 }
