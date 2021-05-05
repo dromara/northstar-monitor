@@ -220,10 +220,10 @@ export default {
       gatewayMgmtApi.create(obj).then(this.updateList)
     },
     connect(row) {
-      gatewayMgmtApi.connect(row.gatewayId)
+      gatewayMgmtApi.connect(row.gatewayId).then(this.updateList)
     },
     disconnect(row) {
-      gatewayMgmtApi.disconnect(row.gatewayId)
+      gatewayMgmtApi.disconnect(row.gatewayId).then(this.updateList)
     }
   }
 }

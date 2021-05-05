@@ -187,10 +187,8 @@ export default {
       return this.gatewayUsage === 'TRADE' ? '账户' : '网关'
     }
   },
-  mounted() {
-    gatewayMgmtApi.findAll('MARKET_DATA').then((data) => {
-      this.linkedGatewayOptions = data
-    })
+  async created() {
+    this.linkedGatewayOptions = await gatewayMgmtApi.findAll('MARKET_DATA')
   },
   watch: {
     gatewayDescription: function (val) {

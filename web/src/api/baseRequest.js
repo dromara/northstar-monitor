@@ -3,10 +3,10 @@ import router from '../router'
 import { Message } from 'element-ui'
 
 // require('promise.prototype.finally').shim()
-
+console.log('App base path: ', process.env.VUE_APP_BASE_PATH)
 // create an axios instance
 const service = axios.create({
-  baseURL: window.baseURL, // url = base url + request url
+  baseURL: process.env.VUE_APP_BASE_PATH, // url = base url + request url
   withCredentials: true, // send cookies when cross-domain requests
   timeout: 3000 // 请求的超时时间
 })
