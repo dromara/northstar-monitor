@@ -6,5 +6,9 @@ export default {
       userName: username,
       password: password
     })
+  },
+
+  test() {
+    return baseService.get('/auth/test')
   }
 }

@@ -17,6 +17,6 @@ export default {
     return baseService.get('/mgt/connection?gatewayId=' + gatewayId)
   },
   disconnect(gatewayId) {
-    return baseService.get('/mgt/gateway?gatewayId=' + gatewayId)
+    return baseService.delete('/mgt/connection?gatewayId=' + gatewayId)
   }
 }

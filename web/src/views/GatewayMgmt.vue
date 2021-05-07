@@ -56,6 +56,7 @@
                 ? 'negative'
                 : ''
             "
+            @click="inspect(scope.row)"
             >{{
               {
                 CONNECTING: '连接中',
@@ -175,7 +176,7 @@ export default {
       search: ''
     }
   },
-  created() {
+  mounted() {
     console.log('GatewayManagement created. Usage:' + this.gatewayUsage)
     const timelyUpdate = () => {
       let timer = setTimeout(timelyUpdate, 5000)
@@ -224,6 +225,9 @@ export default {
     },
     disconnect(row) {
       gatewayMgmtApi.disconnect(row.gatewayId).then(this.updateList)
+    },
+    inspect(row) {
+      console.log(row)
     }
   }
 }

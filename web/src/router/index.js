@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
+import loginServiceApi from '../api/loginServiceApi'
+import { Message } from 'element-ui'
 
 Vue.use(VueRouter)
 
@@ -37,6 +39,26 @@ const routes = [
 
 const router = new VueRouter({
   routes
+})
+
+router.beforeEach(async (to, from, next) => {
+  if (to.name === 'login') {
+    next()
+    return
+  }
+  try {
+    console.log('test auth')
+    await loginServiceApi.test()
+    next()
+  } catch (e) {
+    console.log('test fail')
+    Message({
+      type: 'error',
+      message: '认证失败！请登陆！',
+      duration: 3000
+    })
+    next('/')
+  }
 })
 
 export default router

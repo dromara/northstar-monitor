@@ -1,21 +1,19 @@
 <template>
   <div class="ns-trade">
     <div class="ns-trade__account-profile">
-      <el-dropdown
-        :style="{ 'margin-left': '10px' }"
-        class="ns-trade--account-option"
+      <el-select
+        class="ns-trade__account"
+        v-model="currentAccount"
+        placeholder="选择账户"
       >
-        <el-button>
-          账户<i class="el-icon-arrow-down el-icon--right"></i>
-        </el-button>
-        <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>黄金糕</el-dropdown-item>
-          <el-dropdown-item>狮子头</el-dropdown-item>
-          <el-dropdown-item>螺蛳粉</el-dropdown-item>
-          <el-dropdown-item>双皮奶</el-dropdown-item>
-          <el-dropdown-item>蚵仔煎</el-dropdown-item>
-        </el-dropdown-menu>
-      </el-dropdown>
+        <el-option
+          v-for="item in accountOptions"
+          :key="item.gatewayId"
+          :label="item.gatewayId"
+          :value="item.gatewayId"
+        >
+        </el-option>
+      </el-select>
       <div class="ns-trade__account-description">
         权益：{{ account.balance }}
       </div>
@@ -99,6 +97,8 @@
 import NsButton from '@/components/TradeButton'
 import NsPriceBoard from '@/components/PriceBoard'
 import NsAccountDetail from '@/components/AccountDetail'
+import gatewayMgmtApi from '../api/gatewayMgmtServiceApi'
+
 export default {
   name: 'Trade',
   components: {
@@ -108,20 +108,8 @@ export default {
   },
   data() {
     return {
-      symbolList: [
-        {
-          symbol: 'rb2102',
-          label: '螺纹2102'
-        },
-        {
-          symbol: 'rb2103',
-          label: '螺纹2103'
-        },
-        {
-          symbol: 'rb2104',
-          label: '螺纹2104'
-        }
-      ],
+      accountOptions: [],
+      symbolList: [],
       priceOptionList: [
         {
           label: '对手价',
@@ -145,26 +133,20 @@ export default {
       dealPrice: '',
       dealPriceType: '',
       curTab: 'position',
+      currentAccount: '',
       account: {
         balance: 0,
         available: 0,
-        positionDescription: [
-          {
-            symbol: 'rb2103',
-            volume: '5',
-
-            availableVol: '3',
-            openPrice: '1234',
-            positionProfit: '1234'
-          }
-        ]
+        positionDescription: []
       }
     }
   },
   methods: {
     onPositionChosen() {}
   },
-  created() {},
+  async created() {
+    this.accountOptions = await gatewayMgmtApi.findAll('TRADE')
+  },
   mounted() {},
   computed: {
     flexibleTblHeight() {
@@ -186,7 +168,7 @@ export default {
 }
 .ns-trade__account {
   width: 100%;
-  padding: 10px 0;
+  margin-left: 20px;
 }
 .ns-trade__account-profile {
   display: flex;

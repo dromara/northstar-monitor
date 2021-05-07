@@ -155,60 +155,23 @@ export default {
     tableContentHeight: {
       type: Number,
       default: 100
+    },
+    positionDescription: {
+      type: Array,
+      default: () => []
+    },
+    orderDescription: {
+      type: Array,
+      default: () => []
+    },
+    transactionDescription: {
+      type: Array,
+      default: () => []
     }
   },
   data() {
     return {
-      curTab: 'position',
-      positionDescription: [
-        {
-          symbol: 'rb2103',
-          volume: '5',
-          direction: '多',
-          availableVol: '3',
-          openPrice: '1234',
-          positionProfit: '1234'
-        },
-        {
-          symbol: 'rb2103',
-          volume: '5',
-          direction: '多',
-          availableVol: '3',
-          openPrice: '1234',
-          positionProfit: '1234'
-        },
-        {
-          symbol: 'rb2103',
-          volume: '5',
-          direction: '多',
-          availableVol: '3',
-          openPrice: '1234',
-          positionProfit: '1234'
-        },
-        {
-          symbol: 'rb2103',
-          volume: '5',
-          availableVol: '3',
-          openPrice: '1234',
-          positionProfit: '1234'
-        },
-        {
-          symbol: 'rb2103',
-          volume: '5',
-          availableVol: '3',
-          openPrice: '1234',
-          positionProfit: '1234'
-        },
-        {
-          symbol: 'rb2103',
-          volume: '5',
-          availableVol: '3',
-          openPrice: '1234',
-          positionProfit: '1234'
-        }
-      ],
-      orderDescription: [],
-      transactionDescription: []
+      curTab: 'position'
     }
   }
 }
