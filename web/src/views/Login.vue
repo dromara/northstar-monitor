@@ -39,11 +39,10 @@ export default {
     }
   },
   methods: {
-    login() {
-      loginServiceApi.login(this.userForm.name, this.userForm.pass).then(() => {
-        console.log('登陆成功')
-        this.$router.push({ name: 'workspace' })
-      })
+    async login() {
+      await loginServiceApi.login(this.userForm.name, this.userForm.pass)
+      console.log('登陆成功')
+      this.$router.push({ name: 'workspace' })
     },
     resetForm() {}
   }

@@ -3,8 +3,9 @@
     <div class="ns-trade__account-profile">
       <el-select
         class="ns-trade__account"
-        v-model="currentAccount"
+        v-model="currentAccountId"
         placeholder="选择账户"
+        @change="handleAccountChange"
       >
         <el-option
           v-for="item in accountOptions"
@@ -15,18 +16,16 @@
         </el-option>
       </el-select>
       <div class="ns-trade__account-description">
-        权益：{{ account.balance }}
+        权益：{{ accountBalance | intFormat }}
       </div>
       <div class="ns-trade__account-description">
-        可用：{{ account.available }}
+        可用：{{ accountAvailable | intFormat }}
       </div>
       <div class="ns-trade__account-description">
         使用率：{{
-          account.balance
-            ? parseInt(
-                (100 * (account.balance - account.available)) / account.balance
-              )
-            : 0.0
+          accountBalance
+            ? (accountBalance - accountAvailable) / accountBalance
+            : 0
         }}
         %
       </div>
@@ -99,6 +98,8 @@ import NsPriceBoard from '@/components/PriceBoard'
 import NsAccountDetail from '@/components/AccountDetail'
 import gatewayMgmtApi from '../api/gatewayMgmtServiceApi'
 
+let accountCheckTimer
+
 export default {
   name: 'Trade',
   components: {
@@ -133,24 +134,58 @@ export default {
       dealPrice: '',
       dealPriceType: '',
       curTab: 'position',
-      currentAccount: '',
-      account: {
-        balance: 0,
-        available: 0,
-        positionDescription: []
-      }
+      currentAccountId: ''
     }
   },
   methods: {
-    onPositionChosen() {}
+    onPositionChosen() {},
+    handleAccountChange() {
+      const timelyCheck = () => {
+        accountCheckTimer = setTimeout(() => {
+          if (!this.$store.getters.isAccountConnected(this.currentAccountId)) {
+            this.$message.error(`账户${this.currentAccountId}没有连线`)
+          }
+          timelyCheck()
+        }, 3000)
+      }
+      timelyCheck()
+      console.log(
+        this.$store.getters.getAccountInfoByGatewayId(this.currentAccountId)
+      )
+    }
+  },
+  filters: {
+    intFormat(val) {
+      return val.toString().replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,')
+    }
+  },
+  beforeDestroy() {
+    clearTimeout(accountCheckTimer)
   },
   async created() {
+    gatewayMgmtApi.asyncUpdateContracts()
     this.accountOptions = await gatewayMgmtApi.findAll('TRADE')
   },
-  mounted() {},
   computed: {
     flexibleTblHeight() {
       return document.body.clientHeight - 460
+    },
+    accountInfo() {
+      return this.$store.getters.getAccountInfoByGatewayId(
+        this.currentAccountId
+      )
+    },
+    accountBalance() {
+      if (!this.accountInfo) {
+        return 0
+      }
+      return this.accountInfo.account.balance
+    },
+    accountAvailable() {
+      if (!this.accountInfo) {
+        return 0
+      }
+      return this.accountInfo.account.available
     }
   }
 }
