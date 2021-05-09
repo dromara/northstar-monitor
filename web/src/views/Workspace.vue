@@ -37,6 +37,8 @@
 import GatewayManagement from './GatewayMgmt'
 import SocketConnection from '../components/SocketConnection'
 import Trade from './Trade'
+import gatewayMgmtApi from '../api/gatewayMgmtServiceApi'
+
 export default {
   components: {
     GatewayManagement,
@@ -47,6 +49,9 @@ export default {
     return {
       curPage: '1'
     }
+  },
+  created() {
+    gatewayMgmtApi.asyncUpdateContracts()
   },
   methods: {
     handleSelect(index) {

@@ -3,15 +3,15 @@
     <div class="ns-trade__account-profile">
       <el-select
         class="ns-trade__account"
-        v-model="currentAccountId"
+        v-model="curAccountIndex"
         placeholder="选择账户"
         @change="handleAccountChange"
       >
         <el-option
-          v-for="item in accountOptions"
-          :key="item.gatewayId"
+          v-for="(item, index) in accountOptions"
+          :key="index"
           :label="item.gatewayId"
-          :value="item.gatewayId"
+          :value="index"
         >
         </el-option>
       </el-select>
@@ -33,11 +33,16 @@
     <div class="ns-trade__trade-section">
       <div class="ns-trade-action">
         <div class="ns-trade-action__item">
-          <el-select v-model="dealSymbol" filterable placeholder="请选择合约">
+          <el-select
+            v-model="dealSymbol"
+            filterable
+            placeholder="请选择合约"
+            @change="handleContractChange"
+          >
             <el-option
               v-for="(item, i) in symbolList"
               :key="i"
-              :label="item.label"
+              :label="item.name"
               :value="item.symbol"
             >
             </el-option>
@@ -55,7 +60,12 @@
           </div>
         </div>
         <div class="ns-trade-action__item">
-          <el-select v-model="dealPriceType" filterable placeholder="价格类型">
+          <el-select
+            v-model="dealPriceType"
+            filterable
+            placeholder="价格类型"
+            @change="handleDealPriceTypeChange"
+          >
             <el-option
               v-for="item in priceOptionList"
               :key="item.type"
@@ -67,9 +77,10 @@
         </div>
         <div class="ns-trade-action__item">
           <el-input
-            v-model="dealPrice"
+            v-model="limitPrice"
             placeholder="委托价"
             :disabled="dealPriceType !== 'CUSTOM_PRICE'"
+            type="number"
           ></el-input>
         </div>
       </div>
@@ -79,13 +90,21 @@
     </div>
     <div class="ns-trade__trade-btn-wrap">
       <div class="ns-trade-button">
-        <NsButton :price="'12345'" :color="'rgba(196, 68, 66, 1)'" />
+        <NsButton
+          :price="limitPrice || '12345'"
+          :color="'rgba(196, 68, 66, 1)'"
+          :label="'买开'"
+        />
       </div>
       <div class="ns-trade-button">
-        <NsButton :price="'12345'" :color="'rgba(64, 158, 95, 1)'" />
+        <NsButton
+          :price="limitPrice || '12345'"
+          :color="'rgba(64, 158, 95, 1)'"
+          :label="'卖开'"
+        />
       </div>
       <div class="ns-trade-button">
-        <NsButton :price="'优先平今'" :reverseColor="true" />
+        <NsButton :price="'优先平今'" :reverseColor="true" :label="'平仓'" />
       </div>
     </div>
     <NsAccountDetail :tableContentHeight="flexibleTblHeight" />
@@ -132,26 +151,42 @@ export default {
       dealSymbol: '',
       dealVol: '',
       dealPrice: '',
+      limitPrice: '',
       dealPriceType: '',
       curTab: 'position',
+      curAccountIndex: '',
+      currentAccount: {},
       currentAccountId: ''
     }
   },
   methods: {
     onPositionChosen() {},
     handleAccountChange() {
+      this.currentAccount = this.accountOptions[this.curAccountIndex]
+      let gatewayId = this.currentAccount.gatewayId
+
       const timelyCheck = () => {
         accountCheckTimer = setTimeout(() => {
-          if (!this.$store.getters.isAccountConnected(this.currentAccountId)) {
-            this.$message.error(`账户${this.currentAccountId}没有连线`)
+          if (!this.$store.getters.isAccountConnected(gatewayId)) {
+            this.$message.error(`账户${gatewayId}没有连线`)
           }
           timelyCheck()
         }, 3000)
       }
       timelyCheck()
-      console.log(
-        this.$store.getters.getAccountInfoByGatewayId(this.currentAccountId)
+
+      this.symbolList = this.$store.getters.findContractsByType(
+        this.currentAccount.relativeGatewayId,
+        'FUTURES'
       )
+    },
+    handleContractChange() {
+      console.log(this.dealSymbol)
+    },
+    handleDealPriceTypeChange() {
+      if (this.dealPriceType !== 'CUSTOM_PRICE') {
+        this.limitPrice = ''
+      }
     }
   },
   filters: {
@@ -163,7 +198,6 @@ export default {
     clearTimeout(accountCheckTimer)
   },
   async created() {
-    gatewayMgmtApi.asyncUpdateContracts()
     this.accountOptions = await gatewayMgmtApi.findAll('TRADE')
   },
   computed: {

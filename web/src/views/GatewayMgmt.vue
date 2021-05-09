@@ -156,6 +156,8 @@
 import NsGatewayForm from '@/components/GatewayForm'
 import gatewayMgmtApi from '../api/gatewayMgmtServiceApi'
 
+let timer
+
 export default {
   components: {
     NsGatewayForm
@@ -175,10 +177,13 @@ export default {
       search: ''
     }
   },
+  beforeDestroy() {
+    clearTimeout(timer)
+  },
   mounted() {
     console.log('GatewayManagement created. Usage:' + this.gatewayUsage)
     const timelyUpdate = () => {
-      let timer = setTimeout(timelyUpdate, 5000)
+      timer = setTimeout(timelyUpdate, 5000)
       this.updateList().catch(() => clearTimeout(timer))
     }
     timelyUpdate()
