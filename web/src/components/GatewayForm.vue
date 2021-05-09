@@ -1,10 +1,10 @@
 <template>
   <el-dialog
     :title="isUpdateMode ? '修改' : '新增'"
-    :visible="visible"
+    :visible.sync="dialogVisible"
     width="768px"
     :close-on-click-modal="false"
-    @close="() => $emit('update:visible', false)"
+    :show-close="false"
   >
     <NsCtpForm
       :visible.sync="ctpFormVisible"
@@ -108,11 +108,12 @@
       </el-row>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="() => $emit('update:visible', false)">取 消</el-button>
+      <el-button @click="close">取 消</el-button>
       <el-button
         type="primary"
         @click="gatewaySettingConfig"
         :disabled="!form.gatewayType"
+        :ctpSettingsSrc="form.settings"
         >{{ typeLabel }}配置</el-button
       >
       <el-button type="primary" @click="saveGateway">保 存</el-button>
@@ -168,6 +169,7 @@ export default {
           { required: true, message: '不能为空', trigger: 'blur' }
         ]
       },
+      dialogVisible: false,
       ctpFormVisible: false,
       form: {
         gatewayId: '',
@@ -191,8 +193,16 @@ export default {
     this.linkedGatewayOptions = await gatewayMgmtApi.findAll('MARKET_DATA')
   },
   watch: {
-    gatewayDescription: function (val) {
-      Object.assign(this.form, val)
+    visible: function (val) {
+      if (val) {
+        this.dialogVisible = val
+        Object.assign(this.form, this.gatewayDescription)
+      }
+    },
+    dialogVisible: function (val) {
+      if (!val) {
+        this.$emit('update:visible', val)
+      }
     }
   },
   methods: {
@@ -215,12 +225,15 @@ export default {
           let obj = {}
           Object.assign(obj, this.form)
           this.$emit('onSave', obj)
-          this.$emit('update:visible', false)
-          this.$refs.gatewayForm.resetFields()
+          this.close()
         })
         .catch((e) => {
           console.error(e)
         })
+    },
+    close() {
+      this.dialogVisible = false
+      this.form = this.$options.data().form
     }
   }
 }

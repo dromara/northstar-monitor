@@ -56,7 +56,6 @@
                 ? 'negative'
                 : ''
             "
-            @click="inspect(scope.row)"
             >{{
               {
                 CONNECTING: '连接中',
@@ -198,6 +197,7 @@ export default {
     handleCreate() {
       this.dialogFormVisible = true
       this.curTableIndex = -1
+      this.curGatewayDescription = {}
     },
     handleEdit(index, row) {
       console.log(index, row)
@@ -225,9 +225,6 @@ export default {
     },
     disconnect(row) {
       gatewayMgmtApi.disconnect(row.gatewayId).then(this.updateList)
-    },
-    inspect(row) {
-      console.log(row)
     }
   }
 }

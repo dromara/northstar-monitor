@@ -2,11 +2,11 @@
   <el-dialog
     width="768px"
     title="CTP网关配置"
-    :visible="visible"
+    :visible.sync="dialogVisible"
     append-to-body
     :close-on-click-modal="false"
     :show-close="false"
-    @close="onClose"
+    destroy-on-close
   >
     <el-form
       ref="ctpSettings"
@@ -17,7 +17,7 @@
     >
       <el-row>
         <el-col :span="8">
-          <el-form-item label="网关账户" :required="true" prop="userId">
+          <el-form-item label="网关账户" prop="userId">
             <el-input
               v-model="ctpSettings.userId"
               autocomplete="off"
@@ -25,7 +25,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="8">
-          <el-form-item label="网关密码" :required="true" prop="password">
+          <el-form-item label="网关密码" prop="password">
             <el-input
               v-model="ctpSettings.password"
               type="password"
@@ -38,7 +38,6 @@
           <el-form-item
             label="期货公司编码"
             label-width="130px"
-            :required="true"
             prop="brokerId"
           >
             <el-input
@@ -51,12 +50,12 @@
 
       <el-row>
         <el-col :span="8">
-          <el-form-item label="网关IP" :required="true" prop="host">
+          <el-form-item label="网关IP" prop="host">
             <el-input v-model="ctpSettings.host" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="6">
-          <el-form-item label="网关端口" :required="true" prop="port">
+          <el-form-item label="网关端口" prop="port">
             <el-input
               v-model="ctpSettings.port"
               autocomplete="off"
@@ -65,7 +64,7 @@
           </el-form-item>
         </el-col>
         <el-col :span="10">
-          <el-form-item label="授权码" :required="true" prop="authCode">
+          <el-form-item label="授权码" prop="authCode">
             <el-input
               v-model="ctpSettings.authCode"
               autocomplete="off"
@@ -75,7 +74,7 @@
       </el-row>
       <el-row>
         <el-col :span="11">
-          <el-form-item label="AppID" :required="true" prop="appId">
+          <el-form-item label="AppID" prop="appId">
             <el-input v-model="ctpSettings.appId" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
@@ -83,7 +82,6 @@
           <el-form-item
             label="UserProductInfo"
             label-width="150px"
-            :required="true"
             prop="userProductInfo"
           >
             <el-input
@@ -95,7 +93,7 @@
       </el-row>
     </el-form>
     <div slot="footer" class="dialog-footer">
-      <el-button @click="() => $emit('update:visible', false)">取 消</el-button>
+      <el-button @click="close">取 消</el-button>
       <el-button type="primary" @click="saveCtpSetting">保 存</el-button>
     </div>
   </el-dialog>
@@ -131,6 +129,7 @@ export default {
         ],
         appId: [{ required: true, message: '不能为空', trigger: 'blur' }]
       },
+      dialogVisible: false,
       ctpSettings: {
         userId: '',
         password: '',
@@ -144,13 +143,22 @@ export default {
     }
   },
   watch: {
-    ctpSettingsSrc: function (val) {
-      Object.assign(this.ctpSettings, val)
+    visible: function (val) {
+      if (val) {
+        this.dialogVisible = val
+        Object.assign(this.ctpSettings, this.ctpSettingsSrc)
+      }
+    },
+    dialogVisible: function (val) {
+      if (!val) {
+        this.$emit('update:visible', val)
+      }
     }
   },
   methods: {
-    onClose() {
-      this.$emit('update:visible', false)
+    close() {
+      this.dialogVisible = false
+      this.ctpSettings = this.$options.data().ctpSettings
     },
     saveCtpSetting() {
       this.ctpSettings.mdHost = this.ctpSettings.host
@@ -162,8 +170,7 @@ export default {
           let obj = {}
           Object.assign(obj, this.ctpSettings)
           this.$emit('onSave', obj)
-          this.$emit('update:visible', false)
-          this.$refs.ctpSettings.resetFields()
+          this.close()
         }
       })
     }
