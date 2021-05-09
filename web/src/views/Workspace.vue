@@ -29,15 +29,18 @@
       />
       <Trade v-if="curPage === '4'" :key="4" />
     </div>
+    <socket-connection />
   </div>
 </template>
 
 <script>
 import GatewayManagement from './GatewayMgmt'
+import SocketConnection from '../components/SocketConnection'
 import Trade from './Trade'
 export default {
   components: {
     GatewayManagement,
+    SocketConnection,
     Trade
   },
   data() {
