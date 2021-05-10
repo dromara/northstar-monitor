@@ -34,7 +34,7 @@
       <div class="ns-trade-action">
         <div class="ns-trade-action__item">
           <el-select
-            v-model="dealSymbol"
+            v-model="symbolListIndex"
             filterable
             placeholder="请选择合约"
             @change="handleContractChange"
@@ -43,7 +43,7 @@
               v-for="(item, i) in symbolList"
               :key="i"
               :label="item.name"
-              :value="item.symbol"
+              :value="i"
             >
             </el-option>
           </el-select>
@@ -85,20 +85,20 @@
         </div>
       </div>
       <div class="ns-trade-info">
-        <NsPriceBoard />
+        <NsPriceBoard :tick="$store.state.marketCurrentDataModule.curTick" />
       </div>
     </div>
     <div class="ns-trade__trade-btn-wrap">
       <div class="ns-trade-button">
         <NsButton
-          :price="limitPrice || '12345'"
+          :price="bkPrice ? bkPrice.toString() : '0'"
           :color="'rgba(196, 68, 66, 1)'"
           :label="'买开'"
         />
       </div>
       <div class="ns-trade-button">
         <NsButton
-          :price="limitPrice || '12345'"
+          :price="skPrice ? skPrice.toString() : '0'"
           :color="'rgba(64, 158, 95, 1)'"
           :label="'卖开'"
         />
@@ -154,6 +154,7 @@ export default {
       limitPrice: '',
       dealPriceType: '',
       curTab: 'position',
+      symbolListIndex: '',
       curAccountIndex: '',
       currentAccount: {},
       currentAccountId: ''
@@ -165,9 +166,14 @@ export default {
       this.currentAccount = this.accountOptions[this.curAccountIndex]
       let gatewayId = this.currentAccount.gatewayId
 
+      clearTimeout(accountCheckTimer)
       const timelyCheck = () => {
         accountCheckTimer = setTimeout(() => {
-          if (!this.$store.getters.isAccountConnected(gatewayId)) {
+          if (
+            !this.$store.getters.isAccountConnected(
+              this.currentAccount.gatewayId
+            )
+          ) {
             this.$message.error(`账户${gatewayId}没有连线`)
           }
           timelyCheck()
@@ -181,6 +187,11 @@ export default {
       )
     },
     handleContractChange() {
+      this.dealSymbol = this.symbolList[this.symbolListIndex].symbol
+      this.$store.commit(
+        'updateFocusUnifiedSymbol',
+        this.symbolList[this.symbolListIndex].unifiedsymbol
+      )
       console.log(this.dealSymbol)
     },
     handleDealPriceTypeChange() {
@@ -220,6 +231,34 @@ export default {
         return 0
       }
       return this.accountInfo.account.available
+    },
+    curContract() {
+      if (this.dealSymbol) {
+        return this.symbolList[this.symbolListIndex]
+      }
+      return null
+    },
+    bkPrice() {
+      return {
+        COUNTERPARTY_PRICE: this.$store.state.marketCurrentDataModule.curTick
+          .askpriceList[0],
+        WAITING_PRICE: this.$store.state.marketCurrentDataModule.curTick
+          .bidpriceList[0],
+        FIGHTING_PRICE: this.$store.state.marketCurrentDataModule.curTick
+          .upperlimit,
+        CUSTOM_PRICE: this.limitPrice
+      }[this.dealPriceType]
+    },
+    skPrice() {
+      return {
+        COUNTERPARTY_PRICE: this.$store.state.marketCurrentDataModule.curTick
+          .bidpriceList[0],
+        WAITING_PRICE: this.$store.state.marketCurrentDataModule.curTick
+          .askpriceList[0],
+        FIGHTING_PRICE: this.$store.state.marketCurrentDataModule.curTick
+          .lowerlimit,
+        CUSTOM_PRICE: this.limitPrice
+      }[this.dealPriceType]
     }
   }
 }

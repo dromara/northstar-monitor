@@ -109,6 +109,12 @@
 
 <script>
 export default {
+  props: {
+    tick: {
+      type: Object,
+      default: () => {}
+    }
+  },
   data() {
     return {
       askPrice: [1234, 1235, 1236, 1237, 1238],
@@ -119,17 +125,15 @@ export default {
       volume: 120
     }
   },
-  computed: {
-    // askPrice1: () => this.askPrice[0],
-    // askPrice2: () => this.askPrice[1],
-    // askPrice3: () => this.askPrice[2],
-    // askPrice4: () => this.askPrice[3],
-    // askPrice5: () => this.askPrice[4],
-    // bidPrice1: () => this.bidPrice[0],
-    // bidPrice2: () => this.bidPrice[1],
-    // bidPrice3: () => this.bidPrice[2],
-    // bidPrice4: () => this.bidPrice[3],
-    // bidPrice5: () => this.bidPrice[4]
+  watch: {
+    tick: function (tick) {
+      this.askVol = tick.askvolumeList
+      this.askPrice = tick.askpriceList
+      this.bidPrice = tick.bidpriceList
+      this.bidVol = tick.bidvolumeList
+      this.lastPrice = tick.lastprice
+      this.volume = tick.volumedelta
+    }
   }
 }
 </script>
