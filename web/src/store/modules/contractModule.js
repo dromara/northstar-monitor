@@ -5,6 +5,16 @@ const PRODUCT_CLASS_TYPE = {
   2: 'FUTURES',
   3: 'OPTION'
 }
+
+const convertToInt = (str) => {
+  let alphabic = str.replace(/\d+/, '')
+  let numeric = str.replace(/[^\d]+/, '')
+  let result = ''
+  for (let i = 0; i < alphabic.length; i++) {
+    result += alphabic.charAt(i).charCodeAt()
+  }
+  return parseInt(result + numeric)
+}
 const contractModule = {
   state: () => ({
     gatewayContractMap: {}
@@ -43,7 +53,9 @@ const contractModule = {
         throw new Error('没有找到网关' + gatewayId)
       }
       let contractMap = state.gatewayContractMap[gatewayId][type]
-      return [...contractMap].map((i) => i[1])
+      return [...contractMap]
+        .map((i) => i[1])
+        .sort((a, b) => convertToInt(a.symbol) - convertToInt(b.symbol))
     }
   }
 }

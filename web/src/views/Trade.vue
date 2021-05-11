@@ -3,7 +3,7 @@
     <div class="ns-trade__account-profile">
       <el-select
         class="ns-trade__account"
-        v-model="curAccountIndex"
+        v-model="currentAccountId"
         placeholder="选择账户"
         @change="handleAccountChange"
       >
@@ -11,7 +11,7 @@
           v-for="(item, index) in accountOptions"
           :key="index"
           :label="item.gatewayId"
-          :value="index"
+          :value="item.gatewayId"
         >
         </el-option>
       </el-select>
@@ -129,6 +129,7 @@ export default {
   data() {
     return {
       accountOptions: [],
+      accountMap: {},
       symbolList: [],
       priceOptionList: [
         {
@@ -155,26 +156,17 @@ export default {
       dealPriceType: '',
       curTab: 'position',
       symbolListIndex: '',
-      curAccountIndex: '',
-      currentAccount: {},
       currentAccountId: ''
     }
   },
   methods: {
     onPositionChosen() {},
     handleAccountChange() {
-      this.currentAccount = this.accountOptions[this.curAccountIndex]
-      let gatewayId = this.currentAccount.gatewayId
-
       clearTimeout(accountCheckTimer)
       const timelyCheck = () => {
         accountCheckTimer = setTimeout(() => {
-          if (
-            !this.$store.getters.isAccountConnected(
-              this.currentAccount.gatewayId
-            )
-          ) {
-            this.$message.error(`账户${gatewayId}没有连线`)
+          if (!this.$store.getters.isAccountConnected(this.currentAccountId)) {
+            this.$message.error(`账户${this.currentAccountId}没有连线`)
           }
           timelyCheck()
         }, 3000)
@@ -184,6 +176,11 @@ export default {
       this.symbolList = this.$store.getters.findContractsByType(
         this.currentAccount.relativeGatewayId,
         'FUTURES'
+      )
+
+      this.$store.commit(
+        'updateFocusMarketGatewayId',
+        this.currentAccount.relativeGatewayId
       )
     },
     handleContractChange() {
@@ -207,18 +204,23 @@ export default {
   },
   beforeDestroy() {
     clearTimeout(accountCheckTimer)
+    this.$store.commit('resetMarketCurrentDataModule')
   },
   async created() {
     this.accountOptions = await gatewayMgmtApi.findAll('TRADE')
+    this.accountOptions.forEach((i) => {
+      this.accountMap[i.gatewayId] = i
+    })
   },
   computed: {
     flexibleTblHeight() {
       return document.body.clientHeight - 460
     },
+    currentAccount() {
+      return this.accountMap[this.currentAccountId]
+    },
     accountInfo() {
-      return this.$store.getters.getAccountInfoByGatewayId(
-        this.currentAccountId
-      )
+      return this.$store.getters.getAccountById(this.currentAccountId)
     },
     accountBalance() {
       if (!this.accountInfo) {

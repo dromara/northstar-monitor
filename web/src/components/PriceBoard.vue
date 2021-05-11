@@ -117,12 +117,12 @@ export default {
   },
   data() {
     return {
-      askPrice: [1234, 1235, 1236, 1237, 1238],
-      askVol: [12, 135, 12, 0, 12, 23],
-      bidPrice: [1233, 1232, 1231, 1230, 1229],
-      bidVol: [12, 135, 12, 0, 12, 35],
-      lastPrice: 1234,
-      volume: 120
+      askPrice: [0, 0, 0, 0, 0],
+      askVol: [0, 0, 0, 0, 0],
+      bidPrice: [0, 0, 0, 0, 0],
+      bidVol: [0, 0, 0, 0, 0],
+      lastPrice: 0,
+      volume: 0
     }
   },
   watch: {
@@ -161,5 +161,7 @@ export default {
 .ns-price-board__row--highlight {
   border-top: 1px solid rgb(206, 48, 48);
   border-bottom: 1px solid rgb(206, 48, 48);
+  font-weight: bolder;
+  font-size: 14px;
 }
 </style>
