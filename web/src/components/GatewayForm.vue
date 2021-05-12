@@ -123,7 +123,7 @@
 
 <script>
 import NsCtpForm from '@/components/CtpForm'
-import gatewayMgmtApi from '../api/gatewayMgmtServiceApi'
+import gatewayMgmtApi from '../api/gatewayMgmtApi'
 const GATEWAY_ADAPTER = {
   CTP: 'xyz.redtorch.gateway.ctp.x64v6v3v15v.CtpGatewayAdapter',
   IB: ''

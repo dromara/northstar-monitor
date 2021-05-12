@@ -154,7 +154,7 @@
 
 <script>
 import NsGatewayForm from '@/components/GatewayForm'
-import gatewayMgmtApi from '../api/gatewayMgmtServiceApi'
+import gatewayMgmtApi from '../api/gatewayMgmtApi'
 
 let timer
 

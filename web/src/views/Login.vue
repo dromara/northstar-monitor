@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import loginServiceApi from '@/api/loginServiceApi'
+import loginApi from '@/api/loginApi'
 export default {
   data() {
     return {
@@ -40,7 +40,7 @@ export default {
   },
   methods: {
     async login() {
-      await loginServiceApi.login(this.userForm.name, this.userForm.pass)
+      await loginApi.login(this.userForm.name, this.userForm.pass)
       console.log('登陆成功')
       this.$router.push({ name: 'workspace' })
     },

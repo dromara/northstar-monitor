@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import loginServiceApi from '../api/loginServiceApi'
+import loginApi from '../api/loginApi'
 import { Message } from 'element-ui'
 
 Vue.use(VueRouter)
@@ -48,7 +48,7 @@ router.beforeEach(async (to, from, next) => {
   }
   try {
     console.log('test auth')
-    await loginServiceApi.test()
+    await loginApi.test()
     next()
   } catch (e) {
     console.log('test fail')

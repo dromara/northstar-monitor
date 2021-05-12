@@ -24,7 +24,7 @@
       <div class="ns-trade__account-description">
         使用率：{{
           accountBalance
-            ? (accountBalance - accountAvailable) / accountBalance
+            ? ((accountBalance - accountAvailable) / accountBalance).toFixed(1)
             : 0
         }}
         %
@@ -94,6 +94,7 @@
           :price="bkPrice ? bkPrice.toString() : '0'"
           :color="'rgba(196, 68, 66, 1)'"
           :label="'买开'"
+          @click.native="buyOpen"
         />
       </div>
       <div class="ns-trade-button">
@@ -101,10 +102,16 @@
           :price="skPrice ? skPrice.toString() : '0'"
           :color="'rgba(64, 158, 95, 1)'"
           :label="'卖开'"
+          @click.native="sellOpen"
         />
       </div>
       <div class="ns-trade-button">
-        <NsButton :price="'优先平今'" :reverseColor="true" :label="'平仓'" />
+        <NsButton
+          :price="'优先平今'"
+          :reverseColor="true"
+          :label="'平仓'"
+          @click.native="closePosition"
+        />
       </div>
     </div>
     <NsAccountDetail :tableContentHeight="flexibleTblHeight" />
@@ -115,7 +122,8 @@
 import NsButton from '@/components/TradeButton'
 import NsPriceBoard from '@/components/PriceBoard'
 import NsAccountDetail from '@/components/AccountDetail'
-import gatewayMgmtApi from '../api/gatewayMgmtServiceApi'
+import gatewayMgmtApi from '../api/gatewayMgmtApi'
+import tradeOprApi from '../api/tradeOprApi'
 
 let accountCheckTimer
 
@@ -184,18 +192,32 @@ export default {
       )
     },
     handleContractChange() {
-      this.dealSymbol = this.symbolList[this.symbolListIndex].symbol
-      this.$store.commit(
-        'updateFocusUnifiedSymbol',
-        this.symbolList[this.symbolListIndex].unifiedsymbol
-      )
+      this.dealSymbol = this.symbolList[this.symbolListIndex].unifiedsymbol
+      this.$store.commit('updateFocusUnifiedSymbol', this.dealSymbol)
       console.log(this.dealSymbol)
     },
     handleDealPriceTypeChange() {
       if (this.dealPriceType !== 'CUSTOM_PRICE') {
         this.limitPrice = ''
       }
-    }
+    },
+    buyOpen() {
+      tradeOprApi.buyOpen(
+        this.currentAccountId,
+        this.dealSymbol,
+        this.bkPrice,
+        this.dealVol
+      )
+    },
+    sellOpen() {
+      tradeOprApi.sellOpen(
+        this.currentAccountId,
+        this.dealSymbol,
+        this.bkPrice,
+        this.dealVol
+      )
+    },
+    closePosition() {}
   },
   filters: {
     intFormat(val) {
