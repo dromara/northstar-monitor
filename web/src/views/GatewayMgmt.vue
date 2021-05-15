@@ -51,9 +51,9 @@
           <span
             :class="
               scope.row.connectionState === 'CONNECTED'
-                ? 'positive'
+                ? 'color-green'
                 : scope.row.connectionState === 'DISCONNECTED'
-                ? 'negative'
+                ? 'color-red'
                 : ''
             "
             >{{

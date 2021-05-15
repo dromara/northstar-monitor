@@ -5,6 +5,7 @@ html,body{
     background-color: #545c64;
     color: white;
     font-size: 14px;
+    user-select: none;
 }
 
 .ns-page {
@@ -36,14 +37,10 @@ div::-webkit-scrollbar-track {/*滚动条里面轨道*/
     background: rgba(0,0,0,0.1);
 }
 
-tr:hover {
-    background-color: yellow;
-}
-
-.negative {
+.color-red {
     color: #ee9090;
 }
 
-.positive {
+.color-green {
     color:#93c57a;
 }

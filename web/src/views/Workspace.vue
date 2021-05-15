@@ -37,7 +37,7 @@
 import GatewayManagement from './GatewayMgmt'
 import SocketConnection from '../components/SocketConnection'
 import Trade from './Trade'
-import gatewayMgmtApi from '../api/gatewayMgmtApi'
+import dataSyncApi from '../api/dataSyncApi'
 
 export default {
   components: {
@@ -51,7 +51,7 @@ export default {
     }
   },
   created() {
-    gatewayMgmtApi.asyncUpdateContracts()
+    dataSyncApi.dataSync()
   },
   methods: {
     handleSelect(index) {

@@ -18,8 +18,5 @@ export default {
   },
   disconnect(gatewayId) {
     return baseService.delete('/mgt/connection?gatewayId=' + gatewayId)
-  },
-  asyncUpdateContracts() {
-    return baseService.get('/mgt/contracts/async')
   }
 }

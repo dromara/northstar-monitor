@@ -21,21 +21,19 @@ export default {
       gatewayId: gatewayId
     })
   },
-  closeLongPosition(gatewayId, unifiedSymbol, price, volume, stopPrice) {
+  closeLongPosition(gatewayId, unifiedSymbol, price, volume) {
     baseService.post('/trade/submit', {
       contractUnifiedSymbol: unifiedSymbol,
       price: price,
-      stopPrice: stopPrice,
       volume: volume,
       tradeOpr: 'SP',
       gatewayId: gatewayId
     })
   },
-  closeShortPosition(gatewayId, unifiedSymbol, price, volume, stopPrice) {
+  closeShortPosition(gatewayId, unifiedSymbol, price, volume) {
     baseService.post('/trade/submit', {
       contractUnifiedSymbol: unifiedSymbol,
       price: price,
-      stopPrice: stopPrice,
       volume: volume,
       tradeOpr: 'BP',
       gatewayId: gatewayId

@@ -16,15 +16,18 @@
         </el-option>
       </el-select>
       <div class="ns-trade__account-description">
-        权益：{{ accountBalance | intFormat }}
+        权益：{{ parseInt(accountBalance) | intFormat }}
       </div>
       <div class="ns-trade__account-description">
-        可用：{{ accountAvailable | intFormat }}
+        可用：{{ parseInt(accountAvailable) | intFormat }}
       </div>
       <div class="ns-trade__account-description">
         使用率：{{
           accountBalance
-            ? ((accountBalance - accountAvailable) / accountBalance).toFixed(1)
+            ? (
+                ((accountBalance - accountAvailable) * 100) /
+                accountBalance
+              ).toFixed(1)
             : 0
         }}
         %
@@ -34,7 +37,7 @@
       <div class="ns-trade-action">
         <div class="ns-trade-action__item">
           <el-select
-            v-model="symbolListIndex"
+            v-model="dealSymbol"
             filterable
             placeholder="请选择合约"
             @change="handleContractChange"
@@ -43,7 +46,7 @@
               v-for="(item, i) in symbolList"
               :key="i"
               :label="item.name"
-              :value="i"
+              :value="item.unifiedsymbol"
             >
             </el-option>
           </el-select>
@@ -91,7 +94,7 @@
     <div class="ns-trade__trade-btn-wrap">
       <div class="ns-trade-button">
         <NsButton
-          :price="bkPrice ? bkPrice.toString() : '0'"
+          :price="`${bkPrice || 0}`"
           :color="'rgba(196, 68, 66, 1)'"
           :label="'买开'"
           @click.native="buyOpen"
@@ -99,7 +102,7 @@
       </div>
       <div class="ns-trade-button">
         <NsButton
-          :price="skPrice ? skPrice.toString() : '0'"
+          :price="`${skPrice || 0}`"
           :color="'rgba(64, 158, 95, 1)'"
           :label="'卖开'"
           @click.native="sellOpen"
@@ -107,14 +110,21 @@
       </div>
       <div class="ns-trade-button">
         <NsButton
-          :price="'优先平今'"
+          :price="`${closePrice || '优先平今'}`"
           :reverseColor="true"
           :label="'平仓'"
           @click.native="closePosition"
         />
       </div>
     </div>
-    <NsAccountDetail :tableContentHeight="flexibleTblHeight" />
+    <NsAccountDetail
+      :tableContentHeight="flexibleTblHeight"
+      :positionDescription="$store.state.accountModule.curInfo.positions"
+      :orderDescription="$store.getters.orders"
+      :transactionDescription="$store.state.accountModule.curInfo.transactions"
+      @chosenPosition="onPositionChosen"
+      @cancelOrder="onCancelOrder"
+    />
   </div>
 </template>
 
@@ -163,13 +173,16 @@ export default {
       limitPrice: '',
       dealPriceType: '',
       curTab: 'position',
-      symbolListIndex: '',
-      currentAccountId: ''
+      symbolIndexMap: {},
+      currentAccountId: '',
+      currentPosition: ''
     }
   },
   methods: {
-    onPositionChosen() {},
     handleAccountChange() {
+      if (!this.currentAccountId) {
+        return
+      }
       clearTimeout(accountCheckTimer)
       const timelyCheck = () => {
         accountCheckTimer = setTimeout(() => {
@@ -186,13 +199,15 @@ export default {
         'FUTURES'
       )
 
+      this.$store.commit('resetMarketCurrentDataModule')
       this.$store.commit(
         'updateFocusMarketGatewayId',
         this.currentAccount.relativeGatewayId
       )
+      this.$store.commit('updateCurAccountId', this.currentAccountId)
     },
     handleContractChange() {
-      this.dealSymbol = this.symbolList[this.symbolListIndex].unifiedsymbol
+      this.dealPriceType = 'COUNTERPARTY_PRICE'
       this.$store.commit('updateFocusUnifiedSymbol', this.dealSymbol)
       console.log(this.dealSymbol)
     },
@@ -200,6 +215,18 @@ export default {
       if (this.dealPriceType !== 'CUSTOM_PRICE') {
         this.limitPrice = ''
       }
+    },
+    onPositionChosen(pos) {
+      console.log(pos)
+      this.dealVol = pos.position - pos.frozen
+      this.dealSymbol = pos.contract.unifiedsymbol
+      this.currentPosition = pos
+      this.handleContractChange()
+      console.log(this.closePrice)
+    },
+    onCancelOrder(order) {
+      console.log(order)
+      tradeOprApi.cancelOrder(this.currentAccountId, order.orderid)
     },
     buyOpen() {
       tradeOprApi.buyOpen(
@@ -217,7 +244,24 @@ export default {
         this.dealVol
       )
     },
-    closePosition() {}
+    closePosition() {
+      if (this.currentPosition.positiondirection === 2) {
+        tradeOprApi.closeLongPosition(
+          this.currentAccountId,
+          this.dealSymbol,
+          this.closePrice,
+          this.dealVol
+        )
+      }
+      if (this.currentPosition.positiondirection === 3) {
+        tradeOprApi.closeShortPosition(
+          this.currentAccountId,
+          this.dealSymbol,
+          this.closePrice,
+          this.dealVol
+        )
+      }
+    }
   },
   filters: {
     intFormat(val) {
@@ -226,13 +270,14 @@ export default {
   },
   beforeDestroy() {
     clearTimeout(accountCheckTimer)
-    this.$store.commit('resetMarketCurrentDataModule')
   },
   async created() {
+    this.currentAccountId = this.$store.state.accountModule.curAccountId
     this.accountOptions = await gatewayMgmtApi.findAll('TRADE')
     this.accountOptions.forEach((i) => {
       this.accountMap[i.gatewayId] = i
     })
+    this.handleAccountChange()
   },
   computed: {
     flexibleTblHeight() {
@@ -242,25 +287,15 @@ export default {
       return this.accountMap[this.currentAccountId]
     },
     accountInfo() {
-      return this.$store.getters.getAccountById(this.currentAccountId)
+      return this.$store.state.accountModule.curInfo.account
     },
     accountBalance() {
-      if (!this.accountInfo) {
-        return 0
-      }
-      return this.accountInfo.account.balance
+      if (this.accountInfo.balance) return this.accountInfo.balance
+      return 0
     },
     accountAvailable() {
-      if (!this.accountInfo) {
-        return 0
-      }
-      return this.accountInfo.account.available
-    },
-    curContract() {
-      if (this.dealSymbol) {
-        return this.symbolList[this.symbolListIndex]
-      }
-      return null
+      if (this.accountInfo.available) return this.accountInfo.available
+      return 0
     },
     bkPrice() {
       return {
@@ -283,6 +318,23 @@ export default {
           .lowerlimit,
         CUSTOM_PRICE: this.limitPrice
       }[this.dealPriceType]
+    },
+    closePrice() {
+      if (
+        this.currentPosition &&
+        this.currentPosition.positiondirection === 2
+      ) {
+        return this.skPrice
+      }
+      if (
+        this.currentPosition &&
+        this.currentPosition.positiondirection === 3
+      ) {
+        return this.bkPrice
+      }
+      return ''
+      // console.log('当前持仓', this.currentPosition)
+      // return this.bkPrice
     }
   }
 }
