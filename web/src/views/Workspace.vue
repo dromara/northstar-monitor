@@ -27,7 +27,11 @@
         :gatewayUsage="'TRADE'"
         :key="2"
       />
-      <Trade v-if="curPage === '4'" :key="4" />
+      <div class="ns-trmkt-wrapper" v-if="curPage === '4'" :key="4">
+        <Trade />
+        <MarketData />
+      </div>
+      <MarketData v-if="curPage === '3'" :key="3" />
     </div>
     <socket-connection />
   </div>
@@ -36,6 +40,7 @@
 <script>
 import GatewayManagement from './GatewayMgmt'
 import SocketConnection from '../components/SocketConnection'
+import MarketData from './MarketData'
 import Trade from './Trade'
 import dataSyncApi from '../api/dataSyncApi'
 
@@ -43,6 +48,7 @@ export default {
   components: {
     GatewayManagement,
     SocketConnection,
+    MarketData,
     Trade
   },
   data() {
@@ -80,5 +86,9 @@ export default {
 
 .el-menu.el-menu--horizontal {
   border-bottom: none;
+}
+.ns-trmkt-wrapper {
+  display: flex;
+  width: 100%;
 }
 </style>

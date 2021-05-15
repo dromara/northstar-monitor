@@ -12,7 +12,7 @@ import {
   TradeField,
   OrderField,
   NoticeField
-} from '../pb/xyz/redtorch/pb/core_field_pb'
+} from '../lib/xyz/redtorch/pb/core_field_pb'
 import SocketIO from 'socket.io-client'
 export default {
   data() {

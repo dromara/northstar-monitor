@@ -341,7 +341,7 @@ export default {
 <style>
 .ns-trade {
   width: 100%;
-  max-width: 500px;
+  max-width: 450px;
   margin: auto;
   height: 100%;
   display: flex;
