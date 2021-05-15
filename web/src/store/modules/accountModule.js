@@ -25,10 +25,7 @@ const accountModule = {
     updateCurAccountId(state, id) {
       state.curAccountId = id
       if (state[id]) {
-        state.curInfo.account = state[id].account
-        state.curInfo.positions = state[id].positions
-        state.curInfo.orders = state[id].orders
-        state.curInfo.transactions = state[id].transactions
+        state.curInfo = state[id]
       } else {
         state.curInfo = getFromFactory()
       }
@@ -88,9 +85,6 @@ const accountModule = {
         return false
       }
       return new Date().getTime() - state[gatewayId].lastUpdateTime < 3000
-    },
-    orders: (state) => {
-      return state.curInfo.orders
     }
   }
 }

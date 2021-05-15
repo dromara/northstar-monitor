@@ -90,7 +90,7 @@
           >
             <template slot-scope="scope">
               {{
-                `${{ 1: '多', 2: '空' }[scope.row.direction]}${
+                `${{ 1: '多', 2: '空' }[scope.row.direction] || ''}${
                   scope.row.offsetflag === 1 ? '开' : '平'
                 }`
               }}
@@ -112,7 +112,12 @@
           </el-table-column>
           <el-table-column label="撤单" align="center">
             <template slot-scope="scope">
-              <i class="el-icon-delete" @click="cancelOrder(scope.row)"></i>
+              <el-button
+                size="mini"
+                icon="el-icon-delete"
+                @click.native="cancelOrder(scope.row)"
+              >
+              </el-button>
             </template>
           </el-table-column> </el-table
       ></el-tab-pane>
@@ -283,11 +288,14 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .ns-account-detail {
   height: 100%;
   min-height: 300px;
   margin: 0 20px;
   overflow: hidden;
+}
+.el-button {
+  border: none;
 }
 </style>

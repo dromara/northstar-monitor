@@ -120,7 +120,7 @@
     <NsAccountDetail
       :tableContentHeight="flexibleTblHeight"
       :positionDescription="$store.state.accountModule.curInfo.positions"
-      :orderDescription="$store.getters.orders"
+      :orderDescription="$store.state.accountModule.curInfo.orders"
       :transactionDescription="$store.state.accountModule.curInfo.transactions"
       @chosenPosition="onPositionChosen"
       @cancelOrder="onCancelOrder"
@@ -333,8 +333,6 @@ export default {
         return this.bkPrice
       }
       return ''
-      // console.log('当前持仓', this.currentPosition)
-      // return this.bkPrice
     }
   }
 }
@@ -347,6 +345,7 @@ export default {
   margin: auto;
   height: 100%;
   display: flex;
+  overflow: hidden;
   flex-direction: column;
   background-color: rgba(67, 74, 80, 1);
 }
