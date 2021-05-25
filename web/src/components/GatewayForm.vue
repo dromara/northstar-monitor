@@ -70,6 +70,7 @@
               v-model="form.gatewayUsage"
               placeholder="未知"
               @change="onChooseGatewayType"
+              disabled
             >
               <el-option
                 v-if="gatewayUsage === 'MARKET_DATA'"
@@ -78,13 +79,8 @@
               ></el-option>
               <el-option
                 v-if="gatewayUsage === 'TRADE'"
-                label="真实交易"
+                label="交易"
                 value="TRADE"
-              ></el-option>
-              <el-option
-                v-if="gatewayUsage === 'TRADE'"
-                label="模拟交易"
-                value="SIM_TRADE"
               ></el-option>
               <!-- <el-option label="IB网关" value="beijing"></el-option> -->
             </el-select>
@@ -119,7 +115,6 @@
         type="primary"
         @click="gatewaySettingConfig"
         :disabled="!form.gatewayType"
-        :ctpSettingsSrc="form.settings"
         >{{ typeLabel }}配置</el-button
       >
       <el-button type="primary" @click="saveGateway">保 存</el-button>
@@ -201,12 +196,13 @@ export default {
   },
   async created() {
     this.linkedGatewayOptions = await gatewayMgmtApi.findAll('MARKET_DATA')
+    this.form.gatewayUsage = this.gatewayUsage
   },
   watch: {
     visible: function (val) {
       if (val) {
         this.dialogVisible = val
-        Object.assign(this.form, this.gatewayDescription)
+        this.form = Object.assign({}, this.gatewayDescription)
       }
     },
     dialogVisible: function (val) {
@@ -220,7 +216,7 @@ export default {
       this.form.gatewayAdapterType = GATEWAY_ADAPTER[this.form.gatewayType]
     },
     gatewaySettingConfig() {
-      console.log(this.form.gatewayType)
+      console.log(this.form)
       if (this.form.gatewayType === 'CTP') {
         this.ctpFormVisible = true
       }

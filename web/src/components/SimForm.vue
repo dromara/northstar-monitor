@@ -31,7 +31,7 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row>
+      <el-row v-if="!isCreate">
         <el-col :span="9" :offset="1">
           <div class="ns-row-wrapper">模拟账户余额： {{ simBalance }}</div>
         </el-col>
@@ -66,6 +66,10 @@ export default {
     settingsSrc: {
       type: Object,
       default: () => {}
+    },
+    isCreate: {
+      type: Boolean,
+      default: true
     }
   },
   data() {
@@ -75,7 +79,7 @@ export default {
           { required: true, message: '不能为空', trigger: 'blur' }
         ]
       },
-      simBalance: 1000000,
+      simBalance: 0,
       settings: {
         ticksOfCommission: ''
       }
@@ -83,8 +87,12 @@ export default {
   },
   watch: {
     settingsSrc: function (val) {
+      console.log(val)
       Object.assign(this.settings, val)
     }
+  },
+  mounted() {
+    this.settings = this.settingsSrc
   },
   methods: {
     onClose() {

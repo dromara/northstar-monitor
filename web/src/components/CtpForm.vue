@@ -147,6 +147,10 @@ export default {
       if (val) {
         this.dialogVisible = val
         Object.assign(this.ctpSettings, this.ctpSettingsSrc)
+        this.ctpSettings.host =
+          this.ctpSettingsSrc.mdHost || this.ctpSettingsSrc.tdHost
+        this.ctpSettings.port =
+          this.ctpSettingsSrc.mdPort || this.ctpSettingsSrc.tdPort
       }
     },
     dialogVisible: function (val) {
