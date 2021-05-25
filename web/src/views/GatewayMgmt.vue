@@ -194,10 +194,8 @@ export default {
     }
   },
   methods: {
-    updateList() {
-      return gatewayMgmtApi.findAll(this.gatewayUsage).then((data) => {
-        this.tableData = data
-      })
+    async updateList() {
+      this.tableData = await gatewayMgmtApi.findAll(this.gatewayUsage)
     },
     handleCreate() {
       this.dialogFormVisible = true
@@ -210,26 +208,29 @@ export default {
       this.curGatewayDescription = row
       this.dialogFormVisible = true
     },
-    handleDelete(index, row) {
+    async handleDelete(index, row) {
       console.log(index, row)
-      gatewayMgmtApi.remove(row.gatewayId).then(() => {
-        this.updateList()
-      })
+      await gatewayMgmtApi.remove(row.gatewayId)
+      this.updateList()
     },
-    handleSave(obj) {
+    async handleSave(obj) {
       console.log(obj)
       if (this.curTableIndex > -1) {
-        gatewayMgmtApi.update(obj).then(this.updateList)
+        await gatewayMgmtApi.update(obj)
+        this.updateList()
         return
       }
       this.tableData.push(obj)
-      gatewayMgmtApi.create(obj).then(this.updateList)
+      await gatewayMgmtApi.create(obj)
+      this.updateList()
     },
-    connect(row) {
-      gatewayMgmtApi.connect(row.gatewayId).then(this.updateList)
+    async connect(row) {
+      await gatewayMgmtApi.connect(row.gatewayId)
+      this.updateList()
     },
-    disconnect(row) {
-      gatewayMgmtApi.disconnect(row.gatewayId).then(this.updateList)
+    async disconnect(row) {
+      await gatewayMgmtApi.disconnect(row.gatewayId)
+      this.updateList()
     }
   }
 }

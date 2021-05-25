@@ -40,6 +40,7 @@ const accountModule = {
       if (gatewayId === state.curAccountId) {
         state.curInfo.account = acc
       }
+      console.log(acc)
     },
     updatePosition(state, pos) {
       let gatewayId = pos.gatewayid

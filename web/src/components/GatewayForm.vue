@@ -9,7 +9,12 @@
     <NsCtpForm
       :visible.sync="ctpFormVisible"
       :ctpSettingsSrc="form.settings"
-      @onSave="(ctpSettings) => (form.settings = ctpSettings)"
+      @onSave="(settings) => (form.settings = settings)"
+    />
+    <NsSimForm
+      :visible.sync="simFormVisible"
+      :settingsSrc="form.settings"
+      @onSave="(settings) => (form.settings = settings)"
     />
     <el-form
       ref="gatewayForm"
@@ -43,6 +48,7 @@
               @change="onChooseGatewayType"
             >
               <el-option label="CTP" value="CTP"></el-option>
+              <el-option label="SIM" value="SIM"></el-option>
               <!-- <el-option label="IB网关" value="beijing"></el-option> -->
             </el-select>
           </el-form-item>
@@ -123,9 +129,11 @@
 
 <script>
 import NsCtpForm from '@/components/CtpForm'
+import NsSimForm from '@/components/SimForm'
 import gatewayMgmtApi from '../api/gatewayMgmtApi'
 const GATEWAY_ADAPTER = {
   CTP: 'xyz.redtorch.gateway.ctp.x64v6v3v15v.CtpGatewayAdapter',
+  SIM: 'tech.xuanwu.northstar.gateway.sim.SimGatewayLocalImpl',
   IB: ''
 }
 const CONNECTION_STATE = {
@@ -136,7 +144,8 @@ const CONNECTION_STATE = {
 }
 export default {
   components: {
-    NsCtpForm
+    NsCtpForm,
+    NsSimForm
   },
   props: {
     visible: {
@@ -171,6 +180,7 @@ export default {
       },
       dialogVisible: false,
       ctpFormVisible: false,
+      simFormVisible: false,
       form: {
         gatewayId: '',
         description: '',
@@ -210,8 +220,12 @@ export default {
       this.form.gatewayAdapterType = GATEWAY_ADAPTER[this.form.gatewayType]
     },
     gatewaySettingConfig() {
+      console.log(this.form.gatewayType)
       if (this.form.gatewayType === 'CTP') {
         this.ctpFormVisible = true
+      }
+      if (this.form.gatewayType === 'SIM') {
+        this.simFormVisible = true
       }
     },
     async saveGateway() {

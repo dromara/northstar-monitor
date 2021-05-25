@@ -27,6 +27,10 @@ export default {
       let tick = TickField.deserializeBinary(data).toObject()
       this.$store.commit('updateTick', tick)
     })
+    this.socket.on('IDX_TICK', (data) => {
+      let tick = TickField.deserializeBinary(data).toObject()
+      this.$store.commit('updateTick', tick)
+    })
     this.socket.on('BAR', (data) => {
       let bar = BarField.deserializeBinary(data).toObject()
       this.$store.commit('updateBar', bar)
