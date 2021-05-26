@@ -31,23 +31,6 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-row v-if="!isCreate">
-        <el-col :span="9" :offset="1">
-          <div class="ns-row-wrapper">模拟账户余额： {{ simBalance }}</div>
-        </el-col>
-        <el-col :span="6" :offset="3">
-          <el-input
-            v-model="settings.deposit"
-            type="number"
-            autocomplete="off"
-            clearable
-            placeholder="出入金额"
-          ></el-input>
-        </el-col>
-        <el-col :span="3" offset="1">
-          <el-button>出入金</el-button>
-        </el-col>
-      </el-row>
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="() => $emit('update:visible', false)">取 消</el-button>
@@ -79,7 +62,6 @@ export default {
           { required: true, message: '不能为空', trigger: 'blur' }
         ]
       },
-      simBalance: 0,
       settings: {
         ticksOfCommission: ''
       }

@@ -7,6 +7,10 @@
       :isUpdateMode="curTableIndex > -1"
       @onSave="handleSave"
     />
+    <NsSimBalanceForm
+      :visible.sync="simBalanceFormVisible"
+      :simGatewayId="curGatewayDescription.gatewayId"
+    />
     <el-table
       :data="
         tableData.filter(
@@ -94,7 +98,7 @@
         align="center"
       >
       </el-table-column>
-      <el-table-column align="center" width="220px">
+      <el-table-column align="center" width="300px">
         <template slot="header">
           <el-button size="mini" type="primary" @click="handleCreate"
             >新建</el-button
@@ -117,6 +121,15 @@
           >
           <el-button
             size="mini"
+            v-if="
+              scope.row.connectionState === 'CONNECTED' &&
+              scope.row.gatewayType === 'SIM'
+            "
+            @click="handleMoneyIO(scope.row)"
+            >出入金</el-button
+          >
+          <el-button
+            size="mini"
             @click="handleEdit(scope.$index, scope.row)"
             :disabled="scope.row.connectionState !== 'DISCONNECTED'"
             >修改</el-button
@@ -136,13 +149,15 @@
 
 <script>
 import NsGatewayForm from '@/components/GatewayForm'
+import NsSimBalanceForm from '@/components/SimBalanceMgmt'
 import gatewayMgmtApi from '../api/gatewayMgmtApi'
 
 let timer
 
 export default {
   components: {
-    NsGatewayForm
+    NsGatewayForm,
+    NsSimBalanceForm
   },
   props: {
     gatewayUsage: {
@@ -153,6 +168,7 @@ export default {
   data() {
     return {
       dialogFormVisible: false,
+      simBalanceFormVisible: false,
       curTableIndex: -1,
       curGatewayDescription: {},
       tableData: [],
@@ -213,6 +229,11 @@ export default {
     async disconnect(row) {
       await gatewayMgmtApi.disconnect(row.gatewayId)
       this.updateList()
+    },
+    handleMoneyIO(row) {
+      console.log(row)
+      this.curGatewayDescription = row
+      this.simBalanceFormVisible = true
     }
   }
 }

@@ -18,5 +18,10 @@ export default {
   },
   disconnect(gatewayId) {
     return baseService.delete('/mgt/connection?gatewayId=' + gatewayId)
+  },
+  moneyIO(gatewayId, money) {
+    return baseService.post(
+      `/mgt/moneyio?gatewayId=${gatewayId}&money=${money}`
+    )
   }
 }

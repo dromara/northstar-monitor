@@ -78,7 +78,7 @@ const accountModule = {
   actions: {},
   getters: {
     getAccountById: (state) => (gatewayId) => {
-      return state[gatewayId]
+      return state[gatewayId] || {}
     },
     isAccountConnected: (state) => (gatewayId) => {
       if (!state[gatewayId]) {
