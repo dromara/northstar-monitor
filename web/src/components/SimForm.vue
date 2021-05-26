@@ -92,7 +92,7 @@ export default {
     }
   },
   mounted() {
-    this.settings = this.settingsSrc
+    this.settings = this.settingsSrc || {}
   },
   methods: {
     onClose() {

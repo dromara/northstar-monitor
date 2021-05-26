@@ -88,24 +88,6 @@
       >
       </el-table-column>
       <el-table-column
-        v-if="gatewayUsage === 'TRADE'"
-        label="账户用途"
-        prop="gatewayUsage"
-        width="80px"
-        header-align="center"
-        align="center"
-      >
-        <template slot-scope="scope">
-          {{
-            scope.row.gatewayUsage === 'TRADE'
-              ? '真实'
-              : scope.row.gatewayUsage === 'SIM_TRADE'
-              ? '模拟'
-              : ''
-          }}
-        </template>
-      </el-table-column>
-      <el-table-column
         label="适配器类型"
         prop="gatewayAdapterType"
         header-align="center"

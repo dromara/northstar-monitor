@@ -197,12 +197,13 @@ export default {
   async created() {
     this.linkedGatewayOptions = await gatewayMgmtApi.findAll('MARKET_DATA')
     this.form.gatewayUsage = this.gatewayUsage
+    console.log(this.form)
   },
   watch: {
     visible: function (val) {
       if (val) {
         this.dialogVisible = val
-        this.form = Object.assign({}, this.gatewayDescription)
+        Object.assign(this.form, this.gatewayDescription)
       }
     },
     dialogVisible: function (val) {
