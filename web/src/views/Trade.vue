@@ -16,10 +16,10 @@
         </el-option>
       </el-select>
       <div class="ns-trade__account-description">
-        权益：{{ parseInt(accountBalance) | intFormat }}
+        权益：{{ parseInt(accountBalance) | accountingFormatter }}
       </div>
       <div class="ns-trade__account-description">
-        可用：{{ parseInt(accountAvailable) | intFormat }}
+        可用：{{ parseInt(accountAvailable) | accountingFormatter }}
       </div>
       <div class="ns-trade__account-description">
         使用率：{{
@@ -261,11 +261,6 @@ export default {
           this.dealVol
         )
       }
-    }
-  },
-  filters: {
-    intFormat(val) {
-      return val.toString().replace(/\d{1,3}(?=(\d{3})+(\.\d*)?$)/g, '$&,')
     }
   },
   beforeDestroy() {

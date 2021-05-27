@@ -7,9 +7,13 @@ import ElementUI from 'element-ui'
 import './assets/style/index.css'
 import './assets/style/theme/index.css'
 
+import { accountingFormatter } from '@/filter/number-filter'
+
 Vue.use(ElementUI, { size: 'small' })
 
 Vue.config.productionTip = false
+
+Vue.filter('accountingFormatter', accountingFormatter)
 
 // 统一异常处理
 Vue.config.errorHandler = function (e, v) {
