@@ -1,6 +1,31 @@
 /**
  * 保存最近一次的tick与bar数据
  */
+
+const createFromBar = (bar) => {
+  return {
+    open: bar.openprice,
+    low: bar.lowprice,
+    high: bar.highprice,
+    close: bar.closeprice,
+    volume: bar.volumedelta,
+    openInterest: bar.openinterest,
+    timestamp: bar.actiontimestamp
+  }
+}
+
+// const createFromTick = (tick, curMin, curMax, lastBar) => {
+//   return {
+//     open: lastBar.closeprice,
+//     low: Math.min(lastBar.closeprice, tick.lastprice, curMin),
+//     high: Math.max(lastBar.closeprice, tick.lastprice, curMax),
+//     close: tick.lastprice,
+//     volume: tick.volume - lastBar.volume,
+//     openInterest: tick.openinterest,
+//     timestamp: tick.actiontimestamp - (tick.actiontimestamp % 60000)
+//   }
+// }
+
 const marketCurrentDataModule = {
   state: () => ({
     curMarketGatewayId: '',
@@ -13,7 +38,13 @@ const marketCurrentDataModule = {
       lastprice: 0,
       volumedelta: 0
     },
-    curBar: {}
+    chart: null,
+    chartReady: false,
+    loadingHisBar: false,
+    barBuf: [],
+    lastBar: null,
+    curBarH: 0,
+    curBarL: 0
   }),
   mutations: {
     resetMarketCurrentDataModule(state) {
@@ -22,6 +53,7 @@ const marketCurrentDataModule = {
     },
     updateFocusMarketGatewayId(state, gatewayId) {
       state.curMarketGatewayId = gatewayId
+      state.curUnifiedSymbol = ''
       console.log('当前curMarketGatewayId', gatewayId)
     },
     updateFocusUnifiedSymbol(state, unifiedsymbol) {
@@ -36,19 +68,80 @@ const marketCurrentDataModule = {
         return
       }
       state.curTick = tick
+      // if (!state.chartReady) {
+      //   return
+      // }
+
+      // let curBar = createFromTick(
+      //   tick,
+      //   state.curBarL,
+      //   state.curBarH,
+      //   state.lastBar
+      // )
+      // state.curBarH = curBar.high
+      // state.curBarL = curBar.low
+      // console.log(curBar)
+      // state.chart.updateData(curBar)
     },
-    updateBar(state, bar) {
+    updateKLineChart(state, kLineChart) {
+      state.chart = kLineChart
+      console.log('updateKLineChart', state.chart)
+    },
+    updateHisBar(state, bar) {
+      console.log(bar)
+      if (!state.chart) {
+        return
+      }
       if (
         state.curMarketGatewayId !== bar.gatewayid ||
         state.curUnifiedSymbol !== bar.unifiedsymbol
       ) {
         return
       }
-      state.curBar = bar
+      if (bar.closeprice === 0) {
+        if (state.barBuf.length) {
+          state.barBuf.forEach((b) => state.chart.updateData(createFromBar(b)))
+          state.barBuf = []
+        }
+        state.loadingHisBar = false
+        state.chartReady = true
+        return
+      }
+      state.loadingHisBar = true
+      state.chart.updateData(createFromBar(bar))
+      state.lastBar = bar
+      state.curBarH = bar.closeprice
+      state.curBarL = bar.closeprice
+    },
+    updateBar(state, bar) {
+      if (!state.chart) {
+        return
+      }
+      if (
+        state.curMarketGatewayId !== bar.gatewayid ||
+        state.curUnifiedSymbol !== bar.unifiedsymbol
+      ) {
+        return
+      }
+      if (state.loadingHisBar) {
+        state.barBuf.push(bar)
+      } else {
+        state.chart.updateData(createFromBar(bar))
+        state.lastBar = bar
+        state.curBarH = bar.closeprice
+        state.curBarL = bar.closeprice
+      }
     }
   },
   actions: {},
-  getters: {}
+  getters: {
+    curMarketGatewayId: (state) => {
+      return state.curMarketGatewayId
+    },
+    curUnifiedSymbol: (state) => {
+      return state.curUnifiedSymbol
+    }
+  }
 }
 
 export default marketCurrentDataModule

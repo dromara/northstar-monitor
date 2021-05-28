@@ -199,7 +199,6 @@ export default {
         'FUTURES'
       )
 
-      this.$store.commit('resetMarketCurrentDataModule')
       this.$store.commit(
         'updateFocusMarketGatewayId',
         this.currentAccount.relativeGatewayId
@@ -265,6 +264,7 @@ export default {
   },
   beforeDestroy() {
     clearTimeout(accountCheckTimer)
+    this.$store.commit('resetMarketCurrentDataModule')
   },
   async created() {
     this.currentAccountId = this.$store.state.accountModule.curAccountId

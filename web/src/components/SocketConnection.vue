@@ -35,6 +35,10 @@ export default {
       let bar = BarField.deserializeBinary(data).toObject()
       this.$store.commit('updateBar', bar)
     })
+    this.socket.on('HIS_BAR', (data) => {
+      let bar = BarField.deserializeBinary(data).toObject()
+      this.$store.commit('updateHisBar', bar)
+    })
     this.socket.on('ACCOUNT', (data) => {
       let account = AccountField.deserializeBinary(data).toObject()
       this.$store.commit('updateAccount', account)

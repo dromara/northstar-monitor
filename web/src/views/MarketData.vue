@@ -1,10 +1,5 @@
 <template>
   <div class="ns-mktdata">
-    <!-- <div class="ns-mktdata__head">
-      <el-button>1m</el-button>
-      <el-button>1D</el-button>
-      <el-button></el-button>
-    </div> -->
     <div id="update-k-line" class="ns-mktdata__body" />
   </div>
 </template>
@@ -13,32 +8,44 @@
 import { dispose, init } from 'klinecharts'
 import volumePure from '@/lib/indicator/volume-pure'
 import openInterest from '@/lib/indicator/open-interest'
-import generatedKLineDataList from '../generatedKLineDataList'
+
+import dataSyncApi from '@/api/dataSyncApi'
+import { mapGetters } from 'vuex'
+import moment from 'moment'
 
 export default {
   name: 'UpdateKLineChart',
+  data() {
+    return {
+      kLineChart: null
+    }
+  },
   mounted: function () {
     const kLineChart = init('update-k-line')
     kLineChart.addCustomTechnicalIndicator(volumePure)
     kLineChart.addCustomTechnicalIndicator(openInterest)
-    // const updateData = () => {
-    //   setTimeout(() => {
-    //     const dataList = kLineChart.getDataList()
-    //     const lastData = dataList[dataList.length - 1]
-    //     const newData = generatedKLineDataList(
-    //       lastData.timestamp,
-    //       lastData.close,
-    //       1
-    //     )[0]
-    //     newData.timestamp += 60 * 1000
-    //     console.log(newData)
-    //     kLineChart.updateData(newData)
-    //     updateData(kLineChart)
-    //   }, 1000)
-    // }
-    kLineChart.applyNewData(generatedKLineDataList())
     kLineChart.createTechnicalIndicator('CJL', true, { id: 'default' })
     kLineChart.createTechnicalIndicator('OPID', true, { id: 'default' })
+
+    this.$store.commit('updateKLineChart', kLineChart)
+    this.kLineChart = kLineChart
+  },
+  computed: {
+    ...mapGetters(['curMarketGatewayId', 'curUnifiedSymbol'])
+  },
+  watch: {
+    '$store.state.marketCurrentDataModule.curUnifiedSymbol': function (val) {
+      if (val) {
+        let startDate = moment().subtract(7, 'days').format('YYYYMMDD')
+        let endDate = moment().format('YYYYMMDD')
+        dataSyncApi.loadHistoryBars(
+          this.curMarketGatewayId,
+          this.curUnifiedSymbol,
+          startDate,
+          endDate
+        )
+      }
+    }
   },
   methods: {},
   destroyed: function () {
