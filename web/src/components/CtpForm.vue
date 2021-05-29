@@ -146,6 +146,9 @@ export default {
     visible: function (val) {
       if (val) {
         this.dialogVisible = val
+        if (!this.ctpSettingsSrc) {
+          return
+        }
         Object.assign(this.ctpSettings, this.ctpSettingsSrc)
         this.ctpSettings.host =
           this.ctpSettingsSrc.mdHost || this.ctpSettingsSrc.tdHost
