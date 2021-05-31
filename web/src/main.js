@@ -4,8 +4,6 @@ import router from './router'
 import store from './store'
 
 import ElementUI from 'element-ui'
-import './assets/style/index.css'
-import './assets/style/theme/index.css'
 
 import NumberFilter from '@/filter/number-filter'
 
