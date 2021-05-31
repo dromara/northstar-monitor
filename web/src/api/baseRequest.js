@@ -1,4 +1,5 @@
-import axios from 'axios'
+/* eslint-disable */
+// import axios from 'axios'
 
 // require('promise.prototype.finally').shim()
 console.log('App base path: ', process.env.VUE_APP_BASE_PATH)
