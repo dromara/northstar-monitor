@@ -1,5 +1,6 @@
 #!/bin/bash
-
+npm i
 npm run build
 cd server
-npm start
+npm i
+nohup npm start >monitor.log &
