@@ -44,3 +44,13 @@ div::-webkit-scrollbar-track {/*滚动条里面轨道*/
 .color-green {
     color:#93c57a;
 }
+
+.el-dialog{
+    min-width: 370px;
+}
+.el-menu{
+    height: 100%;
+}
+.text-selectable{
+    user-select: all !important;
+}
