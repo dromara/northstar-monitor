@@ -245,6 +245,7 @@ export default {
     close() {
       this.dialogVisible = false
       this.form = this.$options.data().form
+      this.form.gatewayUsage = this.gatewayUsage
     }
   }
 }
