@@ -40,13 +40,14 @@
             v-model="dealSymbol"
             filterable
             placeholder="请选择合约"
+            value-key="unifiedSymbol"
             @change="handleContractChange"
           >
             <el-option
               v-for="(item, i) in symbolList"
               :key="i"
               :label="item.name"
-              :value="item.unifiedsymbol"
+              :value="item.unifiedSymbol"
             >
             </el-option>
           </el-select>

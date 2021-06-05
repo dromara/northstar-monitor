@@ -1,7 +1,7 @@
 <template>
   <div class="ns-mktdata">
     <div id="update-k-line" class="ns-mktdata__body">
-      {{ kLineChart || '未有数据，请先选择合约' }}
+      {{ !kLineChart ? '未有数据，请先选择合约' : '' }}
     </div>
   </div>
 </template>
