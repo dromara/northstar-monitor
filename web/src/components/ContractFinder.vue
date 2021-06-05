@@ -8,7 +8,7 @@
   >
     <el-form label-width="100px">
       <el-form-item label="合约列表">
-        <el-select v-model="unifiedSymbol">
+        <el-select v-model="unifiedSymbol" filterable>
           <el-option
             v-for="c in contractList"
             :label="c.name"
@@ -19,7 +19,16 @@
         </el-select>
       </el-form-item>
       <el-form-item label="合约ID">
-        <span class="text-selectable">{{ unifiedSymbol }}</span>
+        <span ref="symbolText" class="text-selectable">{{
+          unifiedSymbol
+        }}</span>
+        <el-button
+          size="mini"
+          @click="copy"
+          icon="el-icon-document-copy"
+          circle
+          :disabled="!unifiedSymbol"
+        ></el-button>
       </el-form-item>
     </el-form>
     <div slot="footer" class="dialog-footer">
@@ -67,8 +76,17 @@ export default {
       this.contractList = list
       this.contractList.sort(sortFunc)
     })
+  },
+  methods: {
+    copy() {
+      document.execCommand('Copy')
+    }
   }
 }
 </script>
 
-<style></style>
+<style>
+.text-selectable {
+  padding-right: 10px;
+}
+</style>

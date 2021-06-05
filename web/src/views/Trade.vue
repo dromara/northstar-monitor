@@ -134,6 +134,7 @@ import NsPriceBoard from '@/components/PriceBoard'
 import NsAccountDetail from '@/components/AccountDetail'
 import gatewayMgmtApi from '../api/gatewayMgmtApi'
 import tradeOprApi from '../api/tradeOprApi'
+import dataSyncApi from '../api/dataSyncApi'
 
 let accountCheckTimer
 
@@ -194,10 +195,20 @@ export default {
       }
       timelyCheck()
 
-      this.symbolList = this.$store.getters.findContractsByType(
-        this.currentAccount.relativeGatewayId,
-        'FUTURES'
-      )
+      // this.symbolList = this.$store.getters.findContractsByType(
+      //   this.currentAccount.relativeGatewayId,
+      //   'FUTURES'
+      // )
+      const sortFunc = (a, b) => {
+        return a['unifiedSymbol'].localeCompare(b['unifiedSymbol'])
+      }
+
+      dataSyncApi.getAvailableContracts().then((list) => {
+        console.log('合约总数', list.length)
+        this.symbolList = list
+          .filter((i) => i.gatewayId === this.currentAccount.relativeGatewayId)
+          .sort(sortFunc)
+      })
 
       this.$store.commit(
         'updateFocusMarketGatewayId',

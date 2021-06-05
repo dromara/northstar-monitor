@@ -7,7 +7,12 @@
       @onSave="onSave"
     />
     <el-table height="100%" :data="list">
-      <el-table-column label="模组名称" prop="moduleName" align="center" />
+      <el-table-column
+        label="模组名称"
+        prop="moduleName"
+        align="center"
+        width="100px"
+      />
       <el-table-column
         label="绑定账户"
         prop="accountGatewayId"
@@ -33,7 +38,7 @@
           {{
             scope.row.riskControlRules
               .map((i) => i.componentMeta.name)
-              .join(',')
+              .join(', ')
           }}
         </template>
       </el-table-column>
@@ -46,19 +51,20 @@
         label="是否启用"
         prop="enabled"
         align="center"
-        width="60px"
+        width="100px"
       >
         <template slot-scope="scope">{{
           scope.row.enabled ? '启用' : '停用'
         }}</template>
       </el-table-column>
-      <el-table-column align="center" width="150px">
+      <el-table-column align="center" width="240px">
         <template slot="header">
           <el-button size="mini" type="primary" @click="handleCreate"
             >新建</el-button
           >
         </template>
         <template slot-scope="scope">
+          <el-button size="mini">历史</el-button>
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
             >修改</el-button
           >
