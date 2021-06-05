@@ -64,33 +64,38 @@
           </el-form-item>
           <el-form-item v-if="activeIndex === '2'" label="信号策略">
             <el-select
-              v-model="form.signalPolicy.componentMeta"
+              v-model="chosenSignalPolicy"
               @change="onChosenSignalPolicy"
-              value-key="name"
               placeholder="请选择"
               key="信号策略"
             >
               <el-option
                 v-for="(p, i) in signalPolicyOptions"
-                :label="p.name"
-                :value="p"
+                :label="p.componentMeta.name"
+                :value="p.componentMeta.name"
                 :key="i"
               ></el-option>
             </el-select>
           </el-form-item>
           <div v-if="activeIndex === '2'">
-            <el-form-item
-              v-for="(param, index) in signalPolicyParams"
-              :label="param.label"
-              :key="param.field"
-            >
-              <el-input
-                v-model="form.signalPolicy.initParams[index]['value']"
-                :class="param.unit ? 'with-unit' : ''"
-                :type="param.type.toLowerCase()"
-              />
-              <span v-if="param.unit" class="value-unit">{{ param.unit }}</span>
-            </el-form-item>
+            <div v-for="(policy, i) in signalPolicyOptions" :key="i">
+              <div v-if="chosenSignalPolicy === policy.componentMeta.name">
+                <el-form-item
+                  v-for="(param, index) in policy.initParams"
+                  :label="param.label"
+                  :key="param.field"
+                >
+                  <el-input
+                    v-model="signalPolicyOptions[i].initParams[index]['value']"
+                    :class="param.unit ? 'with-unit' : ''"
+                    :type="param.type.toLowerCase()"
+                  />
+                  <span v-if="param.unit" class="value-unit">{{
+                    param.unit
+                  }}</span>
+                </el-form-item>
+              </div>
+            </div>
           </div>
 
           <el-form-item v-if="activeIndex === '3'" label="风控策略">
@@ -107,7 +112,7 @@
               <el-option
                 v-for="(r, i) in riskRuleOptions"
                 :label="r.componentMeta.name"
-                :value="r.componentMeta"
+                :value="r.componentMeta.name"
                 :key="i"
               ></el-option>
             </el-select>
@@ -115,11 +120,7 @@
           <div v-if="activeIndex === '3'">
             <div v-for="(rule, i) in riskRuleOptions" :key="i">
               <div
-                v-if="
-                  chosenRiskRules
-                    .map((r) => r.name)
-                    .indexOf(rule.componentMeta.name) !== -1
-                "
+                v-if="chosenRiskRules.indexOf(rule.componentMeta.name) !== -1"
               >
                 <el-form-item
                   v-for="(param, k) in rule.initParams"
@@ -140,33 +141,39 @@
           </div>
           <el-form-item v-if="activeIndex === '4'" label="交易策略">
             <el-select
-              v-model="form.dealer.componentMeta"
+              v-model="chosenDealer"
               @change="onChosenDealer"
               value-key="name"
               placeholder="请选择"
               key="交易策略"
             >
               <el-option
-                v-for="(p, i) in dealerOptions"
-                :label="p.name"
-                :value="p"
+                v-for="(dealer, i) in dealerOptions"
+                :label="dealer.componentMeta.name"
+                :value="dealer.componentMeta.name"
                 :key="i"
               ></el-option>
             </el-select>
           </el-form-item>
           <div v-if="activeIndex === '4'">
-            <el-form-item
-              v-for="(param, index) in dealerParams"
-              :label="param.label"
-              :key="param.field"
-            >
-              <el-input
-                v-model="form.dealer.initParams[index]['value']"
-                :class="param.unit ? 'with-unit' : ''"
-                :type="param.type.toLowerCase()"
-              />
-              <span v-if="param.unit" class="value-unit">{{ param.unit }}</span>
-            </el-form-item>
+            <div v-for="(dealer, i) in dealerOptions" :key="i">
+              <div v-if="dealer.componentMeta.name === chosenDealer">
+                <el-form-item
+                  v-for="(param, index) in dealer.initParams"
+                  :label="param.label"
+                  :key="param.field"
+                >
+                  <el-input
+                    v-model="dealerOptions[i].initParams[index]['value']"
+                    :class="param.unit ? 'with-unit' : ''"
+                    :type="param.type.toLowerCase()"
+                  />
+                  <span v-if="param.unit" class="value-unit">{{
+                    param.unit
+                  }}</span>
+                </el-form-item>
+              </div>
+            </div>
           </div>
         </el-form>
       </el-main>
@@ -187,6 +194,14 @@ import ContractFinder from './ContractFinder'
 import gatewayMgmtApi from '../api/gatewayMgmtApi'
 import ctaModuleApi from '../api/ctaModuleApi'
 
+const initComponent = async (component, arr) => {
+  const paramsMap = await ctaModuleApi.componentParams(component)
+  arr.push({
+    componentMeta: component,
+    initParams: Object.values(paramsMap).sort((a, b) => a.order - b.order)
+  })
+}
+
 export default {
   components: {
     ContractFinder
@@ -200,10 +215,6 @@ export default {
       type: Boolean,
       default: false
     },
-    ctaSettings: {
-      type: Object,
-      default: () => {}
-    },
     module: {
       type: Object,
       default: () => {}
@@ -215,12 +226,12 @@ export default {
       contractFinderVisible: false,
       accountOptions: [],
       signalPolicyOptions: [],
-      signalPolicyParams: [],
       riskRuleOptions: [],
       dealerOptions: [],
-      dealerParams: [],
       activeIndex: '1',
+      chosenSignalPolicy: '',
       chosenRiskRules: [],
+      chosenDealer: '',
       form: {
         moduleName: '',
         accountGatewayId: '',
@@ -238,57 +249,76 @@ export default {
       }
     }
   },
-  async mounted() {
-    gatewayMgmtApi
-      .findAll('TRADE')
-      .then((result) => (this.accountOptions = result.map((i) => i.gatewayId)))
-    ctaModuleApi
-      .getCtpSignalPolicies()
-      .then((result) => (this.signalPolicyOptions = result))
-    ctaModuleApi.getDealers().then((result) => (this.dealerOptions = result))
-
-    const rules = await ctaModuleApi.getRiskControlRules()
-    rules.forEach(async (i) => {
-      const paramsMap = await ctaModuleApi.componentParams(i)
-      this.riskRuleOptions.push({
-        componentMeta: i,
-        initParams: Object.values(paramsMap).sort((a, b) => a.order - b.order)
-      })
-    })
+  mounted() {
+    this.initData()
   },
   watch: {
     visible: function (val) {
       if (val) {
         this.dialogVisible = val
-        Object.assign(this.form, this.ctaSettings)
+        if (!Object.keys(this.module).length) {
+          return
+        }
+        this.form = Object.assign({}, this.module)
+
+        this.chosenSignalPolicy = this.module.signalPolicy.componentMeta.name
+        this.signalPolicyOptions.forEach((p) => {
+          if (p.componentMeta.name === this.chosenSignalPolicy) {
+            p.initParams = this.module.signalPolicy.initParams
+          }
+        })
+
+        this.chosenDealer = this.module.dealer.componentMeta.name
+        this.dealerOptions.forEach((d) => {
+          if (d.componentMeta.name === this.chosenDealer) {
+            d.initParams = this.module.dealer.initParams
+          }
+        })
+
+        // 风控策略名 --> 初始化参数列表
+        const ruleNameToParamsMap = this.module.riskControlRules.reduce(
+          (obj, rule) => {
+            obj[rule.componentMeta.name] = rule.initParams
+            return obj
+          },
+          {}
+        )
+        this.riskRuleOptions.forEach((r) => {
+          if (ruleNameToParamsMap[r.componentMeta.name]) {
+            r.initParams = ruleNameToParamsMap[r.componentMeta.name]
+          }
+        })
+        this.chosenRiskRules = this.module.riskControlRules.map(
+          (i) => i.componentMeta.name
+        )
+        this.onChosenRiskRule(this.chosenRiskRules)
       }
     },
     dialogVisible: function (val) {
       if (!val) {
         this.$emit('update:visible', val)
       }
-    },
-    module: function (val) {
-      this.form = Object.assign({}, val)
-      this.signalPolicyParams = val.signalPolicy.initParams
-      this.dealerParams = val.dealer.initParams
-
-      // 风控策略名 --> 初始化参数列表
-      const ruleNameToParamsMap = val.riskControlRules.reduce((obj, rule) => {
-        obj[rule.componentMeta.name] = rule.initParams
-        return obj
-      }, {})
-      console.log(ruleNameToParamsMap)
-      this.riskRuleOptions.forEach((r) => {
-        if (ruleNameToParamsMap[r.componentMeta.name]) {
-          r.initParams = ruleNameToParamsMap[r.componentMeta.name]
-        }
-      })
-      this.chosenRiskRules = val.riskControlRules.map((i) => i.componentMeta)
-      this.onChosenRiskRule(this.chosenRiskRules)
     }
   },
   methods: {
+    initData() {
+      gatewayMgmtApi
+        .findAll('TRADE')
+        .then(
+          (result) => (this.accountOptions = result.map((i) => i.gatewayId))
+        )
+      ctaModuleApi.getCtpSignalPolicies().then((policies) => {
+        policies.forEach(async (i) =>
+          initComponent(i, this.signalPolicyOptions)
+        )
+      })
+      ctaModuleApi.getDealers().then((dealers) => {
+        dealers.forEach(async (i) => initComponent(i, this.dealerOptions))
+      })
+      ctaModuleApi.getRiskControlRules().then((rules) => {
+        rules.forEach(async (i) => initComponent(i, this.riskRuleOptions))
+      })
+    },
     handleSelect(index) {
       this.activeIndex = index
     },
@@ -307,6 +337,9 @@ export default {
     },
     close() {
       this.dialogVisible = false
+      this.activeIndex = '1'
+      Object.assign(this.$data, this.$options.data())
+      this.$nextTick(this.initData)
     },
     assertTrue(expression, errMsg) {
       if (!expression) {
@@ -315,43 +348,27 @@ export default {
       }
       return true
     },
-    onChosenRiskRule(objArr) {
-      const chosenRuleNames = objArr.map((i) => i.name)
+    onChosenRiskRule() {
       // 处理数据增减
       this.form.riskControlRules = this.riskRuleOptions.filter(
-        (i) => chosenRuleNames.indexOf(i.componentMeta.name) !== -1
+        (i) => this.chosenRiskRules.indexOf(i.componentMeta.name) !== -1
       )
-      console.log(this.riskRuleOptions)
-      console.log(this.chosenRiskRules)
-      console.log(this.form)
     },
     async onChosenDealer() {
-      this.dealerParams = []
-      let paramsMap = await ctaModuleApi.componentParams(
-        this.form.dealer.componentMeta
+      const arr = this.dealerOptions.filter(
+        (i) => i.componentMeta.name === this.chosenDealer
       )
-      this.form.dealer.initParams = []
-      Object.values(paramsMap)
-        .sort((a, b) => a.order - b.order)
-        .map((i) => {
-          this.form.dealer.initParams.push(i)
-          return i
-        })
-        .forEach((i) => this.dealerParams.push(i))
+      if (arr.length) {
+        this.form.dealer = arr[0]
+      }
     },
     async onChosenSignalPolicy() {
-      this.signalPolicyParams = []
-      let paramsMap = await ctaModuleApi.componentParams(
-        this.form.signalPolicy.componentMeta
+      const arr = this.signalPolicyOptions.filter(
+        (i) => i.componentMeta.name === this.chosenSignalPolicy
       )
-      this.form.signalPolicy.initParams = []
-      Object.values(paramsMap)
-        .sort((a, b) => a.order - b.order)
-        .map((i) => {
-          this.form.signalPolicy.initParams.push(i)
-          return i
-        })
-        .forEach((i) => this.signalPolicyParams.push(i))
+      if (arr.length) {
+        this.form.signalPolicy = arr[0]
+      }
     }
   }
 }

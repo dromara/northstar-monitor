@@ -98,6 +98,7 @@ export default {
     handleCreate() {
       this.ctaModuleFormVisible = true
       this.curTableIndex = -1
+      this.curModule = {}
     },
     handleEdit(index, row) {
       console.log(index, row)
