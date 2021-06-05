@@ -95,7 +95,7 @@
 
           <el-form-item v-if="activeIndex === '3'" label="风控策略">
             <el-select
-              v-model="choseRiskRules"
+              v-model="chosenRiskRules"
               @change="onChosenRiskRule"
               value-key="name"
               placeholder="请选择"
@@ -105,23 +105,29 @@
               clearable
             >
               <el-option
-                v-for="(p, i) in riskRuleOptions"
-                :label="p.name"
-                :value="p"
+                v-for="(r, i) in riskRuleOptions"
+                :label="r.componentMeta.name"
+                :value="r.componentMeta"
                 :key="i"
               ></el-option>
             </el-select>
           </el-form-item>
           <div v-if="activeIndex === '3'">
-            <div v-for="(rule, i) in form.riskControlRules" :key="i">
-              <div>
+            <div v-for="(rule, i) in riskRuleOptions" :key="i">
+              <div
+                v-if="
+                  chosenRiskRules
+                    .map((r) => r.name)
+                    .indexOf(rule.componentMeta.name) !== -1
+                "
+              >
                 <el-form-item
                   v-for="(param, k) in rule.initParams"
                   :key="k"
                   :label="param.label"
                 >
                   <el-input
-                    v-model="form.riskControlRules[i].initParams[k]['value']"
+                    v-model="riskRuleOptions[i].initParams[k]['value']"
                     :class="param.unit ? 'with-unit' : ''"
                     :type="param.type.toLowerCase()"
                   />
@@ -211,11 +217,10 @@ export default {
       signalPolicyOptions: [],
       signalPolicyParams: [],
       riskRuleOptions: [],
-      riskRuleParams: {},
       dealerOptions: [],
       dealerParams: [],
       activeIndex: '1',
-      choseRiskRules: [],
+      chosenRiskRules: [],
       form: {
         moduleName: '',
         accountGatewayId: '',
@@ -242,10 +247,10 @@ export default {
       .then((result) => (this.signalPolicyOptions = result))
     ctaModuleApi.getDealers().then((result) => (this.dealerOptions = result))
 
-    this.riskRuleOptions = await ctaModuleApi.getRiskControlRules()
-    this.riskRuleOptions.forEach(async (i) => {
+    const rules = await ctaModuleApi.getRiskControlRules()
+    rules.forEach(async (i) => {
       const paramsMap = await ctaModuleApi.componentParams(i)
-      this.form.riskControlRules.push({
+      this.riskRuleOptions.push({
         componentMeta: i,
         initParams: Object.values(paramsMap).sort((a, b) => a.order - b.order)
       })
@@ -267,8 +272,20 @@ export default {
       this.form = Object.assign({}, val)
       this.signalPolicyParams = val.signalPolicy.initParams
       this.dealerParams = val.dealer.initParams
-      this.choseRiskRules = val.riskControlRules.map((i) => i.componentMeta)
-      this.onChosenRiskRule(this.choseRiskRules)
+
+      // 风控策略名 --> 初始化参数列表
+      const ruleNameToParamsMap = val.riskControlRules.reduce((obj, rule) => {
+        obj[rule.componentMeta.name] = rule.initParams
+        return obj
+      }, {})
+      console.log(ruleNameToParamsMap)
+      this.riskRuleOptions.forEach((r) => {
+        if (ruleNameToParamsMap[r.componentMeta.name]) {
+          r.initParams = ruleNameToParamsMap[r.componentMeta.name]
+        }
+      })
+      this.chosenRiskRules = val.riskControlRules.map((i) => i.componentMeta)
+      this.onChosenRiskRule(this.chosenRiskRules)
     }
   },
   methods: {
@@ -299,10 +316,14 @@ export default {
       return true
     },
     onChosenRiskRule(objArr) {
-      console.log(objArr)
-      console.log(this.riskRuleOptions)
+      const chosenRuleNames = objArr.map((i) => i.name)
       // 处理数据增减
-      // const ruleNames = this.choseRiskRules.map(i => i.name)
+      this.form.riskControlRules = this.riskRuleOptions.filter(
+        (i) => chosenRuleNames.indexOf(i.componentMeta.name) !== -1
+      )
+      console.log(this.riskRuleOptions)
+      console.log(this.chosenRiskRules)
+      console.log(this.form)
     },
     async onChosenDealer() {
       this.dealerParams = []
