@@ -3,6 +3,9 @@
 https://gitee.com/KevinHuangwl/northstar
 
 
+# 使用说明
+https://gitee.com/KevinHuangwl/northstar-monitor/wikis
+
 ## 启动步骤
 假设当前环境是全新的服务器  
 
