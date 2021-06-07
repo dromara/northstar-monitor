@@ -19,9 +19,6 @@
             clearable
           ></el-input>
         </el-form-item>
-        <el-form-item label="服务器地址">
-          <el-input v-model="hostUrl" autocomplete="off" clearable></el-input>
-        </el-form-item>
         <el-form-item>
           <el-button @click="login">提交</el-button>
         </el-form-item>
