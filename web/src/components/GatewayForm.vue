@@ -86,11 +86,6 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-col :span="5" v-if="gatewayUsage === 'MARKET_DATA'">
-          <el-form-item label="自动连接">
-            <el-switch v-model="form.autoConnect"></el-switch>
-          </el-form-item>
-        </el-col>
         <el-col :span="8" v-if="gatewayUsage === 'TRADE'">
           <el-form-item label="行情网关" prop="relativeGatewayId">
             <el-select
@@ -105,6 +100,11 @@
                 :key="i"
               ></el-option>
             </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="5">
+          <el-form-item label="自动连接">
+            <el-switch v-model="form.autoConnect"></el-switch>
           </el-form-item>
         </el-col>
       </el-row>
