@@ -14,18 +14,6 @@ const createFromBar = (bar) => {
   }
 }
 
-// const createFromTick = (tick, curMin, curMax, lastBar) => {
-//   return {
-//     open: lastBar.closeprice,
-//     low: Math.min(lastBar.closeprice, tick.lastprice, curMin),
-//     high: Math.max(lastBar.closeprice, tick.lastprice, curMax),
-//     close: tick.lastprice,
-//     volume: tick.volume - lastBar.volume,
-//     openInterest: tick.openinterest,
-//     timestamp: tick.actiontimestamp - (tick.actiontimestamp % 60000)
-//   }
-// }
-
 const marketCurrentDataModule = {
   state: () => ({
     curMarketGatewayId: '',
@@ -68,20 +56,6 @@ const marketCurrentDataModule = {
         return
       }
       state.curTick = tick
-      // if (!state.chartReady) {
-      //   return
-      // }
-
-      // let curBar = createFromTick(
-      //   tick,
-      //   state.curBarL,
-      //   state.curBarH,
-      //   state.lastBar
-      // )
-      // state.curBarH = curBar.high
-      // state.curBarL = curBar.low
-      // console.log(curBar)
-      // state.chart.updateData(curBar)
     },
     updateKLineChart(state, kLineChart) {
       state.chart = kLineChart

@@ -1,13 +1,20 @@
 /* eslint-disable */
 // import axios from 'axios'
+import store from '../store'
 
-// require('promise.prototype.finally').shim()
-console.log('App base path: ', process.env.VUE_APP_BASE_PATH)
 // create an axios instance
 const service = axios.create({
-  baseURL: process.env.VUE_APP_BASE_PATH, // url = base url + request url
   withCredentials: true, // send cookies when cross-domain requests
   timeout: 3000 // 请求的超时时间
+})
+
+service.interceptors.request.use((config) => {
+   //根据vuex store内容动态设置baseurl
+   config.baseURL = store.getters.apiBaseUrl
+  return config
+}, (error) => {
+  // 对请求错误做些什么
+  return Promise.reject(error)
 })
 
 // response interceptor

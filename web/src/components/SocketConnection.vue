@@ -21,8 +21,8 @@ export default {
     }
   },
   mounted() {
-    console.log('socket服务地址:', process.env.VUE_APP_SOCKET_ENDPOINT)
-    this.socket = SocketIO(process.env.VUE_APP_SOCKET_ENDPOINT)
+    console.log('socket服务地址:', this.$store.getters.websocketBaseUrl)
+    this.socket = SocketIO(this.$store.getters.websocketBaseUrl)
     this.socket.on('TICK', (data) => {
       let tick = TickField.deserializeBinary(data).toObject()
       this.$store.commit('updateTick', tick)

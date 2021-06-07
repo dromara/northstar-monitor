@@ -19,6 +19,9 @@
             clearable
           ></el-input>
         </el-form-item>
+        <el-form-item label="服务器地址">
+          <el-input v-model="hostUrl" autocomplete="off" clearable></el-input>
+        </el-form-item>
         <el-form-item>
           <el-button @click="login">提交</el-button>
         </el-form-item>
@@ -35,11 +38,17 @@ export default {
       userForm: {
         name: '',
         pass: ''
-      }
+      },
+      hostUrl: ''
     }
+  },
+  mounted() {
+    this.hostUrl = location.hostname
   },
   methods: {
     async login() {
+      this.$store.commit('updateHost', this.hostUrl)
+
       await loginApi.login(this.userForm.name, this.userForm.pass)
       console.log('登陆成功')
       this.$router.push({ name: 'workspace' })
