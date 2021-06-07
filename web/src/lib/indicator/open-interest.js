@@ -11,16 +11,25 @@ var _default = {
   shouldCheckParamCount: false,
   shouldFormatBigNumber: false,
   // precision: 0,
-  // maxValue: 10000,
   baseValue: 0,
-  // minValue: -10000,
   plots: [
     {
       key: 'openInterestDelta',
       title: 'OpDif: ',
-      type: 'bar'
+      type: 'bar',
+      color: function color(data, options) {
+        var currentData = data.currentData
+        if (currentData.technicalIndicatorData.openInterestDelta > 0) {
+          return options.bar.downColor
+        } else if (currentData.technicalIndicatorData.openInterestDelta < 0) {
+          return options.bar.upColor
+        } else {
+          return options.bar.noChangeColor
+        }
+      }
     }
   ],
+
   calcTechnicalIndicator: (dataList) => {
     return dataList.map((kLineData) => {
       const openInterestDelta = kLineData.openInterestDelta || 0

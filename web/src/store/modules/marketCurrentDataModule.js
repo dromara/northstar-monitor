@@ -62,7 +62,6 @@ const marketCurrentDataModule = {
       console.log('updateKLineChart', state.chart)
     },
     updateHisBar(state, bar) {
-      console.log(bar)
       if (!state.chart) {
         return
       }
