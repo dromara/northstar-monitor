@@ -6,25 +6,26 @@ Object.defineProperty(exports, '__esModule', {
 exports.default = void 0
 
 var _default = {
-  name: 'OPID',
+  name: 'OpDif',
   series: 'volume',
   shouldCheckParamCount: false,
   shouldFormatBigNumber: false,
-  precision: 0,
+  // precision: 0,
+  // maxValue: 10000,
   baseValue: 0,
-  minValue: 0,
+  // minValue: -10000,
   plots: [
     {
-      key: 'openInterest',
-      title: 'OPID: ',
-      type: 'line'
+      key: 'openInterestDelta',
+      title: 'OpDif: ',
+      type: 'bar'
     }
   ],
   calcTechnicalIndicator: (dataList) => {
     return dataList.map((kLineData) => {
-      const openInterest = kLineData.openInterest || 0
+      const openInterestDelta = kLineData.openInterestDelta || 0
       return {
-        openInterest
+        openInterestDelta
       }
     })
   }

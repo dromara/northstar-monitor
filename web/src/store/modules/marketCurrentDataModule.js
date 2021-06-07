@@ -9,7 +9,7 @@ const createFromBar = (bar) => {
     high: bar.highprice,
     close: bar.closeprice,
     volume: bar.volumedelta,
-    openInterest: bar.openinterest,
+    openInterestDelta: bar.openinterestdelta,
     timestamp: bar.actiontimestamp
   }
 }

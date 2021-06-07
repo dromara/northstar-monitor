@@ -9,7 +9,7 @@
 <script>
 import { dispose, init } from 'klinecharts'
 import volumePure from '@/lib/indicator/volume-pure'
-import openInterest from '@/lib/indicator/open-interest'
+import openInterestDelta from '@/lib/indicator/open-interest'
 
 import dataSyncApi from '@/api/dataSyncApi'
 import { mapGetters } from 'vuex'
@@ -31,10 +31,9 @@ export default {
       if (!this.kLineChart) {
         const kLineChart = init('update-k-line')
         kLineChart.addCustomTechnicalIndicator(volumePure)
-        kLineChart.addCustomTechnicalIndicator(openInterest)
-        kLineChart.createTechnicalIndicator('CJL', true, { id: 'default' })
-        kLineChart.createTechnicalIndicator('OPID', true, { id: 'default' })
-        kLineChart.updateData({})
+        kLineChart.addCustomTechnicalIndicator(openInterestDelta)
+        kLineChart.createTechnicalIndicator('CJL', false)
+        kLineChart.createTechnicalIndicator('OpDif', false)
         this.$store.commit('updateKLineChart', kLineChart)
         this.kLineChart = kLineChart
       }
