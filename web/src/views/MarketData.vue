@@ -38,6 +38,7 @@ export default {
         this.kLineChart = kLineChart
       }
       if (val) {
+        this.kLineChart.clearData()
         let startDate = moment().subtract(7, 'days').format('YYYYMMDD')
         let endDate = moment().format('YYYYMMDD')
         dataSyncApi.loadHistoryBars(
