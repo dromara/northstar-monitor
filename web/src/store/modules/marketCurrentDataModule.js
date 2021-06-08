@@ -30,6 +30,7 @@ const marketCurrentDataModule = {
     chartReady: false,
     loadingHisBar: false,
     barBuf: [],
+    hisBars: [],
     lastBar: null,
     curBarH: 0,
     curBarL: 0
@@ -72,17 +73,19 @@ const marketCurrentDataModule = {
         return
       }
       console.log('History', bar)
-      if (bar.closeprice === 0) {
+      if (!bar.closeprice) {
         if (state.barBuf.length) {
           state.barBuf.forEach((b) => state.chart.updateData(createFromBar(b)))
           state.barBuf = []
         }
+        state.chart.applyNewData(state.hisBars)
+        state.hisBars = []
         state.loadingHisBar = false
         state.chartReady = true
         return
       }
       state.loadingHisBar = true
-      state.chart.updateData(createFromBar(bar))
+      state.hisBars.push(createFromBar(bar))
       state.lastBar = bar
       state.curBarH = bar.closeprice
       state.curBarL = bar.closeprice
