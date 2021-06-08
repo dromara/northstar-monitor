@@ -71,6 +71,7 @@ const marketCurrentDataModule = {
       ) {
         return
       }
+      console.log('History', bar)
       if (bar.closeprice === 0) {
         if (state.barBuf.length) {
           state.barBuf.forEach((b) => state.chart.updateData(createFromBar(b)))
@@ -96,6 +97,7 @@ const marketCurrentDataModule = {
       ) {
         return
       }
+      console.log(bar)
       if (state.loadingHisBar) {
         state.barBuf.push(bar)
       } else {
