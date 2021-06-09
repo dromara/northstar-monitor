@@ -33,9 +33,13 @@ const marketCurrentDataModule = {
     hisBars: [],
     lastBar: null,
     curBarH: 0,
-    curBarL: 0
+    curBarL: 0,
+    socketClient: null
   }),
   mutations: {
+    initSocketClient(state, client) {
+      state.socketClient = client
+    },
     resetMarketCurrentDataModule(state) {
       Object.assign(state, marketCurrentDataModule.state())
       console.log('重置marketCurrentDataModule', state)
@@ -46,7 +50,13 @@ const marketCurrentDataModule = {
       console.log('当前curMarketGatewayId', gatewayId)
     },
     updateFocusUnifiedSymbol(state, unifiedsymbol) {
+      if (state.curUnifiedSymbol) {
+        state.socketClient.emit('logout', state.curUnifiedSymbol)
+      }
       state.curUnifiedSymbol = unifiedsymbol
+      if (unifiedsymbol) {
+        state.socketClient.emit('login', unifiedsymbol)
+      }
       console.log('当前curUnifiedSymbol', unifiedsymbol)
     },
     updateTick(state, tick) {
