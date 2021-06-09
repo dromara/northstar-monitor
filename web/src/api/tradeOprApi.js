@@ -2,7 +2,7 @@ import baseService from './baseRequest'
 
 export default {
   buyOpen(gatewayId, unifiedSymbol, price, volume, stopPrice) {
-    baseService.post('/trade/submit', {
+    return baseService.post('/trade/submit', {
       contractUnifiedSymbol: unifiedSymbol,
       price: price,
       stopPrice: stopPrice,
@@ -12,7 +12,7 @@ export default {
     })
   },
   sellOpen(gatewayId, unifiedSymbol, price, volume, stopPrice) {
-    baseService.post('/trade/submit', {
+    return baseService.post('/trade/submit', {
       contractUnifiedSymbol: unifiedSymbol,
       price: price,
       stopPrice: stopPrice,
@@ -22,7 +22,7 @@ export default {
     })
   },
   closeLongPosition(gatewayId, unifiedSymbol, price, volume) {
-    baseService.post('/trade/submit', {
+    return baseService.post('/trade/submit', {
       contractUnifiedSymbol: unifiedSymbol,
       price: price,
       volume: volume,
@@ -31,7 +31,7 @@ export default {
     })
   },
   closeShortPosition(gatewayId, unifiedSymbol, price, volume) {
-    baseService.post('/trade/submit', {
+    return baseService.post('/trade/submit', {
       contractUnifiedSymbol: unifiedSymbol,
       price: price,
       volume: volume,
@@ -40,7 +40,7 @@ export default {
     })
   },
   cancelOrder(gatewayId, orderId) {
-    baseService.post('/trade/cancel', {
+    return baseService.post('/trade/cancel', {
       orderId: orderId,
       gatewayId: gatewayId
     })

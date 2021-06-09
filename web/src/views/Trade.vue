@@ -239,16 +239,16 @@ export default {
       console.log(order)
       tradeOprApi.cancelOrder(this.currentAccountId, order.orderid)
     },
-    buyOpen() {
-      tradeOprApi.buyOpen(
+    async buyOpen() {
+      await tradeOprApi.buyOpen(
         this.currentAccountId,
         this.dealSymbol,
         this.bkPrice,
         this.dealVol
       )
     },
-    sellOpen() {
-      tradeOprApi.sellOpen(
+    async sellOpen() {
+      await tradeOprApi.sellOpen(
         this.currentAccountId,
         this.dealSymbol,
         this.bkPrice,
@@ -257,7 +257,7 @@ export default {
     },
     closePosition() {
       if (this.currentPosition.positiondirection === 2) {
-        tradeOprApi.closeLongPosition(
+        return tradeOprApi.closeLongPosition(
           this.currentAccountId,
           this.dealSymbol,
           this.closePrice,
@@ -265,13 +265,14 @@ export default {
         )
       }
       if (this.currentPosition.positiondirection === 3) {
-        tradeOprApi.closeShortPosition(
+        return tradeOprApi.closeShortPosition(
           this.currentAccountId,
           this.dealSymbol,
           this.closePrice,
           this.dealVol
         )
       }
+      throw new Error('没有持仓')
     }
   },
   beforeDestroy() {

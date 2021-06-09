@@ -22,11 +22,11 @@ service.interceptors.response.use(
   (response) => {
     const res = response.data
     if (res.status === 555) {
-      return Promise.reject(new Error(res.message))
+      throw new Error(res.message)
     }
     // 统一请求的异常处理
     if (res.status !== 200) {
-      return Promise.reject(new Error(res.message))
+      throw new Error(res.message)
     } else {
       return res.data
     }
