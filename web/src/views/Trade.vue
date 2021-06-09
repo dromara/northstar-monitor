@@ -239,16 +239,16 @@ export default {
       console.log(order)
       tradeOprApi.cancelOrder(this.currentAccountId, order.orderid)
     },
-    async buyOpen() {
-      await tradeOprApi.buyOpen(
+    buyOpen() {
+      return tradeOprApi.buyOpen(
         this.currentAccountId,
         this.dealSymbol,
         this.bkPrice,
         this.dealVol
       )
     },
-    async sellOpen() {
-      await tradeOprApi.sellOpen(
+    sellOpen() {
+      return tradeOprApi.sellOpen(
         this.currentAccountId,
         this.dealSymbol,
         this.bkPrice,
