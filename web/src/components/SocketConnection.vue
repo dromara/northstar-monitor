@@ -14,6 +14,12 @@ import {
   NoticeField
 } from '../lib/xyz/redtorch/pb/core_field_pb'
 import SocketIO from 'socket.io-client'
+const TYPE = {
+  0: 'success',
+  1: 'info',
+  2: 'warning',
+  3: 'error'
+}
 export default {
   data() {
     return {
@@ -63,12 +69,6 @@ export default {
     this.socket.on('NOTICE', (data) => {
       let notice = NoticeField.deserializeBinary(data).toObject()
       console.log(notice)
-      const TYPE = {
-        0: 'success',
-        1: 'info',
-        2: 'warning',
-        3: 'error'
-      }
       this.$message[TYPE[notice.status]](notice.content)
     })
     this.socket.on('error', (e) => {
