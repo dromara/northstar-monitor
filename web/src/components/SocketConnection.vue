@@ -63,6 +63,13 @@ export default {
     this.socket.on('NOTICE', (data) => {
       let notice = NoticeField.deserializeBinary(data).toObject()
       console.log(notice)
+      const TYPE = {
+        0: 'success',
+        1: 'info',
+        2: 'warning',
+        3: 'error'
+      }
+      this.$message[TYPE[notice.status]](notice.content)
     })
     this.socket.on('error', (e) => {
       console.log('SocketIO连接异常', e)
