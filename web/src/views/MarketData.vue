@@ -40,7 +40,10 @@ export default {
       if (val) {
         this.kLineChart.clearData()
         let startDate = moment().subtract(7, 'days').format('YYYYMMDD')
-        let endDate = moment().add(6, 'hours').format('YYYYMMDD')
+        let now = moment()
+        let endDate = moment()
+          .add(now.weekday() === 5 ? 54 : 6, 'hours')
+          .format('YYYYMMDD')
         dataSyncApi.loadHistoryBars(
           this.curMarketGatewayId,
           this.curUnifiedSymbol,
