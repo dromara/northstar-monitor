@@ -1,6 +1,6 @@
 <template>
   <div class="ns-page">
-    <CtaForm
+    <ModuleForm
       :visible.sync="ctaModuleFormVisible"
       :isUpdateMode="curTableIndex > -1"
       :module="curModule"
@@ -12,6 +12,12 @@
         prop="moduleName"
         align="center"
         width="100px"
+      />
+      <el-table-column
+        label="策略模式"
+        prop="type"
+        align="center"
+        width="90px"
       />
       <el-table-column
         label="绑定账户"
@@ -81,13 +87,13 @@
 </template>
 
 <script>
-import CtaForm from '@/components/CtaForm'
+import ModuleForm from '@/components/ModuleForm'
 
 import ctaModuleApi from '@/api/ctaModuleApi'
 
 export default {
   components: {
-    CtaForm
+    ModuleForm
   },
   data() {
     return {

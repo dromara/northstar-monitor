@@ -41,6 +41,12 @@
           <el-form-item v-if="activeIndex === '1'" label="模组名称">
             <el-input v-model="form.moduleName"></el-input>
           </el-form-item>
+          <el-form-item v-if="activeIndex === '1'" label="模组类型">
+            <el-select v-model="form.type">
+              <el-option label="CTA" value="CTA"></el-option>
+              <el-option label="ARBITRAGE" value="ARBITRAGE"></el-option>
+            </el-select>
+          </el-form-item>
           <el-form-item v-if="activeIndex === '1'" label="绑定账户">
             <el-select v-model="form.accountGatewayId">
               <el-option
@@ -184,7 +190,7 @@
         >合约查询</el-button
       >
       <el-button @click="close">取 消</el-button>
-      <el-button type="primary" @click="saveCtaSetting">保 存</el-button>
+      <el-button type="primary" @click="saveSetting">保 存</el-button>
     </div>
   </el-dialog>
 </template>
@@ -245,7 +251,8 @@ export default {
           componentMeta: {},
           initParams: []
         },
-        enabled: true
+        enabled: true,
+        type: ''
       }
     }
   },
@@ -322,7 +329,7 @@ export default {
     handleSelect(index) {
       this.activeIndex = index
     },
-    saveCtaSetting() {
+    saveSetting() {
       const pass =
         this.assertTrue(this.form.moduleName, '未指定模组名称') ||
         this.assertTrue(this.form.accountGatewayId, '未指定绑定账户') ||
