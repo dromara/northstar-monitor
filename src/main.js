@@ -5,12 +5,11 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 
-
 import NumberFilter from '@/filter/number-filter'
 
 console.log(NumberFilter)
 
-Vue.use(ELEMENT, { size: 'small' })
+Vue.use(ELEMENT, { size: 'mini' })
 
 Vue.config.productionTip = false
 

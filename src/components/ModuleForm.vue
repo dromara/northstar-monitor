@@ -29,7 +29,7 @@
           </el-menu-item>
         </el-menu>
       </el-aside>
-      <el-main
+      <el-main class="main-compact"
         ><el-form
           :model="form"
           label-width="100px"
@@ -55,6 +55,14 @@
                 :key="account"
               ></el-option>
             </el-select>
+          </el-form-item>
+          <el-form-item v-if="activeIndex === '1'" label="数据回溯">
+            <el-input
+              v-model="form.daysOfRefData"
+              type="number"
+              class="with-unit"
+            ></el-input
+            ><span class="value-unit">天</span>
           </el-form-item>
           <el-form-item v-if="activeIndex === '1'" label="分配账户比例">
             <el-input
@@ -253,7 +261,8 @@ export default {
           initParams: []
         },
         enabled: true,
-        type: ''
+        type: '',
+        daysOfRefData: 1
       }
     }
   },
@@ -383,6 +392,9 @@ export default {
 </script>
 
 <style scoped>
+.main-compact {
+  padding-bottom: 0px;
+}
 .cta-dialog {
   min-width: 376px;
 }
