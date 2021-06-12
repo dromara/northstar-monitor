@@ -3,6 +3,9 @@
 https://gitee.com/KevinHuangwl/northstar
 
 
+# 使用说明
+https://gitee.com/KevinHuangwl/northstar-monitor/wikis
+
 ## 启动步骤
 假设当前环境是全新的服务器  
 
@@ -14,22 +17,20 @@ git clone https://gitee.com/KevinHuangwl/northstar-monitor.git
 
 构建程序（每次代码更新后运行）
 ```
-cd ~/northstar-monitor/web
+cd ~/northstar-monitor
 bash build.sh
 ```
 
 运行程序
 ```
-cd ~/northstar-monitor/web
+cd ~/northstar-monitor
 bash startup.sh
 ```
 
 终止程序
 ```
-cd ~/northstar-monitor/web
+cd ~/northstar-monitor
 bash shutdown.sh
 ```
-
-
 
 
