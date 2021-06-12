@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :title="isUpdateMode ? '修改' : '新增'"
+    :title="readOnly ? '查看' : '新增'"
     :visible.sync="dialogVisible"
     :close-on-click-modal="false"
     :show-close="false"
@@ -31,7 +31,6 @@
       </el-aside>
       <el-main
         ><el-form
-          ref="ctaSettings"
           :model="form"
           label-width="100px"
           class="cta-form"
@@ -190,7 +189,9 @@
         >合约查询</el-button
       >
       <el-button @click="close">取 消</el-button>
-      <el-button type="primary" @click="saveSetting">保 存</el-button>
+      <el-button type="primary" @click="saveSetting" :disabled="readOnly"
+        >保 存</el-button
+      >
     </div>
   </el-dialog>
 </template>
@@ -213,7 +214,7 @@ export default {
     ContractFinder
   },
   props: {
-    isUpdateMode: {
+    readOnly: {
       type: Boolean,
       default: false
     },

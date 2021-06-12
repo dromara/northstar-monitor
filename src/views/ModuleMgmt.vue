@@ -2,7 +2,7 @@
   <div class="ns-page">
     <ModuleForm
       :visible.sync="ctaModuleFormVisible"
-      :isUpdateMode="curTableIndex > -1"
+      :readOnly="curTableIndex > -1"
       :module="curModule"
       @onSave="onSave"
     />
@@ -72,7 +72,7 @@
         <template slot-scope="scope">
           <el-button size="mini">历史</el-button>
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
-            >修改</el-button
+            >查看</el-button
           >
           <el-button
             size="mini"
@@ -127,8 +127,6 @@ export default {
       console.log(obj)
       if (this.curTableIndex < 0) {
         await ctaModuleApi.insertModule(obj)
-      } else {
-        await ctaModuleApi.updateModule(obj)
       }
       this.findAll()
     },

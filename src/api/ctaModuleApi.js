@@ -16,9 +16,6 @@ export default {
   insertModule(module) {
     return baseService.post('/cta/module', module)
   },
-  updateModule(module) {
-    return baseService.put('/cta/module', module)
-  },
   getAllModules() {
     return baseService.get('/cta/module')
   },
