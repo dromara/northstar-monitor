@@ -30,13 +30,7 @@
         </el-menu>
       </el-aside>
       <el-main class="main-compact"
-        ><el-form
-          :model="form"
-          label-width="100px"
-          class="cta-form"
-          inline
-          :rules="formRules"
-        >
+        ><el-form :model="form" label-width="100px" class="cta-form" inline :rules="formRules">
           <el-form-item v-if="activeIndex === '1'" label="模组名称">
             <el-input v-model="form.moduleName"></el-input>
           </el-form-item>
@@ -48,40 +42,22 @@
           </el-form-item>
           <el-form-item v-if="activeIndex === '1'" label="绑定账户">
             <el-select v-model="form.accountGatewayId">
-              <el-option
-                v-for="account in accountOptions"
-                :label="account"
-                :value="account"
-                :key="account"
-              ></el-option>
+              <el-option v-for="account in accountOptions" :label="account" :value="account" :key="account"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item v-if="activeIndex === '1'" label="数据回溯">
-            <el-input
-              v-model="form.daysOfRefData"
-              type="number"
-              class="with-unit"
-            ></el-input
+            <el-input v-model="form.daysOfRefData" type="number" class="with-unit"></el-input
             ><span class="value-unit">天</span>
           </el-form-item>
           <el-form-item v-if="activeIndex === '1'" label="分配账户比例">
-            <el-input
-              type="number"
-              v-model="form.allocatedAccountShare"
-              class="with-unit"
-            />
+            <el-input type="number" v-model="form.allocatedAccountShare" class="with-unit" />
             <span class="value-unit">%</span>
           </el-form-item>
           <el-form-item v-if="activeIndex === '1'" label="是否启用">
             <el-switch v-model="form.enabled"> </el-switch>
           </el-form-item>
           <el-form-item v-if="activeIndex === '2'" label="信号策略">
-            <el-select
-              v-model="chosenSignalPolicy"
-              @change="onChosenSignalPolicy"
-              placeholder="请选择"
-              key="信号策略"
-            >
+            <el-select v-model="chosenSignalPolicy" @change="onChosenSignalPolicy" placeholder="请选择" key="信号策略">
               <el-option
                 v-for="(p, i) in signalPolicyOptions"
                 :label="p.componentMeta.name"
@@ -93,19 +69,13 @@
           <div v-if="activeIndex === '2'">
             <div v-for="(policy, i) in signalPolicyOptions" :key="i">
               <div v-if="chosenSignalPolicy === policy.componentMeta.name">
-                <el-form-item
-                  v-for="(param, index) in policy.initParams"
-                  :label="param.label"
-                  :key="param.field"
-                >
+                <el-form-item v-for="(param, index) in policy.initParams" :label="param.label" :key="param.field">
                   <el-input
                     v-model="signalPolicyOptions[i].initParams[index]['value']"
                     :class="param.unit ? 'with-unit' : ''"
                     :type="param.type.toLowerCase()"
                   />
-                  <span v-if="param.unit" class="value-unit">{{
-                    param.unit
-                  }}</span>
+                  <span v-if="param.unit" class="value-unit">{{ param.unit }}</span>
                 </el-form-item>
               </div>
             </div>
@@ -132,22 +102,14 @@
           </el-form-item>
           <div v-if="activeIndex === '3'">
             <div v-for="(rule, i) in riskRuleOptions" :key="i">
-              <div
-                v-if="chosenRiskRules.indexOf(rule.componentMeta.name) !== -1"
-              >
-                <el-form-item
-                  v-for="(param, k) in rule.initParams"
-                  :key="k"
-                  :label="param.label"
-                >
+              <div v-if="chosenRiskRules.indexOf(rule.componentMeta.name) !== -1">
+                <el-form-item v-for="(param, k) in rule.initParams" :key="k" :label="param.label">
                   <el-input
                     v-model="riskRuleOptions[i].initParams[k]['value']"
                     :class="param.unit ? 'with-unit' : ''"
                     :type="param.type.toLowerCase()"
                   />
-                  <span v-if="param.unit" class="value-unit">{{
-                    param.unit
-                  }}</span>
+                  <span v-if="param.unit" class="value-unit">{{ param.unit }}</span>
                 </el-form-item>
               </div>
             </div>
@@ -171,19 +133,13 @@
           <div v-if="activeIndex === '4'">
             <div v-for="(dealer, i) in dealerOptions" :key="i">
               <div v-if="dealer.componentMeta.name === chosenDealer">
-                <el-form-item
-                  v-for="(param, index) in dealer.initParams"
-                  :label="param.label"
-                  :key="param.field"
-                >
+                <el-form-item v-for="(param, index) in dealer.initParams" :label="param.label" :key="param.field">
                   <el-input
                     v-model="dealerOptions[i].initParams[index]['value']"
                     :class="param.unit ? 'with-unit' : ''"
                     :type="param.type.toLowerCase()"
                   />
-                  <span v-if="param.unit" class="value-unit">{{
-                    param.unit
-                  }}</span>
+                  <span v-if="param.unit" class="value-unit">{{ param.unit }}</span>
                 </el-form-item>
               </div>
             </div>
@@ -193,13 +149,9 @@
     </el-container>
 
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="contractFinderVisible = true"
-        >合约查询</el-button
-      >
+      <el-button type="primary" @click="contractFinderVisible = true">合约查询</el-button>
       <el-button @click="close">取 消</el-button>
-      <el-button type="primary" @click="saveSetting" :disabled="readOnly"
-        >保 存</el-button
-      >
+      <el-button type="primary" @click="saveSetting" :disabled="readOnly">保 存</el-button>
     </div>
   </el-dialog>
 </template>
@@ -293,21 +245,16 @@ export default {
         })
 
         // 风控策略名 --> 初始化参数列表
-        const ruleNameToParamsMap = this.module.riskControlRules.reduce(
-          (obj, rule) => {
-            obj[rule.componentMeta.name] = rule.initParams
-            return obj
-          },
-          {}
-        )
+        const ruleNameToParamsMap = this.module.riskControlRules.reduce((obj, rule) => {
+          obj[rule.componentMeta.name] = rule.initParams
+          return obj
+        }, {})
         this.riskRuleOptions.forEach((r) => {
           if (ruleNameToParamsMap[r.componentMeta.name]) {
             r.initParams = ruleNameToParamsMap[r.componentMeta.name]
           }
         })
-        this.chosenRiskRules = this.module.riskControlRules.map(
-          (i) => i.componentMeta.name
-        )
+        this.chosenRiskRules = this.module.riskControlRules.map((i) => i.componentMeta.name)
         this.onChosenRiskRule(this.chosenRiskRules)
       }
     },
@@ -319,15 +266,9 @@ export default {
   },
   methods: {
     initData() {
-      gatewayMgmtApi
-        .findAll('TRADE')
-        .then(
-          (result) => (this.accountOptions = result.map((i) => i.gatewayId))
-        )
+      gatewayMgmtApi.findAll('TRADE').then((result) => (this.accountOptions = result.map((i) => i.gatewayId)))
       ctaModuleApi.getCtpSignalPolicies().then((policies) => {
-        policies.forEach(async (i) =>
-          initComponent(i, this.signalPolicyOptions)
-        )
+        policies.forEach(async (i) => initComponent(i, this.signalPolicyOptions))
       })
       ctaModuleApi.getDealers().then((dealers) => {
         dealers.forEach(async (i) => initComponent(i, this.dealerOptions))
@@ -341,9 +282,10 @@ export default {
     },
     saveSetting() {
       const pass =
-        this.assertTrue(this.form.moduleName, '未指定模组名称') ||
-        this.assertTrue(this.form.accountGatewayId, '未指定绑定账户') ||
-        this.assertTrue(this.form.signalPolicy.name, '未指定信号策略')
+        this.assertTrue(this.form.moduleName, '未指定模组名称') &&
+        this.assertTrue(this.form.accountGatewayId, '未指定绑定账户') &&
+        this.assertTrue(this.form.signalPolicy.componentMeta.name, '未指定信号策略') &&
+        this.assertTrue(this.form.dealer.componentMeta.name, '未指定交易策略')
 
       if (!pass) {
         return
@@ -372,17 +314,13 @@ export default {
       )
     },
     async onChosenDealer() {
-      const arr = this.dealerOptions.filter(
-        (i) => i.componentMeta.name === this.chosenDealer
-      )
+      const arr = this.dealerOptions.filter((i) => i.componentMeta.name === this.chosenDealer)
       if (arr.length) {
         this.form.dealer = arr[0]
       }
     },
     async onChosenSignalPolicy() {
-      const arr = this.signalPolicyOptions.filter(
-        (i) => i.componentMeta.name === this.chosenSignalPolicy
-      )
+      const arr = this.signalPolicyOptions.filter((i) => i.componentMeta.name === this.chosenSignalPolicy)
       if (arr.length) {
         this.form.signalPolicy = arr[0]
       }
