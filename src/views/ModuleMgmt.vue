@@ -70,7 +70,7 @@
           >
         </template>
         <template slot-scope="scope">
-          <el-button size="mini">历史</el-button>
+          <el-button size="mini">绩效</el-button>
           <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
             >查看</el-button
           >

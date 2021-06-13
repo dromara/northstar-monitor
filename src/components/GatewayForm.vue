@@ -87,9 +87,9 @@
           </el-form-item>
         </el-col>
         <el-col :span="8" v-if="gatewayUsage === 'TRADE'">
-          <el-form-item label="行情网关" prop="relativeGatewayId">
+          <el-form-item label="行情网关" prop="bindedMktGatewayId">
             <el-select
-              v-model="form.relativeGatewayId"
+              v-model="form.bindedMktGatewayId"
               placeholder="请选择"
               @change="onChooseGatewayType"
             >
@@ -169,7 +169,7 @@ export default {
         gatewayUsage: [
           { required: true, message: '不能为空', trigger: 'blur' }
         ],
-        relativeGatewayId: [
+        bindedMktGatewayId: [
           { required: true, message: '不能为空', trigger: 'blur' }
         ]
       },
@@ -184,7 +184,7 @@ export default {
         gatewayAdapterType: '',
         connectionState: CONNECTION_STATE.DISCONNECTED,
         autoConnect: true,
-        relativeGatewayId: '',
+        bindedMktGatewayId: '',
         settings: null
       }
     }
