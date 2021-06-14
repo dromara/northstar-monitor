@@ -6,7 +6,7 @@
       :module="curModule"
       @onSave="onSave"
     />
-    <ModulePerf :visible.sync="modulePerfVisible" />
+    <ModulePerf :moduleName="curModule.moduleName" :visible.sync="modulePerfVisible" />
     <el-table height="100%" :data="list">
       <el-table-column label="模组名称" prop="moduleName" align="center" width="100px" />
       <el-table-column label="策略模式" prop="type" align="center" width="90px" />
