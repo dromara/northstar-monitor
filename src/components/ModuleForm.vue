@@ -4,7 +4,7 @@
     :visible.sync="dialogVisible"
     :close-on-click-modal="false"
     :show-close="false"
-    class="cta-dialog"
+    class="module-dialog"
     width="540px"
   >
     <ContractFinder :visible.sync="contractFinderVisible" />
@@ -30,7 +30,7 @@
         </el-menu>
       </el-aside>
       <el-main class="main-compact"
-        ><el-form :model="form" label-width="100px" class="cta-form" inline :rules="formRules">
+        ><el-form :model="form" label-width="100px" class="module-form" inline :rules="formRules">
           <el-form-item v-if="activeIndex === '1'" label="模组名称">
             <el-input v-model="form.moduleName"></el-input>
           </el-form-item>
@@ -42,7 +42,12 @@
           </el-form-item>
           <el-form-item v-if="activeIndex === '1'" label="绑定账户">
             <el-select v-model="form.accountGatewayId">
-              <el-option v-for="account in accountOptions" :label="account" :value="account" :key="account"></el-option>
+              <el-option
+                v-for="account in accountOptions"
+                :label="account"
+                :value="account"
+                :key="account"
+              ></el-option>
             </el-select>
           </el-form-item>
           <el-form-item v-if="activeIndex === '1'" label="数据回溯">
@@ -57,7 +62,12 @@
             <el-switch v-model="form.enabled"> </el-switch>
           </el-form-item>
           <el-form-item v-if="activeIndex === '2'" label="信号策略">
-            <el-select v-model="chosenSignalPolicy" @change="onChosenSignalPolicy" placeholder="请选择" key="信号策略">
+            <el-select
+              v-model="chosenSignalPolicy"
+              @change="onChosenSignalPolicy"
+              placeholder="请选择"
+              key="信号策略"
+            >
               <el-option
                 v-for="(p, i) in signalPolicyOptions"
                 :label="p.componentMeta.name"
@@ -69,7 +79,11 @@
           <div v-if="activeIndex === '2'">
             <div v-for="(policy, i) in signalPolicyOptions" :key="i">
               <div v-if="chosenSignalPolicy === policy.componentMeta.name">
-                <el-form-item v-for="(param, index) in policy.initParams" :label="param.label" :key="param.field">
+                <el-form-item
+                  v-for="(param, index) in policy.initParams"
+                  :label="param.label"
+                  :key="param.field"
+                >
                   <el-input
                     v-model="signalPolicyOptions[i].initParams[index]['value']"
                     :class="param.unit ? 'with-unit' : ''"
@@ -133,7 +147,11 @@
           <div v-if="activeIndex === '4'">
             <div v-for="(dealer, i) in dealerOptions" :key="i">
               <div v-if="dealer.componentMeta.name === chosenDealer">
-                <el-form-item v-for="(param, index) in dealer.initParams" :label="param.label" :key="param.field">
+                <el-form-item
+                  v-for="(param, index) in dealer.initParams"
+                  :label="param.label"
+                  :key="param.field"
+                >
                   <el-input
                     v-model="dealerOptions[i].initParams[index]['value']"
                     :class="param.unit ? 'with-unit' : ''"
@@ -149,9 +167,11 @@
     </el-container>
 
     <div slot="footer" class="dialog-footer">
-      <el-button type="primary" @click="contractFinderVisible = true">合约查询</el-button>
+      <el-button v-if="!readOnly" type="primary" @click="contractFinderVisible = true"
+        >合约查询</el-button
+      >
       <el-button @click="close">取 消</el-button>
-      <el-button type="primary" @click="saveSetting" :disabled="readOnly">保 存</el-button>
+      <el-button v-if="!readOnly" type="primary" @click="saveSetting">保 存</el-button>
     </div>
   </el-dialog>
 </template>
@@ -159,10 +179,10 @@
 <script>
 import ContractFinder from './ContractFinder'
 import gatewayMgmtApi from '../api/gatewayMgmtApi'
-import ctaModuleApi from '../api/ctaModuleApi'
+import moduleApi from '../api/moduleApi'
 
 const initComponent = async (component, arr) => {
-  const paramsMap = await ctaModuleApi.componentParams(component)
+  const paramsMap = await moduleApi.componentParams(component)
   arr.push({
     componentMeta: component,
     initParams: Object.values(paramsMap).sort((a, b) => a.order - b.order)
@@ -266,14 +286,16 @@ export default {
   },
   methods: {
     initData() {
-      gatewayMgmtApi.findAll('TRADE').then((result) => (this.accountOptions = result.map((i) => i.gatewayId)))
-      ctaModuleApi.getCtpSignalPolicies().then((policies) => {
+      gatewayMgmtApi
+        .findAll('TRADE')
+        .then((result) => (this.accountOptions = result.map((i) => i.gatewayId)))
+      moduleApi.getCtpSignalPolicies().then((policies) => {
         policies.forEach(async (i) => initComponent(i, this.signalPolicyOptions))
       })
-      ctaModuleApi.getDealers().then((dealers) => {
+      moduleApi.getDealers().then((dealers) => {
         dealers.forEach(async (i) => initComponent(i, this.dealerOptions))
       })
-      ctaModuleApi.getRiskControlRules().then((rules) => {
+      moduleApi.getRiskControlRules().then((rules) => {
         rules.forEach(async (i) => initComponent(i, this.riskRuleOptions))
       })
     },
@@ -320,7 +342,9 @@ export default {
       }
     },
     async onChosenSignalPolicy() {
-      const arr = this.signalPolicyOptions.filter((i) => i.componentMeta.name === this.chosenSignalPolicy)
+      const arr = this.signalPolicyOptions.filter(
+        (i) => i.componentMeta.name === this.chosenSignalPolicy
+      )
       if (arr.length) {
         this.form.signalPolicy = arr[0]
       }
@@ -333,11 +357,11 @@ export default {
 .main-compact {
   padding-bottom: 0px;
 }
-.cta-dialog {
+.module-dialog {
   min-width: 376px;
 }
-.cta-form .el-input,
-.cta-form .el-select {
+.module-form .el-input,
+.module-form .el-select {
   width: 200px;
 }
 
@@ -345,7 +369,7 @@ export default {
   /* font-size: 16px; */
   padding-left: 5px;
 }
-.cta-form .with-unit {
+.module-form .with-unit {
   width: 100px;
 }
 </style>

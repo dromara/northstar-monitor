@@ -1,83 +1,55 @@
 <template>
   <div class="ns-page">
     <ModuleForm
-      :visible.sync="ctaModuleFormVisible"
+      :visible.sync="moduleFormVisible"
       :readOnly="curTableIndex > -1"
       :module="curModule"
       @onSave="onSave"
     />
+    <ModulePerf :visible.sync="modulePerfVisible" />
     <el-table height="100%" :data="list">
-      <el-table-column
-        label="模组名称"
-        prop="moduleName"
-        align="center"
-        width="100px"
-      />
-      <el-table-column
-        label="策略模式"
-        prop="type"
-        align="center"
-        width="90px"
-      />
-      <el-table-column
-        label="绑定账户"
-        prop="accountGatewayId"
-        align="center"
-      />
+      <el-table-column label="模组名称" prop="moduleName" align="center" width="100px" />
+      <el-table-column label="策略模式" prop="type" align="center" width="90px" />
+      <el-table-column label="绑定账户" prop="accountGatewayId" align="center" />
       <el-table-column
         label="资金占用上限"
         prop="allocatedAccountShare"
         align="center"
         width="80px"
       >
-        <template slot-scope="scope"
-          >{{ scope.row.allocatedAccountShare }}%</template
-        >
+        <template slot-scope="scope">{{ scope.row.allocatedAccountShare }}%</template>
       </el-table-column>
-      <el-table-column
-        label="信号策略"
-        prop="signalPolicy.componentMeta.name"
-        align="center"
-      />
+      <el-table-column label="信号策略" prop="signalPolicy.componentMeta.name" align="center" />
       <el-table-column label="风控策略" align="center">
         <template slot-scope="scope">
-          {{
-            scope.row.riskControlRules
-              .map((i) => i.componentMeta.name)
-              .join(', ')
-          }}
+          {{ scope.row.riskControlRules.map((i) => i.componentMeta.name).join(', ') }}
         </template>
       </el-table-column>
-      <el-table-column
-        label="交易策略"
-        prop="dealer.componentMeta.name"
-        align="center"
-      />
-      <el-table-column
-        label="是否启用"
-        prop="enabled"
-        align="center"
-        width="100px"
-      >
-        <template slot-scope="scope">{{
-          scope.row.enabled ? '启用' : '停用'
-        }}</template>
+      <el-table-column label="交易策略" prop="dealer.componentMeta.name" align="center" />
+      <el-table-column label="启停切换" prop="enabled" align="center" width="100px">
+        <template slot-scope="scope">
+          <el-button
+            v-if="scope.row.enabled"
+            type="success"
+            @click.native="toggle(scope.$index, scope.row)"
+            >启用</el-button
+          >
+          <el-button
+            v-if="!scope.row.enabled"
+            type="danger"
+            @click.native="toggle(scope.$index, scope.row)"
+            >停用</el-button
+          >
+        </template>
       </el-table-column>
       <el-table-column align="center" width="240px">
         <template slot="header">
-          <el-button size="mini" type="primary" @click="handleCreate"
-            >新建</el-button
-          >
+          <el-button size="mini" type="primary" @click="handleCreate">新建</el-button>
         </template>
         <template slot-scope="scope">
-          <el-button size="mini">绩效</el-button>
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)"
-            >查看</el-button
-          >
-          <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)"
+          <el-button size="mini" @click="handlePerf(scope.$index, scope.row)">透视</el-button>
+          <el-button size="mini" @click="handleView(scope.$index, scope.row)">查看</el-button>
+          <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)"
             >删除</el-button
           >
         </template>
@@ -88,16 +60,19 @@
 
 <script>
 import ModuleForm from '@/components/ModuleForm'
+import ModulePerf from '@/components/ModulePerformance'
 
-import ctaModuleApi from '@/api/ctaModuleApi'
+import moduleApi from '@/api/moduleApi'
 
 export default {
   components: {
-    ModuleForm
+    ModuleForm,
+    ModulePerf
   },
   data() {
     return {
-      ctaModuleFormVisible: false,
+      moduleFormVisible: false,
+      modulePerfVisible: false,
       curTableIndex: -1,
       curModule: {},
       list: []
@@ -108,31 +83,52 @@ export default {
   },
   methods: {
     handleCreate() {
-      this.ctaModuleFormVisible = true
+      this.moduleFormVisible = true
       this.curTableIndex = -1
       this.curModule = {}
     },
-    handleEdit(index, row) {
+    handlePerf(index, row) {
       console.log(index, row)
       this.curTableIndex = index
       this.curModule = row
-      this.ctaModuleFormVisible = true
+      this.modulePerfVisible = true
+    },
+    handleView(index, row) {
+      console.log(index, row)
+      this.curTableIndex = index
+      this.curModule = row
+      this.moduleFormVisible = true
     },
     async handleDelete(index, row) {
       console.log(index, row)
-      await ctaModuleApi.removeModule(row.moduleName)
+      await moduleApi.removeModule(row.moduleName)
       this.findAll()
     },
     async onSave(obj) {
       console.log(obj)
       if (this.curTableIndex < 0) {
-        await ctaModuleApi.insertModule(obj)
+        await moduleApi.insertModule(obj)
       }
       this.findAll()
     },
     async findAll() {
-      this.list = await ctaModuleApi.getAllModules()
+      this.list = await moduleApi.getAllModules()
       console.log(this.list)
+    },
+    async toggle(index, row) {
+      console.log(index, row)
+      this.$confirm(
+        `是否确定切换模组启停状态？当前状态为［${row.enabled ? '启用' : '停用'}]`,
+        '提示',
+        {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }
+      ).then(async () => {
+        await moduleApi.toggleModuleState(row.moduleName)
+        await this.findAll()
+      })
     }
   }
 }
