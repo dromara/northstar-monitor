@@ -16,13 +16,7 @@
       :settingsSrc="form.settings"
       @onSave="(settings) => (form.settings = settings)"
     />
-    <el-form
-      ref="gatewayForm"
-      :model="form"
-      label-width="100px"
-      width="200px"
-      :rules="formRules"
-    >
+    <el-form ref="gatewayForm" :model="form" label-width="100px" width="200px" :rules="formRules">
       <el-row>
         <el-col :span="8">
           <el-form-item :label="`${typeLabel}ID`" prop="gatewayId">
@@ -42,11 +36,7 @@
       <el-row>
         <el-col :span="8">
           <el-form-item :label="`${typeLabel}类型`" prop="gatewayType">
-            <el-select
-              v-model="form.gatewayType"
-              placeholder="未知"
-              @change="onChooseGatewayType"
-            >
+            <el-select v-model="form.gatewayType" placeholder="未知" @change="onChooseGatewayType">
               <el-option label="CTP" value="CTP"></el-option>
               <el-option label="SIM" value="SIM"></el-option>
               <!-- <el-option label="IB网关" value="beijing"></el-option> -->
@@ -55,11 +45,7 @@
         </el-col>
         <el-col :span="16">
           <el-form-item label="适配器类型" prop="gatewayAdapterType">
-            <el-input
-              v-model="form.gatewayAdapterType"
-              autocomplete="off"
-              disabled
-            ></el-input>
+            <el-input v-model="form.gatewayAdapterType" autocomplete="off" disabled></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -77,11 +63,7 @@
                 label="行情"
                 value="MARKET_DATA"
               ></el-option>
-              <el-option
-                v-if="gatewayUsage === 'TRADE'"
-                label="交易"
-                value="TRADE"
-              ></el-option>
+              <el-option v-if="gatewayUsage === 'TRADE'" label="交易" value="TRADE"></el-option>
               <!-- <el-option label="IB网关" value="beijing"></el-option> -->
             </el-select>
           </el-form-item>
@@ -111,10 +93,7 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="close">取 消</el-button>
-      <el-button
-        type="primary"
-        @click="gatewaySettingConfig"
-        :disabled="!form.gatewayType"
+      <el-button type="primary" @click="gatewaySettingConfig" :disabled="!form.gatewayType"
         >{{ typeLabel }}配置</el-button
       >
       <el-button type="primary" @click="saveGateway">保 存</el-button>
@@ -166,12 +145,8 @@ export default {
       formRules: {
         gatewayId: [{ required: true, message: '不能为空', trigger: 'blur' }],
         gatewayType: [{ required: true, message: '不能为空', trigger: 'blur' }],
-        gatewayUsage: [
-          { required: true, message: '不能为空', trigger: 'blur' }
-        ],
-        bindedMktGatewayId: [
-          { required: true, message: '不能为空', trigger: 'blur' }
-        ]
+        gatewayUsage: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        bindedMktGatewayId: [{ required: true, message: '不能为空', trigger: 'blur' }]
       },
       dialogVisible: false,
       ctpFormVisible: false,

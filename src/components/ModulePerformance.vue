@@ -1,14 +1,49 @@
 <template>
   <el-dialog title="模组透视" :visible.sync="dialogVisible" class="module-perf-dialog" fullscreen>
-    <div class="wrapper" :style="{ height: `${flexibleHeight}px` }">
+    <div class="module-perf-wrapper" :style="{ height: `${flexibleHeight}px` }">
       <div role="side" class="side-panel">
-        <el-form>
-          <el-form-item label="模组名称">
-            {{ moduleName }}
-          </el-form-item>
-          <el-form-item label="总盈亏">
-            {{ totalProfit }}
-          </el-form-item>
+        <el-form inline>
+          <el-row>
+            <el-col span="12">
+              <el-form-item label="模组名称">
+                <div class="text-wrapper">{{ moduleName }}</div>
+              </el-form-item>
+            </el-col>
+            <el-col span="12">
+              <el-form-item label="账户ID">
+                <div class="text-wrapper">{{ accountId }}</div>
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col span="12">
+              <el-form-item label="账户总额">
+                {{ accountBalance }}
+              </el-form-item>
+            </el-col>
+            <el-col span="12">
+              <el-form-item label="模组状态">
+                {{ moduleState }}
+              </el-form-item>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col span="8">
+              <el-form-item label="平仓盈亏">
+                {{ totalCloseProfit }}
+              </el-form-item>
+            </el-col>
+            <el-col span="8">
+              <el-form-item label="持仓盈亏">
+                {{ totalPositionProfit }}
+              </el-form-item>
+            </el-col>
+            <el-col span="8">
+              <el-form-item label="总盈亏">
+                {{ totalCloseProfit + totalPositionProfit }}
+              </el-form-item>
+            </el-col>
+          </el-row>
         </el-form>
         <el-table :data="dealRecords" :height="flexibleTblHeight">
           <el-table-column prop="unifiedSymbol" label="合约" align="center"></el-table-column>
@@ -42,6 +77,8 @@ import volumePure from '@/lib/indicator/volume-pure'
 import openInterestDelta from '@/lib/indicator/open-interest'
 import moduleApi from '@/api/moduleApi'
 
+// import { AccountField } from '@/lib/xyz/redtorch/pb/core_field_pb'
+
 export default {
   props: {
     visible: {
@@ -58,7 +95,11 @@ export default {
       activeTab: '',
       dialogVisible: false,
       dealRecords: [],
-      totalProfit: 100000,
+      totalCloseProfit: 100000,
+      totalPositionProfit: 0,
+      moduleState: '',
+      accountId: 'abcdefghigabcdefghig',
+      accountBalance: 10000000000,
       barDataMap: {
         rb2101: [],
         AP101: []
@@ -82,7 +123,7 @@ export default {
   },
   computed: {
     flexibleTblHeight() {
-      return document.body.clientHeight - 160
+      return document.body.clientHeight - 206
     },
     flexibleHeight() {
       return document.body.clientHeight - 70
@@ -94,7 +135,14 @@ export default {
   methods: {
     async init() {
       const result = await moduleApi.getModulePerf(this.moduleName)
-      this.totalProfit = result.totalProfit
+      this.totalCloseProfit = result.totalCloseProfit
+      this.totalPositionProfit = result.totalPositionProfit
+      this.moduleState = result.moduleState
+      // if (result.account) {
+      //   const account = AccountField.deserializeBinary(result.account).toObject()
+      //   this.accountId = account.gatewayid
+      //   this.accountBalance = account.balance
+      // }
       this.dealRecords = result.dealRecords
       this.activeTab = this.symbolOptions.length ? this.symbolOptions[0] : ''
       const kLineChart = init(`module-k-line`)
@@ -130,7 +178,7 @@ export default {
   height: 100%;
   overflow: hidden;
 }
-.wrapper {
+.module-perf-wrapper {
   display: flex;
 }
 .side-panel {
@@ -142,6 +190,10 @@ export default {
 }
 .kline-header {
   margin-left: 8px;
+}
+.text-wrapper {
+  box-sizing: content-box;
+  width: 100%;
 }
 </style>
 <style>
