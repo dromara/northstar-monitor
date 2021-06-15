@@ -5,43 +5,37 @@
         <el-form inline>
           <el-row>
             <el-col span="12">
-              <el-form-item label="模组名称">
-                <div class="text-wrapper">{{ moduleName }}</div>
-              </el-form-item>
+              <ReadonlyFieldValue label="模组名称" label-width="60px" :value="moduleName" />
             </el-col>
             <el-col span="12">
-              <el-form-item label="账户ID">
-                <div class="text-wrapper">{{ accountId }}</div>
-              </el-form-item>
+              <ReadonlyFieldValue label="账户ID" label-width="60px" :value="accountId" />
             </el-col>
           </el-row>
           <el-row>
             <el-col span="12">
-              <el-form-item label="账户总额">
-                {{ accountBalance }}
-              </el-form-item>
+              <ReadonlyFieldValue label="账户总额" label-width="60px" :value="accountBalance" />
             </el-col>
             <el-col span="12">
-              <el-form-item label="模组状态">
-                {{ moduleState }}
-              </el-form-item>
+              <ReadonlyFieldValue label="模组状态" label-width="60px" :value="moduleState" />
             </el-col>
           </el-row>
           <el-row>
             <el-col span="8">
-              <el-form-item label="平仓盈亏">
-                {{ totalCloseProfit }}
-              </el-form-item>
+              <ReadonlyFieldValue label="平仓盈亏" label-width="60px" :value="totalCloseProfit" />
             </el-col>
             <el-col span="8">
-              <el-form-item label="持仓盈亏">
-                {{ totalPositionProfit }}
-              </el-form-item>
+              <ReadonlyFieldValue
+                label="持仓盈亏"
+                label-width="60px"
+                :value="totalPositionProfit"
+              />
             </el-col>
             <el-col span="8">
-              <el-form-item label="总盈亏">
-                {{ totalCloseProfit + totalPositionProfit }}
-              </el-form-item>
+              <ReadonlyFieldValue
+                label="总盈亏"
+                label-width="50px"
+                :value="totalCloseProfit + totalPositionProfit"
+              />
             </el-col>
           </el-row>
         </el-form>
@@ -76,10 +70,14 @@ import { dispose, init } from 'klinecharts'
 import volumePure from '@/lib/indicator/volume-pure'
 import openInterestDelta from '@/lib/indicator/open-interest'
 import moduleApi from '@/api/moduleApi'
+import ReadonlyFieldValue from '@/components/ReadonlyFieldValue'
 
 // import { AccountField } from '@/lib/xyz/redtorch/pb/core_field_pb'
 
 export default {
+  components: {
+    ReadonlyFieldValue
+  },
   props: {
     visible: {
       type: Boolean,
@@ -98,7 +96,7 @@ export default {
       totalCloseProfit: 100000,
       totalPositionProfit: 0,
       moduleState: '',
-      accountId: 'abcdefghigabcdefghig',
+      accountId: 'abcdefghigabcdefghisfadfasfagsdfasdfasfasfasdfasfasdfasfsadfasfasfasf',
       accountBalance: 10000000000,
       barDataMap: {
         rb2101: [],
@@ -123,7 +121,7 @@ export default {
   },
   computed: {
     flexibleTblHeight() {
-      return document.body.clientHeight - 206
+      return document.body.clientHeight - 190
     },
     flexibleHeight() {
       return document.body.clientHeight - 70
