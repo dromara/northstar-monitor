@@ -24,10 +24,7 @@
       <div class="ns-trade__account-description">
         使用率：{{
           accountBalance
-            ? (
-                ((accountBalance - accountAvailable) * 100) /
-                accountBalance
-              ).toFixed(1)
+            ? (((accountBalance - accountAvailable) * 100) / accountBalance).toFixed(1)
             : 0
         }}
         %
@@ -197,7 +194,7 @@ export default {
       timelyCheck()
 
       // this.symbolList = this.$store.getters.findContractsByType(
-      //   this.currentAccount.relativeGatewayId,
+      //   this.currentAccount.bindedMktGatewayId,
       //   'FUTURES'
       // )
       const sortFunc = (a, b) => {
@@ -207,14 +204,11 @@ export default {
       dataSyncApi.getAvailableContracts().then((list) => {
         console.log('合约总数', list.length)
         this.symbolList = list
-          .filter((i) => i.gatewayId === this.currentAccount.relativeGatewayId)
+          .filter((i) => i.gatewayId === this.currentAccount.bindedMktGatewayId)
           .sort(sortFunc)
       })
 
-      this.$store.commit(
-        'updateFocusMarketGatewayId',
-        this.currentAccount.relativeGatewayId
-      )
+      this.$store.commit('updateFocusMarketGatewayId', this.currentAccount.bindedMktGatewayId)
       this.$store.commit('updateCurAccountId', this.currentAccountId)
     },
     handleContractChange() {
@@ -240,12 +234,7 @@ export default {
       tradeOprApi.cancelOrder(this.currentAccountId, order.orderid)
     },
     buyOpen() {
-      return tradeOprApi.buyOpen(
-        this.currentAccountId,
-        this.dealSymbol,
-        this.bkPrice,
-        this.dealVol
-      )
+      return tradeOprApi.buyOpen(this.currentAccountId, this.dealSymbol, this.bkPrice, this.dealVol)
     },
     sellOpen() {
       return tradeOprApi.sellOpen(
@@ -307,37 +296,25 @@ export default {
     },
     bkPrice() {
       return {
-        COUNTERPARTY_PRICE: this.$store.state.marketCurrentDataModule.curTick
-          .askpriceList[0],
-        WAITING_PRICE: this.$store.state.marketCurrentDataModule.curTick
-          .bidpriceList[0],
-        FIGHTING_PRICE: this.$store.state.marketCurrentDataModule.curTick
-          .upperlimit,
+        COUNTERPARTY_PRICE: this.$store.state.marketCurrentDataModule.curTick.askpriceList[0],
+        WAITING_PRICE: this.$store.state.marketCurrentDataModule.curTick.bidpriceList[0],
+        FIGHTING_PRICE: this.$store.state.marketCurrentDataModule.curTick.upperlimit,
         CUSTOM_PRICE: this.limitPrice
       }[this.dealPriceType]
     },
     skPrice() {
       return {
-        COUNTERPARTY_PRICE: this.$store.state.marketCurrentDataModule.curTick
-          .bidpriceList[0],
-        WAITING_PRICE: this.$store.state.marketCurrentDataModule.curTick
-          .askpriceList[0],
-        FIGHTING_PRICE: this.$store.state.marketCurrentDataModule.curTick
-          .lowerlimit,
+        COUNTERPARTY_PRICE: this.$store.state.marketCurrentDataModule.curTick.bidpriceList[0],
+        WAITING_PRICE: this.$store.state.marketCurrentDataModule.curTick.askpriceList[0],
+        FIGHTING_PRICE: this.$store.state.marketCurrentDataModule.curTick.lowerlimit,
         CUSTOM_PRICE: this.limitPrice
       }[this.dealPriceType]
     },
     closePrice() {
-      if (
-        this.currentPosition &&
-        this.currentPosition.positiondirection === 2
-      ) {
+      if (this.currentPosition && this.currentPosition.positiondirection === 2) {
         return this.skPrice
       }
-      if (
-        this.currentPosition &&
-        this.currentPosition.positiondirection === 3
-      ) {
+      if (this.currentPosition && this.currentPosition.positiondirection === 3) {
         return this.bkPrice
       }
       return ''

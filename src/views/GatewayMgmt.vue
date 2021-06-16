@@ -14,8 +14,7 @@
     <el-table
       :data="
         tableData.filter(
-          (data) =>
-            !search || data.name.toLowerCase().includes(search.toLowerCase())
+          (data) => !search || data.name.toLowerCase().includes(search.toLowerCase())
         )
       "
       height="100%"
@@ -85,7 +84,7 @@
       <el-table-column
         v-if="gatewayUsage === 'TRADE'"
         label="关联网关"
-        prop="relativeGatewayId"
+        prop="bindedMktGatewayId"
         width="150px"
         header-align="center"
         align="center"
@@ -100,9 +99,7 @@
       </el-table-column>
       <el-table-column align="center" width="300px">
         <template slot="header">
-          <el-button size="mini" type="primary" @click="handleCreate"
-            >新建</el-button
-          >
+          <el-button size="mini" type="primary" @click="handleCreate">新建</el-button>
         </template>
         <template slot-scope="scope">
           <el-button
@@ -121,10 +118,7 @@
           >
           <el-button
             size="mini"
-            v-if="
-              scope.row.connectionState === 'CONNECTED' &&
-              scope.row.gatewayType === 'SIM'
-            "
+            v-if="scope.row.connectionState === 'CONNECTED' && scope.row.gatewayType === 'SIM'"
             @click="handleMoneyIO(scope.row)"
             >出入金</el-button
           >
