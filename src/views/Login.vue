@@ -2,22 +2,12 @@
   <div class="wrapper">
     <div class="logo"></div>
     <div class="panel" v-on:keydown.enter="login">
-      <el-form
-        :model="userForm"
-        status-icon
-        label-width="80px"
-        class="demo-userForm"
-      >
+      <el-form :model="userForm" status-icon label-width="80px" class="demo-userForm">
         <el-form-item label="用户名">
           <el-input v-model="userForm.name" clearable></el-input>
         </el-form-item>
         <el-form-item label="密码">
-          <el-input
-            type="password"
-            v-model="userForm.pass"
-            autocomplete="off"
-            clearable
-          ></el-input>
+          <el-input type="password" v-model="userForm.pass" autocomplete="off" clearable></el-input>
         </el-form-item>
         <el-form-item>
           <el-button @click="login">提交</el-button>
@@ -39,13 +29,8 @@ export default {
       hostUrl: ''
     }
   },
-  mounted() {
-    this.hostUrl = location.hostname
-  },
   methods: {
     async login() {
-      this.$store.commit('updateHost', this.hostUrl)
-
       await loginApi.login(this.userForm.name, this.userForm.pass)
       console.log('登陆成功')
       this.$router.push({ name: 'workspace' })

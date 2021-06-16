@@ -72,7 +72,7 @@ import openInterestDelta from '@/lib/indicator/open-interest'
 import moduleApi from '@/api/moduleApi'
 import ReadonlyFieldValue from '@/components/ReadonlyFieldValue'
 
-// import { AccountField } from '@/lib/xyz/redtorch/pb/core_field_pb'
+import { BarField, AccountField } from '@/lib/xyz/redtorch/pb/core_field_pb'
 
 export default {
   components: {
@@ -93,15 +93,12 @@ export default {
       activeTab: '',
       dialogVisible: false,
       dealRecords: [],
-      totalCloseProfit: 100000,
+      totalCloseProfit: 0,
       totalPositionProfit: 0,
       moduleState: '',
-      accountId: 'abcdefghigabcdefghisfadfasfagsdfasdfasfasfasdfasfasdfasfsadfasfasfasf',
-      accountBalance: 10000000000,
-      barDataMap: {
-        rb2101: [],
-        AP101: []
-      },
+      accountId: '',
+      accountBalance: 0,
+      barDataMap: {},
       chart: null
     }
   },
@@ -136,11 +133,17 @@ export default {
       this.totalCloseProfit = result.totalCloseProfit
       this.totalPositionProfit = result.totalPositionProfit
       this.moduleState = result.moduleState
-      // if (result.account) {
-      //   const account = AccountField.deserializeBinary(result.account).toObject()
-      //   this.accountId = account.gatewayid
-      //   this.accountBalance = account.balance
-      // }
+      if (result.account) {
+        const account = AccountField.deserializeBinary(result.account).toObject()
+        this.accountId = account.gatewayid
+        this.accountBalance = account.balance
+      }
+      const refBarDataMap = result.refBarDataMap
+      this.barDataMap = {}
+      Object.keys(refBarDataMap).forEach((k) => {
+        this.barDataMap[k] = BarField.deserializeBinary(refBarDataMap[k]).toObject()
+      })
+
       this.dealRecords = result.dealRecords
       this.activeTab = this.symbolOptions.length ? this.symbolOptions[0] : ''
       const kLineChart = init(`module-k-line`)

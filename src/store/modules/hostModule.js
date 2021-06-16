@@ -1,6 +1,6 @@
 const hostModule = {
   state: () => ({
-    host: 'localhost'
+    host: location.hostname
   }),
   mutations: {
     updateHost(state, host) {
