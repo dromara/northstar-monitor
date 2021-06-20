@@ -19,9 +19,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="合约ID">
-        <span ref="symbolText" class="text-selectable">{{
-          unifiedSymbol
-        }}</span>
+        <span ref="symbolText" class="text-selectable">{{ unifiedSymbol }}</span>
         <el-button
           size="mini"
           @click="copy"
@@ -79,6 +77,12 @@ export default {
   },
   methods: {
     copy() {
+      let range = document.createRange()
+      let refNode = this.$refs.symbolText
+      range.selectNodeContents(refNode)
+      let selection = window.getSelection()
+      selection.removeAllRanges()
+      selection.addRange(range)
       document.execCommand('Copy')
     }
   }
