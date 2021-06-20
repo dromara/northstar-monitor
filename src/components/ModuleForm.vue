@@ -54,10 +54,6 @@
             <el-input v-model="form.daysOfRefData" type="number" class="with-unit"></el-input
             ><span class="value-unit">天</span>
           </el-form-item>
-          <el-form-item v-if="activeIndex === '1'" label="分配账户比例">
-            <el-input type="number" v-model="form.allocatedAccountShare" class="with-unit" />
-            <span class="value-unit">%</span>
-          </el-form-item>
           <el-form-item v-if="activeIndex === '1'" label="是否启用">
             <el-switch v-model="form.enabled"> </el-switch>
           </el-form-item>
@@ -222,7 +218,6 @@ export default {
       form: {
         moduleName: '',
         accountGatewayId: '',
-        allocatedAccountShare: '',
         signalPolicy: {
           componentMeta: {},
           initParams: []

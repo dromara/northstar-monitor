@@ -72,7 +72,7 @@ import openInterestDelta from '@/lib/indicator/open-interest'
 import moduleApi from '@/api/moduleApi'
 import ReadonlyFieldValue from '@/components/ReadonlyFieldValue'
 
-import { BarField, AccountField } from '@/lib/xyz/redtorch/pb/core_field_pb'
+import { BarField } from '@/lib/xyz/redtorch/pb/core_field_pb'
 
 export default {
   components: {
@@ -133,11 +133,8 @@ export default {
       this.totalCloseProfit = result.totalCloseProfit
       this.totalPositionProfit = result.totalPositionProfit
       this.moduleState = result.moduleState
-      if (result.account) {
-        const account = AccountField.deserializeBinary(result.account).toObject()
-        this.accountId = account.gatewayid
-        this.accountBalance = account.balance
-      }
+      this.accountId = result.accountId
+      this.accountBalance = result.accountId
       const refBarDataMap = result.refBarDataMap
       this.barDataMap = {}
       Object.keys(refBarDataMap).forEach((k) => {

@@ -11,14 +11,6 @@
       <el-table-column label="模组名称" prop="moduleName" align="center" width="100px" />
       <el-table-column label="策略模式" prop="type" align="center" width="90px" />
       <el-table-column label="绑定账户" prop="accountGatewayId" align="center" />
-      <el-table-column
-        label="资金占用上限"
-        prop="allocatedAccountShare"
-        align="center"
-        width="80px"
-      >
-        <template slot-scope="scope">{{ scope.row.allocatedAccountShare }}%</template>
-      </el-table-column>
       <el-table-column label="信号策略" prop="signalPolicy.componentMeta.name" align="center" />
       <el-table-column label="风控策略" align="center">
         <template slot-scope="scope">
