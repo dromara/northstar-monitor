@@ -74,6 +74,18 @@ import ReadonlyFieldValue from '@/components/ReadonlyFieldValue'
 
 import { BarField } from '@/lib/xyz/redtorch/pb/core_field_pb'
 
+const createFromBar = (bar) => {
+  return {
+    open: bar.openprice,
+    low: bar.lowprice,
+    high: bar.highprice,
+    close: bar.closeprice,
+    volume: bar.volumedelta,
+    openInterestDelta: bar.openinterestdelta,
+    timestamp: bar.actiontimestamp
+  }
+}
+
 export default {
   components: {
     ReadonlyFieldValue
@@ -134,11 +146,13 @@ export default {
       this.totalPositionProfit = result.totalPositionProfit
       this.moduleState = result.moduleState
       this.accountId = result.accountId
-      this.accountBalance = result.accountId
+      this.accountBalance = result.accountBalance
       const refBarDataMap = result.refBarDataMap
       this.barDataMap = {}
       Object.keys(refBarDataMap).forEach((k) => {
-        this.barDataMap[k] = BarField.deserializeBinary(refBarDataMap[k]).toObject()
+        this.barDataMap[k] = refBarDataMap[k]
+          .map((byteData) => BarField.deserializeBinary(byteData).toObject())
+          .map(createFromBar)
       })
 
       this.dealRecords = result.dealRecords
@@ -149,6 +163,8 @@ export default {
       kLineChart.createTechnicalIndicator('CJL', false)
       kLineChart.createTechnicalIndicator('OpDif', false)
       this.chart = kLineChart
+
+      this.updateChart()
     },
     updateChart() {
       this.chart.clearData()
