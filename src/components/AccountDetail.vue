@@ -8,33 +8,16 @@
           highlight-current-row
           @row-click="choosePosition"
         >
-          <el-table-column
-            prop="contract.name"
-            label="合约名称"
-            align="center"
-            width="100px"
-          >
+          <el-table-column prop="contract.name" label="合约名称" align="center" width="100px">
           </el-table-column>
           <el-table-column label="方向" width="50px" align="center">
             <template slot-scope="scope">
-              <span
-                :class="
-                  { 2: 'color-red', 3: 'color-green' }[
-                    scope.row.positiondirection
-                  ]
-                "
-                >{{
-                  ['未知', '净', '多', '空'][scope.row.positiondirection]
-                }}</span
-              >
+              <span :class="{ 2: 'color-red', 3: 'color-green' }[scope.row.positiondirection]">{{
+                ['未知', '净', '多', '空'][scope.row.positiondirection]
+              }}</span>
             </template>
           </el-table-column>
-          <el-table-column
-            prop="position"
-            label="总仓"
-            width="50px"
-            align="center"
-          >
+          <el-table-column prop="position" label="总仓" width="50px" align="center">
           </el-table-column>
           <el-table-column label="可用" width="50px" align="center">
             <template slot-scope="scope">
@@ -49,11 +32,7 @@
               }}
             </template>
           </el-table-column>
-          <el-table-column
-            prop="openpositionprofit"
-            label="持仓盈亏"
-            align="center"
-          >
+          <el-table-column prop="openpositionprofit" label="持仓盈亏" align="center">
             <template slot-scope="scope">
               <span
                 :class="
@@ -70,24 +49,10 @@
         </el-table></el-tab-pane
       >
       <el-tab-pane label="挂单" name="activeOrder"
-        ><el-table
-          :data="pendingOrders"
-          style="width: 100%"
-          :height="tableContentHeight"
-        >
-          <el-table-column
-            prop="contract.name"
-            label="合约名称"
-            align="center"
-            width="100px"
-          >
+        ><el-table :data="pendingOrders" style="width: 100%" :height="tableContentHeight">
+          <el-table-column prop="contract.name" label="合约名称" align="center" width="100px">
           </el-table-column>
-          <el-table-column
-            prop="dirOpenClose"
-            label="开平"
-            width="50px"
-            align="center"
-          >
+          <el-table-column prop="dirOpenClose" label="开平" width="50px" align="center">
             <template slot-scope="scope">
               {{
                 `${{ 1: '多', 2: '空' }[scope.row.direction] || ''}${
@@ -96,61 +61,31 @@
               }}
             </template>
           </el-table-column>
-          <el-table-column prop="price" label="委托价" align="center">
+          <el-table-column prop="price" label="委托价" align="center"> </el-table-column>
+          <el-table-column prop="totalvolume" label="委托量" width="60px" align="center">
           </el-table-column>
-          <el-table-column
-            prop="totalvolume"
-            label="委托量"
-            width="80px"
-            align="center"
-          >
-          </el-table-column>
-          <el-table-column prop="orderVolPending" label="挂单量" align="center">
+          <el-table-column prop="orderVolPending" label="挂单量" align="center" width="60px">
             <template slot-scope="scope">{{
               scope.row.totalvolume - scope.row.tradedvolume
             }}</template>
           </el-table-column>
-          <el-table-column label="撤单" align="center">
+          <el-table-column label="撤单" align="center" width="65px">
             <template slot-scope="scope">
-              <el-button
-                size="mini"
-                icon="el-icon-delete"
-                @click.native="cancelOrder(scope.row)"
-              >
+              <el-button size="mini" icon="el-icon-delete" @click.native="cancelOrder(scope.row)">
               </el-button>
             </template>
           </el-table-column> </el-table
       ></el-tab-pane>
       <el-tab-pane label="委托" name="order"
-        ><el-table
-          :data="allOrders"
-          style="width: 100%"
-          :height="tableContentHeight"
-        >
-          <el-table-column
-            prop="contract.name"
-            label="合约名称"
-            align="center"
-            width="100px"
-          >
+        ><el-table :data="allOrders" style="width: 100%" :height="tableContentHeight">
+          <el-table-column prop="contract.name" label="合约名称" align="center" width="100px">
           </el-table-column>
-          <el-table-column
-            prop="statusmsg"
-            label="状态"
-            width="60px"
-            align="center"
-          >
+          <el-table-column prop="statusmsg" label="状态" width="60px" align="center">
             <template slot-scope="scope">{{
-              { 1: '全成', 6: '已撤单', 9: '废单' }[scope.row.orderstatus] ||
-              '待成交'
+              { 1: '全成', 6: '已撤单', 9: '废单' }[scope.row.orderstatus] || '待成交'
             }}</template>
           </el-table-column>
-          <el-table-column
-            prop="dirOpenClose"
-            label="开平"
-            width="50px"
-            align="center"
-          >
+          <el-table-column prop="dirOpenClose" label="开平" width="50px" align="center">
             <template slot-scope="scope">
               {{
                 `${{ 1: '多', 2: '空' }[scope.row.direction]}${
@@ -159,32 +94,14 @@
               }}
             </template>
           </el-table-column>
-          <el-table-column prop="price" label="委托价" align="center">
+          <el-table-column prop="price" label="委托价" align="center"> </el-table-column>
+          <el-table-column prop="totalvolume" label="委托量" width="50px" align="center">
           </el-table-column>
-          <el-table-column
-            prop="totalvolume"
-            label="委托量"
-            width="50px"
-            align="center"
-          >
+          <el-table-column prop="tradedvolume" label="已成交" width="50px" align="center">
           </el-table-column>
-          <el-table-column
-            prop="tradedvolume"
-            label="已成交"
-            width="50px"
-            align="center"
-          >
-          </el-table-column>
-          <el-table-column
-            prop="cancelVol"
-            label="已撤单"
-            width="50px"
-            align="center"
-          >
+          <el-table-column prop="cancelVol" label="已撤单" width="50px" align="center">
             <template slot-scope="scope">{{
-              scope.row.orderstatus === 6
-                ? scope.row.totalvolume - scope.row.tradedvolume
-                : 0
+              scope.row.orderstatus === 6 ? scope.row.totalvolume - scope.row.tradedvolume : 0
             }}</template>
           </el-table-column>
           <el-table-column prop="ordertime" label="委托时间" align="center">
@@ -197,12 +114,7 @@
           align="center"
           :height="tableContentHeight"
         >
-          <el-table-column
-            prop="contract.name"
-            label="合约名称"
-            align="center"
-            width="100px"
-          >
+          <el-table-column prop="contract.name" label="合约名称" align="center" width="100px">
           </el-table-column>
           <el-table-column label="开平" align="center" width="50px">
             <template slot-scope="scope">
@@ -213,14 +125,8 @@
               }}
             </template>
           </el-table-column>
-          <el-table-column prop="price" label="成交价" align="center">
-          </el-table-column>
-          <el-table-column
-            prop="volume"
-            label="成交量"
-            align="center"
-            width="50px"
-          >
+          <el-table-column prop="price" label="成交价" align="center"> </el-table-column>
+          <el-table-column prop="volume" label="成交量" align="center" width="50px">
           </el-table-column>
           <el-table-column prop="tradetime" label="成交时间" align="center">
           </el-table-column> </el-table
@@ -267,9 +173,7 @@ export default {
       )
     },
     allPositions() {
-      return Object.values(this.positionDescription).filter(
-        (i) => i.position > 0
-      )
+      return Object.values(this.positionDescription).filter((i) => i.position > 0)
     },
     allTransactions() {
       return Object.values(this.transactionDescription).sort(
