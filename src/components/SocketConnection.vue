@@ -26,10 +26,19 @@ export default {
       socket: null
     }
   },
+  watch: {
+    '$store.state.marketCurrentDataModule.curUnifiedSymbol': function (val, oldVal) {
+      if (oldVal) {
+        this.socket.emit('logout', oldVal)
+      }
+      if (val) {
+        this.socket.emit('login', val)
+      }
+    }
+  },
   mounted() {
     console.log('socket服务地址:', this.$store.getters.websocketBaseUrl)
     this.socket = SocketIO(this.$store.getters.websocketBaseUrl)
-    this.$store.commit('initSocketClient', this.socket)
     this.socket.on('TICK', (data) => {
       let tick = TickField.deserializeBinary(data).toObject()
       this.$store.commit('updateTick', tick)
