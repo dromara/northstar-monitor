@@ -2,21 +2,28 @@ var express = require('express')
 var cookieParser = require('cookie-parser')
 var logger = require('morgan')
 var compression = require('compression')
+const { createProxyMiddleware } = require('http-proxy-middleware')
 
 var indexRouter = require('./routes/index')
-var usersRouter = require('./routes/users')
 
 var app = express()
 
 app.use(compression())
 app.use(logger('dev'))
-app.use(express.json())
-app.use(express.urlencoded({ extended: false }))
+// app.use(express.json())
+// app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static('../dist'))
 
 app.use('/', indexRouter)
-app.use('/users', usersRouter)
+
+app.use(
+  createProxyMiddleware('/northstar', {
+    target: 'http://localhost:8888/', // target host
+    changeOrigin: true, // needed for virtual hosted sites
+    ws: true // proxy websockets
+  })
+)
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
