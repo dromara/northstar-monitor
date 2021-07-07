@@ -6,5 +6,12 @@ module.exports = {
       vue: 'Vue',
       'element-ui': 'ELEMENT'
     }
+  },
+  devServer: {
+    proxy: {
+      '/northstar': {
+        target: 'http://localhost:8888'
+      }
+    }
   }
 }

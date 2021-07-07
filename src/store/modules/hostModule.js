@@ -9,8 +9,8 @@ const hostModule = {
   },
   actions: {},
   getters: {
-    apiBaseUrl: (state) => {
-      return `http://${state.host}:8888/northstar`
+    apiBaseUrl: () => {
+      return `/northstar`
     },
     websocketBaseUrl: (state) => {
       return `http://${state.host}:51888`
