@@ -3,13 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "cross-env PORT=3000 node ./server/bin/www & npm run serve",
+    "start": "cross-env PORT=3000 concurrently 'node ./server/bin/www' 'npm run serve' -k -n 'backend,frontend' -c 'cyan.dim,yellow.dim'",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
     "axios": "^0.21.1",
+    "concurrently": "^6.2.0",
     "core-js": "^3.6.5",
     "element-ui": "^2.15.1",
     "google-protobuf": "^3.17.0-rc.1",
