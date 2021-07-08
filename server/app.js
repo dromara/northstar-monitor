@@ -20,7 +20,13 @@ app.use('/', indexRouter)
 app.use(
   createProxyMiddleware('/northstar', {
     target: 'http://localhost:8888/', // target host
-    changeOrigin: true, // needed for virtual hosted sites
+    changeOrigin: true // needed for virtual hosted sites
+  })
+)
+
+app.use(
+  createProxyMiddleware('/socket.io', {
+    target: 'http://localhost:51888/', // target host
     ws: true // proxy websockets
   })
 )

@@ -9,8 +9,8 @@ module.exports = {
   },
   devServer: {
     proxy: {
-      '/northstar': {
-        target: 'http://localhost:3000'
+      '/': {
+        target: `http://localhost:${process.env.PORT}`
       }
     }
   }

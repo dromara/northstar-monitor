@@ -12,8 +12,8 @@ const hostModule = {
     apiBaseUrl: () => {
       return `/northstar`
     },
-    websocketBaseUrl: (state) => {
-      return `http://${state.host}:51888`
+    websocketBaseUrl: () => {
+      return `/`
     }
   }
 }
