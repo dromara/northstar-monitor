@@ -1,10 +1,8 @@
-#!/usr/bin/env node
-
 /**
  * Module dependencies.
  */
 
-var app = require('../app')
+var app = process.env.MOCK ? require('../app-mock') : require('../app')
 var debug = require('debug')('server:server')
 var http = require('http')
 
