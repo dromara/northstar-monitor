@@ -8,14 +8,17 @@ const service = axios.create({
   timeout: 3000 // 请求的超时时间
 })
 
-service.interceptors.request.use((config) => {
-   //根据vuex store内容动态设置baseurl
-   config.baseURL = store.getters.apiBaseUrl
-  return config
-}, (error) => {
-  // 对请求错误做些什么
-  return Promise.reject(error)
-})
+service.interceptors.request.use(
+  (config) => {
+    //根据vuex store内容动态设置baseurl
+    config.baseURL = '/northstar'
+    return config
+  },
+  (error) => {
+    // 对请求错误做些什么
+    return Promise.reject(error)
+  }
+)
 
 // response interceptor
 service.interceptors.response.use(
