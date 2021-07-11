@@ -39,6 +39,7 @@
             <el-select v-model="form.gatewayType" placeholder="未知" @change="onChooseGatewayType">
               <el-option label="CTP" value="CTP"></el-option>
               <el-option label="SIM" value="SIM"></el-option>
+              <el-option label="TradeNow" value="TradeNow"></el-option>
               <!-- <el-option label="IB网关" value="beijing"></el-option> -->
             </el-select>
           </el-form-item>
@@ -108,6 +109,7 @@ import gatewayMgmtApi from '../api/gatewayMgmtApi'
 const GATEWAY_ADAPTER = {
   CTP: 'xyz.redtorch.gateway.ctp.x64v6v3v15v.CtpGatewayAdapter',
   SIM: 'tech.xuanwu.northstar.gateway.sim.SimGatewayLocalImpl',
+  TradeNow: 'xyz.redtorch.gateway.ctp.x64v6v3v15v.CtpGatewayTradeNowAdapter',
   IB: ''
 }
 const CONNECTION_STATE = {
@@ -193,7 +195,7 @@ export default {
     },
     gatewaySettingConfig() {
       console.log(this.form)
-      if (this.form.gatewayType === 'CTP') {
+      if (this.form.gatewayType === 'CTP' || this.form.gatewayType === 'TradeNow') {
         this.ctpFormVisible = true
       }
       if (this.form.gatewayType === 'SIM') {
