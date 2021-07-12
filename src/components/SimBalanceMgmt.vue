@@ -13,17 +13,12 @@
     </el-row>
     <el-row>
       <el-col :span="24">
-        <span class="row-lh"
-          >账户余额： {{ accountBalance || 0 | accountingFormatter }}</span
-        >
+        <span class="row-lh">账户余额： {{ accountBalance || 0 | accountingFormatter }}</span>
       </el-col>
     </el-row>
     <el-row>
       <el-col :span="24">
-        <span class="row-lh"
-          >账户可用金额：
-          {{ accountAvailable || 0 | accountingFormatter }}</span
-        >
+        <span class="row-lh">账户可用金额： {{ accountAvailable || 0 | accountingFormatter }}</span>
       </el-col>
     </el-row>
     <el-row>
@@ -72,18 +67,16 @@ export default {
     onClose() {
       this.$emit('update:visible', false)
     },
-    moneyIO() {
+    async moneyIO() {
       console.log(this.simGatewayId)
-      gatewayMgmtApi.moneyIO(this.simGatewayId, this.money)
+      await gatewayMgmtApi.moneyIO(this.simGatewayId, this.money || 0)
       this.money = ''
       setTimeout(() => {
         this.updateAmount()
       }, 300)
     },
     updateAmount() {
-      this.accountBalance = this.$store.getters.getAccountById(
-        this.simGatewayId
-      ).account?.balance
+      this.accountBalance = this.$store.getters.getAccountById(this.simGatewayId).account?.balance
       this.accountAvailable = this.$store.getters.getAccountById(
         this.simGatewayId
       ).account?.available
