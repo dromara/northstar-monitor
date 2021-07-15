@@ -56,8 +56,11 @@ export default {
     }
   },
   watch: {
-    visible: function () {
-      this.updateAmount()
+    visible: function (val) {
+      if (val) {
+        this.moneyIO()
+        this.updateAmount()
+      }
     }
   },
   mounted() {
