@@ -40,16 +40,32 @@
           </el-row>
         </el-form>
         <el-table :data="dealRecords" :height="flexibleTblHeight">
-          <el-table-column prop="unifiedSymbol" label="合约" align="center"></el-table-column>
+          <el-table-column prop="contractName" label="合约" align="center"></el-table-column>
           <el-table-column prop="direction" label="方向" align="center" width="40px">
             <template slot-scope="scope">{{
               { PD_Long: '多', PD_Short: '空' }[scope.row.direction] || '未知'
             }}</template>
           </el-table-column>
-          <el-table-column prop="volume" label="手数" align="center" width="40px"></el-table-column>
-          <el-table-column prop="openPrice" label="开仓价" align="center"></el-table-column>
-          <el-table-column prop="closePrice" label="平仓价" align="center"></el-table-column>
-          <el-table-column prop="closeProfit" label="平仓盈亏" align="center"></el-table-column>
+          <el-table-column prop="volume" label="手数" align="center" width="30px"></el-table-column>
+          <el-table-column
+            prop="openPrice"
+            label="开仓价"
+            align="center"
+            width="60px"
+          ></el-table-column>
+          <el-table-column
+            prop="closePrice"
+            label="平仓价"
+            align="center"
+            width="60px"
+          ></el-table-column>
+          <el-table-column
+            prop="closeProfit"
+            label="平仓盈亏"
+            align="center"
+            width="50px"
+          ></el-table-column>
+          <el-table-column prop="tradingDay" label="交易日" align="center"></el-table-column>
         </el-table>
       </div>
       <div role="kline" class="kline-wrapper">
