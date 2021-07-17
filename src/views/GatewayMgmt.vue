@@ -82,6 +82,17 @@
         </template>
       </el-table-column>
       <el-table-column
+        v-if="gatewayUsage !== 'TRADE'"
+        label="行情反馈"
+        width="80px"
+        header-align="center"
+        align="center"
+      >
+        <template slot-scope="scope">
+          {{ scope.row.isActive ? '活跃' : '-' }}
+        </template>
+      </el-table-column>
+      <el-table-column
         v-if="gatewayUsage === 'TRADE'"
         label="关联网关"
         prop="bindedMktGatewayId"
@@ -188,6 +199,13 @@ export default {
   methods: {
     async updateList() {
       this.tableData = await gatewayMgmtApi.findAll(this.gatewayUsage)
+      if (this.gatewayUsage !== 'TRADE') {
+        this.tableData.map(async (item) => {
+          item.isActive = await gatewayMgmtApi.isActive(item.gatewayId)
+          return item
+        })
+        console.log(this.tableData)
+      }
     },
     handleCreate() {
       this.dialogFormVisible = true
