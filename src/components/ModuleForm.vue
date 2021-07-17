@@ -298,8 +298,9 @@ export default {
       this.activeIndex = index
     },
     saveSetting() {
-      const pass =
+      let pass =
         this.assertTrue(this.form.moduleName, '未指定模组名称') &&
+        this.assertTrue(this.form.type, '未指定模组类型') &&
         this.assertTrue(this.form.accountGatewayId, '未指定绑定账户') &&
         this.assertTrue(this.form.signalPolicy.componentMeta.name, '未指定信号策略') &&
         this.assertTrue(this.form.dealer.componentMeta.name, '未指定交易策略')
@@ -307,6 +308,29 @@ export default {
       if (!pass) {
         return
       }
+      const unsetItems1 = this.form.signalPolicy.initParams.filter((item) => !item.value)
+      const unsetItems3 = this.form.dealer.initParams.filter((item) => !item.value)
+      const unsetItems2 = []
+      this.form.riskControlRules.forEach((rule) => {
+        rule.initParams.forEach((item) => {
+          if (!item.value) {
+            unsetItems3.push(item)
+          }
+        })
+      })
+      const groupNames = ['信号策略', '风控策略', '交易策略']
+      const unsetItemsTotal = [unsetItems1, unsetItems2, unsetItems3]
+      console.log(unsetItems1, unsetItems2, unsetItems3)
+      // 二次校验
+      for (let i = 0; i < 3; i++) {
+        let unsetItems = unsetItemsTotal[i]
+        if (!unsetItems.length) {
+          continue
+        }
+        this.assertTrue(unsetItemsTotal[i].value, `${groupNames[i]}未设置${unsetItems[0].label}`)
+        return
+      }
+
       const obj = Object.assign({}, this.form)
       this.$emit('onSave', obj)
       this.close()
