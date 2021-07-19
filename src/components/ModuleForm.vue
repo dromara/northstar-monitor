@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :title="readOnly ? '查看' : '新增'"
+    :title="readOnly ? '查看' : module ? '修改' : '新增'"
     :visible.sync="dialogVisible"
     :close-on-click-modal="false"
     :show-close="false"

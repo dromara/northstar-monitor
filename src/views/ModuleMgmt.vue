@@ -2,7 +2,7 @@
   <div class="ns-page">
     <ModuleForm
       :visible.sync="moduleFormVisible"
-      :readOnly="curTableIndex > -1"
+      :readOnly="curTableIndex > -1 && curModule.enabled"
       :module="curModule"
       @onSave="onSave"
     />
@@ -40,7 +40,9 @@
         </template>
         <template slot-scope="scope">
           <el-button size="mini" @click="handlePerf(scope.$index, scope.row)">透视</el-button>
-          <el-button size="mini" @click="handleView(scope.$index, scope.row)">查看</el-button>
+          <el-button size="mini" @click="handleRow(scope.$index, scope.row)">{{
+            scope.row.enabled ? '查看' : '修改'
+          }}</el-button>
           <el-button size="mini" type="danger" @click="handleDelete(scope.$index, scope.row)"
             >删除</el-button
           >
@@ -85,7 +87,7 @@ export default {
       this.curModule = row
       this.modulePerfVisible = true
     },
-    handleView(index, row) {
+    handleRow(index, row) {
       console.log(index, row)
       this.curTableIndex = index
       this.curModule = row
@@ -100,6 +102,8 @@ export default {
       console.log(obj)
       if (this.curTableIndex < 0) {
         await moduleApi.insertModule(obj)
+      } else {
+        await moduleApi.updateModule(obj)
       }
       this.findAll()
     },

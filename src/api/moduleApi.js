@@ -16,6 +16,9 @@ export default {
   insertModule(module) {
     return baseService.post('/module', module)
   },
+  updateModule(module) {
+    return baseService.put('/module', module)
+  },
   getAllModules() {
     return baseService.get('/module')
   },
