@@ -1,11 +1,16 @@
 # Northstar 网页监控端
 
+#### 开源声明：
+
+**本项目归入 dromara 开源组织运营的初心，是希望可以有更多志同道合的朋友一起参与项目的开发，并且能借其在交易市场上有所收获！**  
+**借用组织的口号：一个人或许能走的更快，但一群人会走的更远。**
+
 本前端界面是对接 northstar 量化交易平台用的，具体设计请移步  
-https://gitee.com/KevinHuangwl/northstar
+https://gitee.com/dromara/northstar
 
 # 使用说明
 
-https://gitee.com/KevinHuangwl/northstar-monitor/wikis
+https://gitee.com/dromara/northstar-monitor/wikis
 
 ## 启动步骤
 
@@ -15,7 +20,7 @@ https://gitee.com/KevinHuangwl/northstar-monitor/wikis
 
 ```
 cd ~
-git clone https://gitee.com/KevinHuangwl/northstar-monitor.git
+git clone https://gitee.com/dromara/northstar-monitor.git
 ```
 
 构建程序（每次代码更新后运行）
