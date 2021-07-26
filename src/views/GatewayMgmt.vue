@@ -200,11 +200,11 @@ export default {
     async updateList() {
       this.tableData = await gatewayMgmtApi.findAll(this.gatewayUsage)
       if (this.gatewayUsage !== 'TRADE') {
-        this.tableData.map(async (item) => {
+        const tableDataPromise = this.tableData.map(async (item) => {
           item.isActive = await gatewayMgmtApi.isActive(item.gatewayId)
           return item
         })
-        console.log(this.tableData)
+        this.tableData = await Promise.all(tableDataPromise)
       }
     },
     handleCreate() {
