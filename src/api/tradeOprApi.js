@@ -39,9 +39,9 @@ export default {
       gatewayId: gatewayId
     })
   },
-  cancelOrder(gatewayId, orderId) {
+  cancelOrder(gatewayId, originOrderId) {
     return baseService.post('/trade/cancel', {
-      orderId: orderId,
+      originOrderId: originOrderId,
       gatewayId: gatewayId
     })
   }

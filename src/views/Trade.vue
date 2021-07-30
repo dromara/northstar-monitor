@@ -231,7 +231,7 @@ export default {
     },
     onCancelOrder(order) {
       console.log(order)
-      tradeOprApi.cancelOrder(this.currentAccountId, order.orderid)
+      tradeOprApi.cancelOrder(this.currentAccountId, order.originorderid)
     },
     buyOpen() {
       return tradeOprApi.buyOpen(this.currentAccountId, this.dealSymbol, this.bkPrice, this.dealVol)
