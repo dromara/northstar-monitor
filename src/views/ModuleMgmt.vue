@@ -7,8 +7,7 @@
       @onSave="onSave"
     />
     <ModulePerf
-      v-if="curModule"
-      :moduleName="curModule.moduleName"
+      :moduleName="curModule ? curModule.moduleName : ''"
       :visible.sync="modulePerfVisible"
     />
     <el-table height="100%" :data="list">
