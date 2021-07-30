@@ -6,7 +6,11 @@
       :module="curModule"
       @onSave="onSave"
     />
-    <ModulePerf :moduleName="curModule.moduleName" :visible.sync="modulePerfVisible" />
+    <ModulePerf
+      v-if="curModule"
+      :moduleName="curModule.moduleName"
+      :visible.sync="modulePerfVisible"
+    />
     <el-table height="100%" :data="list">
       <el-table-column label="模组名称" prop="moduleName" align="center" width="100px" />
       <el-table-column label="策略模式" prop="type" align="center" width="90px" />
@@ -68,7 +72,7 @@ export default {
       moduleFormVisible: false,
       modulePerfVisible: false,
       curTableIndex: -1,
-      curModule: {},
+      curModule: null,
       list: []
     }
   },
@@ -79,7 +83,7 @@ export default {
     handleCreate() {
       this.moduleFormVisible = true
       this.curTableIndex = -1
-      this.curModule = {}
+      this.curModule = null
     },
     handlePerf(index, row) {
       console.log(index, row)

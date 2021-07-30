@@ -1,6 +1,6 @@
 <template>
   <el-dialog
-    :title="readOnly ? '查看' : module ? '修改' : '新增'"
+    :title="readOnly ? '查看' : this.module ? '修改' : '新增'"
     :visible.sync="dialogVisible"
     :close-on-click-modal="false"
     :show-close="false"
@@ -148,7 +148,17 @@
                   :label="param.label"
                   :key="param.field"
                 >
+                  <el-select
+                    v-if="param.type === 'Options'"
+                    v-model="dealerOptions[i].initParams[index]['value']"
+                    :class="param.unit ? 'with-unit' : ''"
+                  >
+                    <el-option v-for="(item, i) in param.options" :value="item" :key="i">{{
+                      item
+                    }}</el-option>
+                  </el-select>
                   <el-input
+                    v-else
                     v-model="dealerOptions[i].initParams[index]['value']"
                     :class="param.unit ? 'with-unit' : ''"
                     :type="param.type.toLowerCase()"
@@ -200,7 +210,7 @@ export default {
     },
     module: {
       type: Object,
-      default: () => {}
+      default: null
     }
   },
   data() {
@@ -240,7 +250,7 @@ export default {
     visible: function (val) {
       if (val) {
         this.dialogVisible = val
-        if (!Object.keys(this.module).length) {
+        if (!this.module) {
           return
         }
         this.form = Object.assign({}, this.module)
