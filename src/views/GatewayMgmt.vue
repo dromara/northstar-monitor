@@ -129,7 +129,11 @@
           >
           <el-button
             size="mini"
-            v-if="scope.row.connectionState === 'CONNECTED' && scope.row.gatewayType === 'SIM'"
+            v-if="
+              gatewayUsage === 'TRADE' &&
+              scope.row.connectionState === 'CONNECTED' &&
+              scope.row.gatewayType === 'SIM'
+            "
             @click="handleMoneyIO(scope.row)"
             >出入金</el-button
           >

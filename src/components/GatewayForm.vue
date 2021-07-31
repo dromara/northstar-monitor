@@ -94,7 +94,10 @@
     </el-form>
     <div slot="footer" class="dialog-footer">
       <el-button @click="close">取 消</el-button>
-      <el-button type="primary" @click="gatewaySettingConfig" :disabled="!form.gatewayType"
+      <el-button
+        type="primary"
+        @click="gatewaySettingConfig"
+        :disabled="!form.gatewayType || (gatewayUsage !== 'TRADE' && form.gatewayType === 'SIM')"
         >{{ typeLabel }}配置</el-button
       >
       <el-button type="primary" @click="saveGateway">保 存</el-button>
@@ -204,6 +207,9 @@ export default {
     },
     async saveGateway() {
       console.log(this.form)
+      if (this.gatewayUsage !== 'TRADE' && this.form.gatewayType === 'SIM') {
+        this.form.settings = { nothing: 0 }
+      }
       if (!this.form.settings || !Object.keys(this.form.settings).length) {
         throw new Error('网关配置不能为空')
       }
