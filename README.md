@@ -23,25 +23,11 @@ cd ~
 git clone https://gitee.com/dromara/northstar-monitor.git
 ```
 
-构建程序（每次代码更新后运行）
+部署程序（每次代码更新后运行）
 
 ```
 cd ~/northstar-monitor
-bash build.sh
-```
-
-运行程序
-
-```
-cd ~/northstar-monitor
-bash startup.sh
-```
-
-终止程序
-
-```
-cd ~/northstar-monitor
-bash shutdown.sh
+bash deploy.sh
 ```
 
 ## 本地开发
