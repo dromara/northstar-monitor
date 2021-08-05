@@ -64,9 +64,7 @@ export default {
   },
   watch: {
     gateway: function(val) {
-      if(!val){
-        this.unifiedSymbol = ''
-      }
+      this.unifiedSymbol = ''
     },
     visible: function (val) {
       if (val) {
