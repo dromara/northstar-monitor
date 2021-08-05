@@ -63,7 +63,7 @@ export default {
     }
   },
   watch: {
-    gateway: function(val) {
+    gateway: function() {
       this.unifiedSymbol = ''
     },
     visible: function (val) {
