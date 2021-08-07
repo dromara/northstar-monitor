@@ -8,11 +8,11 @@
 本前端界面是对接 northstar 量化交易平台用的，具体设计请移步  
 https://gitee.com/dromara/northstar
 
-# 使用说明
+## 使用说明
 
 https://gitee.com/dromara/northstar-monitor/wikis
 
-## 启动步骤
+### 启动步骤
 
 假设当前环境是全新的服务器
 
@@ -29,6 +29,17 @@ git clone https://gitee.com/dromara/northstar-monitor.git
 cd ~/northstar-monitor
 bash deploy.sh
 ```
+
+### 本地模拟
+假设你没有任何期货账户，也不要紧，Northstar已经实现了本地行情及账户模拟，使你在不接通外部真实行情的情况下，都可以体验软件。  
+
+请按以下步骤操作：
+1. 在`[网关管理]`，新建网关，填入网关ID，网关类型选择`[SIM]`，保存
+2. 在`[账户管理]`，新建账户，填入账户ID，账户类型选择`[SIM]`，行情网关选择刚刚新建的模拟网关，点开`[账户配置]`随便填，保存
+
+这时模拟行情与模拟账户都已经自动处于`[连线]`状态，切换到手工交易，选择刚刚填入的模拟账户，选择合约，就应该可以见到行情跳动了。  
+
+
 
 ## 本地开发
 
