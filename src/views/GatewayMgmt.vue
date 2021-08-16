@@ -209,6 +209,8 @@ export default {
           return item
         })
         this.tableData = await Promise.all(tableDataPromise)
+      } else {
+        this.tableData = data
       }
     },
     handleCreate() {
