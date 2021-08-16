@@ -202,9 +202,9 @@ export default {
   },
   methods: {
     async updateList() {
-      this.tableData = await gatewayMgmtApi.findAll(this.gatewayUsage)
+      const data = await gatewayMgmtApi.findAll(this.gatewayUsage)
       if (this.gatewayUsage !== 'TRADE') {
-        const tableDataPromise = this.tableData.map(async (item) => {
+        const tableDataPromise = data.map(async (item) => {
           item.isActive = await gatewayMgmtApi.isActive(item.gatewayId)
           return item
         })
