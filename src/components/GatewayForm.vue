@@ -38,6 +38,7 @@
           <el-form-item :label="`${typeLabel}类型`" prop="gatewayType">
             <el-select v-model="form.gatewayType" placeholder="未知" @change="onChooseGatewayType">
               <el-option label="CTP" value="CTP"></el-option>
+              <el-option label="CTP_SIM" value="CTP_SIM"></el-option>
               <el-option label="SIM" value="SIM"></el-option>
               <!-- <el-option label="IB网关" value="beijing"></el-option> -->
             </el-select>
@@ -110,6 +111,7 @@ import NsSimForm from '@/components/SimForm'
 import gatewayMgmtApi from '../api/gatewayMgmtApi'
 const GATEWAY_ADAPTER = {
   CTP: 'xyz.redtorch.gateway.ctp.x64v6v3v15v.CtpGatewayAdapter',
+  CTP_SIM: 'xyz.redtorch.gateway.ctp.x64v6v5v1cpv.CtpSimGatewayAdapter',
   SIM: 'tech.xuanwu.northstar.gateway.sim.SimGatewayLocalImpl',
   IB: ''
 }
