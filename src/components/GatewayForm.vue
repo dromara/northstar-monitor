@@ -198,7 +198,7 @@ export default {
     },
     gatewaySettingConfig() {
       console.log(this.form)
-      if (this.form.gatewayType === 'CTP') {
+      if (this.form.gatewayType === 'CTP' || this.form.gatewayType === 'CTP_SIM') {
         this.ctpFormVisible = true
       }
       if (this.form.gatewayType === 'SIM') {
