@@ -50,10 +50,6 @@
               ></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item v-if="activeIndex === '1'" label="数据回溯">
-            <el-input v-model="form.daysOfRefData" type="number" class="with-unit"></el-input
-            ><span class="value-unit">天</span>
-          </el-form-item>
           <el-form-item v-if="activeIndex === '1'" label="是否启用">
             <el-switch v-model="form.enabled"> </el-switch>
           </el-form-item>
@@ -239,7 +235,6 @@ export default {
         },
         enabled: true,
         type: '',
-        daysOfRefData: 1
       }
     }
   },
