@@ -356,7 +356,7 @@ export default {
 }
 .ns-trade__trade-section {
   height: 100%;
-  max-height: 300px;
+  max-height: 236px;
   display: flex;
 }
 .ns-trade-action__item {
