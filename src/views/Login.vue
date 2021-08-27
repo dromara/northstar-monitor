@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <div class="logo"><img src="../assets/logo.png"/></div>
+    <div class="logo"><img src="../assets/logo.svg"/></div>
     <div class="panel" v-on:keydown.enter="login">
       <el-form :model="userForm" status-icon label-width="80px" class="demo-userForm">
         <el-form-item label="用户名">
