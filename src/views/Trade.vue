@@ -84,6 +84,13 @@
             type="number"
           ></el-input>
         </div>
+        <div class="ns-trade-action__item">
+          <el-input
+            v-model="stopPrice"
+            placeholder="止损价"
+            type="number"
+          ></el-input>
+        </div>
       </div>
       <div class="ns-trade-info">
         <NsPriceBoard :tick="$store.state.marketCurrentDataModule.curTick" />
@@ -170,6 +177,7 @@ export default {
       dealVol: '',
       dealPrice: '',
       limitPrice: '',
+      stopPrice: '',
       dealPriceType: '',
       curTab: 'position',
       symbolIndexMap: {},
@@ -234,15 +242,16 @@ export default {
       tradeOprApi.cancelOrder(this.currentAccountId, order.originorderid)
     },
     buyOpen() {
-      return tradeOprApi.buyOpen(this.currentAccountId, this.dealSymbol, this.bkPrice, this.dealVol)
+      if(this.stopPrice >= this.bkPrice){
+        throw new Error('多开止损价需要少于开仓价')
+      }
+      return tradeOprApi.buyOpen(this.currentAccountId, this.dealSymbol, this.bkPrice, this.dealVol, this.stopPrice)
     },
     sellOpen() {
-      return tradeOprApi.sellOpen(
-        this.currentAccountId,
-        this.dealSymbol,
-        this.bkPrice,
-        this.dealVol
-      )
+      if(this.stopPrice <= this.skPrice){
+        throw new Error('空开止损价需要大于开仓价')
+      }
+      return tradeOprApi.sellOpen(this.currentAccountId, this.dealSymbol, this.skPrice, this.dealVol,this.stopPrice)
     },
     closePosition() {
       if (this.currentPosition.positiondirection === 2) {
