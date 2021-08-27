@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <div class="logo"></div>
+    <div class="logo"><img src="../assets/logo.png"/></div>
     <div class="panel" v-on:keydown.enter="login">
       <el-form :model="userForm" status-icon label-width="80px" class="demo-userForm">
         <el-form-item label="用户名">
@@ -48,9 +48,8 @@ export default {
   margin: 20px 0;
 }
 .logo {
-  background-image: url('~@/assets/logo.png');
-  width: 300px;
-  height: 300px;
+  width: 400px;
+  height: 400px;
 }
 .wrapper {
   display: flex;
