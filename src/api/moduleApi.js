@@ -28,6 +28,9 @@ export default {
   getModulePerf(name) {
     return baseService.get('/module/perf?name=' + name)
   },
+  getModuleRecords(name){
+    return baseService.get('/module/records?name=' + name)
+  },
   removeModule(name) {
     return baseService.delete('/module?name=' + name)
   }

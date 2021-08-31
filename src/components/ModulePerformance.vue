@@ -158,7 +158,6 @@ export default {
   methods: {
     async init() {
       const result = await moduleApi.getModulePerf(this.moduleName)
-      this.totalCloseProfit = result.totalCloseProfit
       this.totalPositionProfit = result.totalPositionProfit
       this.moduleState = result.moduleState
       this.accountId = result.accountId
@@ -171,7 +170,8 @@ export default {
           .map(createFromBar)
       })
 
-      this.dealRecords = result.dealRecords
+      this.dealRecords = await moduleApi.getModuleRecords(this.moduleName)
+      this.totalCloseProfit = this.dealRecords.map(i => i.closeProfit).reduce((a, b) => a + b)
       this.activeTab = this.symbolOptions.length ? this.symbolOptions[0] : ''
       const kLineChart = init(`module-k-line`)
       kLineChart.addCustomTechnicalIndicator(volumePure)
