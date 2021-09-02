@@ -23,7 +23,9 @@ Vue.config.errorHandler = function (e, v) {
     type: 'error',
     duration: 5 * 1000
   })
-  v.loading = false
+  if(v){
+    v.loading = false
+  }
   console.error(e)
 }
 
