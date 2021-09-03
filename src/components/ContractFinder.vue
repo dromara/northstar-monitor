@@ -20,11 +20,11 @@
       <el-form-item label="合约列表">
         <el-select v-model="unifiedSymbol" filterable>
           <el-option
-            v-for="c in gwContractList"
+            v-for="(c,i) in gwContractList"
             :label="c.name"
             :value="c.unifiedSymbol"
             :value-key="c.unifiedSymbol"
-            :key="c.unifiedSymbol"
+            :key="i"
           ></el-option>
         </el-select>
       </el-form-item>
