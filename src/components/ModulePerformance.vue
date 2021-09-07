@@ -12,11 +12,14 @@
             </el-col>
           </el-row>
           <el-row>
-            <el-col span="12">
+            <el-col span="8">
               <ReadonlyFieldValue label="账户总额" label-width="60px" :value="accountBalance" />
             </el-col>
-            <el-col span="12">
-              <ReadonlyFieldValue label="模组状态" label-width="60px" :value="moduleState" />
+            <el-col span="8">
+              <ReadonlyFieldValue label="可用金额" label-width="60px" :value="moduleAvailable" />
+            </el-col>
+            <el-col span="8">
+              <ReadonlyFieldValue label="模组状态" label-width="60px" :value="positionState" />
             </el-col>
           </el-row>
           <el-row>
@@ -40,7 +43,7 @@
           </el-row>
         </el-form>
         <el-table :data="dealRecords" :height="flexibleTblHeight">
-          <el-table-column prop="contractName" label="合约" align="center"></el-table-column>
+          <el-table-column prop="contractName" label="合约" align="center" width="60px"></el-table-column>
           <el-table-column prop="direction" label="方向" align="center" width="40px">
             <template slot-scope="scope">{{
               { PD_Long: '多', PD_Short: '空' }[scope.row.direction] || '未知'
@@ -63,7 +66,7 @@
             prop="closeProfit"
             label="平仓盈亏"
             align="center"
-            width="50px"
+            width="60px"
           ></el-table-column>
           <el-table-column prop="tradingDay" label="交易日" align="center"></el-table-column>
         </el-table>
@@ -87,6 +90,7 @@ import volumePure from '@/lib/indicator/volume-pure'
 import openInterestDelta from '@/lib/indicator/open-interest'
 import moduleApi from '@/api/moduleApi'
 import ReadonlyFieldValue from '@/components/ReadonlyFieldValue'
+import { mapGetters } from 'vuex'
 
 import { BarField } from '@/lib/xyz/redtorch/pb/core_field_pb'
 
@@ -125,7 +129,7 @@ export default {
       totalPositionProfit: 0,
       moduleState: '',
       accountId: '',
-      accountBalance: 0,
+      moduleAvailable: 0,
       barDataMap: {},
       chart: null
     }
@@ -145,6 +149,7 @@ export default {
     }
   },
   computed: {
+    ...mapGetters(['getAccountById']),
     flexibleTblHeight() {
       return document.body.clientHeight - 190
     },
@@ -153,6 +158,15 @@ export default {
     },
     symbolOptions() {
       return Object.keys(this.barDataMap)
+    },
+    positionState(){
+      return {HOLDING_LONG: '持多单', HOLDING_SHORT: '持空单', EMPTY: '无持仓'}[this.moduleState] || '等待成交'
+    },
+    accountBalance(){
+      if(!this.accountId){
+        return 0
+      }
+      return this.getAccountById(this.accountId).account.balance
     }
   },
   methods: {
@@ -161,7 +175,7 @@ export default {
       this.totalPositionProfit = result.totalPositionProfit
       this.moduleState = result.moduleState
       this.accountId = result.accountId
-      this.accountBalance = result.accountBalance
+      this.moduleAvailable = result.moduleAvailable
       const refBarDataMap = result.refBarDataMap
       this.barDataMap = {}
       Object.keys(refBarDataMap).forEach((k) => {
