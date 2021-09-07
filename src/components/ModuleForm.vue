@@ -32,16 +32,16 @@
       <el-main class="main-compact"
         ><el-form :model="form" label-width="100px" class="module-form" inline :rules="formRules">
           <el-form-item v-if="activeIndex === '1'" label="模组名称">
-            <el-input v-model="form.moduleName"></el-input>
+            <el-input v-model="form.moduleName" :disabled="readOnly || this.module"></el-input>
           </el-form-item>
           <el-form-item v-if="activeIndex === '1'" label="模组类型">
-            <el-select v-model="form.type">
+            <el-select v-model="form.type" :disabled="readOnly">
               <el-option label="CTA" value="CTA"></el-option>
               <el-option label="ARBITRAGE" value="ARBITRAGE"></el-option>
             </el-select>
           </el-form-item>
           <el-form-item v-if="activeIndex === '1'" label="绑定账户">
-            <el-select v-model="form.accountGatewayId">
+            <el-select v-model="form.accountGatewayId" :disabled="readOnly">
               <el-option
                 v-for="account in accountOptions"
                 :label="account"
@@ -51,7 +51,7 @@
             </el-select>
           </el-form-item>
           <el-form-item v-if="activeIndex === '1'" label="是否启用">
-            <el-switch v-model="form.enabled"> </el-switch>
+            <el-switch v-model="form.enabled" :disabled="readOnly"> </el-switch>
           </el-form-item>
           <el-form-item v-if="activeIndex === '2'" label="信号策略">
             <el-select
@@ -59,6 +59,7 @@
               @change="onChosenSignalPolicy"
               placeholder="请选择"
               key="信号策略"
+              :disabled="readOnly"
             >
               <el-option
                 v-for="(p, i) in signalPolicyOptions"
@@ -80,6 +81,7 @@
                     v-model="signalPolicyOptions[i].initParams[index]['value']"
                     :class="param.unit ? 'with-unit' : ''"
                     :type="param.type.toLowerCase()"
+                    :disabled="readOnly"
                   />
                   <span v-if="param.unit" class="value-unit">{{ param.unit }}</span>
                 </el-form-item>
@@ -97,6 +99,7 @@
               collapse-tags
               multiple
               clearable
+              :disabled="readOnly"
             >
               <el-option
                 v-for="(r, i) in riskRuleOptions"
@@ -114,6 +117,7 @@
                     v-model="riskRuleOptions[i].initParams[k]['value']"
                     :class="param.unit ? 'with-unit' : ''"
                     :type="param.type.toLowerCase()"
+                    :disabled="readOnly"
                   />
                   <span v-if="param.unit" class="value-unit">{{ param.unit }}</span>
                 </el-form-item>
@@ -127,6 +131,7 @@
               value-key="name"
               placeholder="请选择"
               key="交易策略"
+              :disabled="readOnly"
             >
               <el-option
                 v-for="(dealer, i) in dealerOptions"
@@ -148,6 +153,7 @@
                     v-if="param.type === 'Options'"
                     v-model="dealerOptions[i].initParams[index]['value']"
                     :class="param.unit ? 'with-unit' : ''"
+                    :disabled="readOnly"
                   >
                     <el-option v-for="(item, i) in param.options" :value="item" :key="i">{{
                       item
@@ -158,6 +164,7 @@
                     v-model="dealerOptions[i].initParams[index]['value']"
                     :class="param.unit ? 'with-unit' : ''"
                     :type="param.type.toLowerCase()"
+                    :disabled="readOnly"
                   />
                   <span v-if="param.unit" class="value-unit">{{ param.unit }}</span>
                 </el-form-item>
