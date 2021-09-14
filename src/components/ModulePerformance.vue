@@ -171,12 +171,12 @@ export default {
   },
   methods: {
     async init() {
-      const result = await moduleApi.getModulePerf(this.moduleName)
+      const result = await moduleApi.getModuleInfo(this.moduleName)
       this.totalPositionProfit = result.totalPositionProfit
       this.moduleState = result.moduleState
       this.accountId = result.accountId
       this.moduleAvailable = result.moduleAvailable
-      const refBarDataMap = result.refBarDataMap
+      const refBarDataMap = await moduleApi.getModuleDataRef(this.moduleName)
       this.barDataMap = {}
       Object.keys(refBarDataMap).forEach((k) => {
         this.barDataMap[k] = refBarDataMap[k]

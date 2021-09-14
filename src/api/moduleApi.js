@@ -25,9 +25,12 @@ export default {
   toggleModuleState(name) {
     return baseService.get('/module/toggle?name=' + name)
   },
-  getModulePerf(name) {
-    return baseService.get('/module/perf?name=' + name)
+  getModuleInfo(name) {
+    return baseService.get('/module/info?name=' + name)
   },
+  getModuleDataRef(name){
+    return baseService.get('/module/refdata?name=' + name)
+  }
   getModuleRecords(name){
     return baseService.get('/module/records?name=' + name)
   },
