@@ -171,7 +171,7 @@ export default {
       )
     },
     accountBalance() {
-      if (!this.accountId) {
+      if (!this.accountId || !this.getAccountById(this.accountId).account) {
         return 0
       }
       return this.getAccountById(this.accountId).account.balance
