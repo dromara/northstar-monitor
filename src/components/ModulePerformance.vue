@@ -43,7 +43,12 @@
           </el-row>
         </el-form>
         <el-table :data="dealRecords" :height="flexibleTblHeight">
-          <el-table-column prop="contractName" label="合约" align="center" width="60px"></el-table-column>
+          <el-table-column
+            prop="contractName"
+            label="合约"
+            align="center"
+            width="60px"
+          ></el-table-column>
           <el-table-column prop="direction" label="方向" align="center" width="40px">
             <template slot-scope="scope">{{
               { PD_Long: '多', PD_Short: '空' }[scope.row.direction] || '未知'
@@ -159,11 +164,14 @@ export default {
     symbolOptions() {
       return Object.keys(this.barDataMap)
     },
-    positionState(){
-      return {HOLDING_LONG: '持多单', HOLDING_SHORT: '持空单', EMPTY: '无持仓'}[this.moduleState] || '等待成交'
+    positionState() {
+      return (
+        { HOLDING_LONG: '持多单', HOLDING_SHORT: '持空单', EMPTY: '无持仓' }[this.moduleState] ||
+        '等待成交'
+      )
     },
-    accountBalance(){
-      if(!this.accountId){
+    accountBalance() {
+      if (!this.accountId) {
         return 0
       }
       return this.getAccountById(this.accountId).account.balance
@@ -185,7 +193,7 @@ export default {
       })
 
       this.dealRecords = await moduleApi.getModuleRecords(this.moduleName)
-      this.totalCloseProfit = this.dealRecords.map(i => i.closeProfit).reduce((a, b) => a + b)
+      this.totalCloseProfit = this.dealRecords.map((i) => i.closeProfit).reduce((a, b) => a + b)
       this.activeTab = this.symbolOptions.length ? this.symbolOptions[0] : ''
       const kLineChart = init(`module-k-line`)
       kLineChart.addCustomTechnicalIndicator(volumePure)

@@ -241,7 +241,7 @@ export default {
           initParams: []
         },
         enabled: true,
-        type: '',
+        type: ''
       }
     }
   },

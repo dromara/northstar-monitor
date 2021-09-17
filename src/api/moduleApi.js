@@ -28,10 +28,10 @@ export default {
   getModuleInfo(name) {
     return baseService.get('/module/info?name=' + name)
   },
-  getModuleDataRef(name){
+  getModuleDataRef(name) {
     return baseService.get('/module/refdata?name=' + name)
-  }
-  getModuleRecords(name){
+  },
+  getModuleRecords(name) {
     return baseService.get('/module/records?name=' + name)
   },
   removeModule(name) {
