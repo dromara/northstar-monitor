@@ -5,12 +5,17 @@
         <div class="basic-info">
           <el-form inline>
             <el-row>
-              <el-col span="12">
+              <el-col span="8">
                 <ReadonlyFieldValue label="模组名称" label-width="60px" :value="moduleName" />
               </el-col>
-              <el-col span="12">
+              <el-col span="8">
                 <ReadonlyFieldValue label="账户ID" label-width="60px" :value="accountId" />
               </el-col>
+              <el-col span="8"
+                ><div class="cell-content">
+                  <el-button @click="init">数据刷新</el-button>
+                </div></el-col
+              >
             </el-row>
             <el-row>
               <el-col span="8">
@@ -51,7 +56,7 @@
             <el-tab-pane name="tradeRecord" label="原始成交"></el-tab-pane>
           </el-tabs>
         </div>
-        <div class="full-height">
+        <div class="table-wrapper">
           <el-table v-show="moduleTab === 'holding'" :data="holdingPositions" height="100%">
             <el-table-column label="合约" align="center" width="60px"></el-table-column>
             <el-table-column label="方向" align="center" width="40px"></el-table-column>
@@ -60,25 +65,12 @@
             <el-table-column label="盈亏" align="center"></el-table-column>
             <el-table-column label="操作" align="center"></el-table-column>
           </el-table>
-          <el-table v-show="moduleTab === 'tradeRecord'" :data="tradeRecords" height="100%">
-            <el-table-column
-              prop="contractName"
-              label="合约"
-              align="center"
-              width="60px"
-            ></el-table-column>
-            <el-table-column prop="operation" label="操作" align="center" width="50px">
-            </el-table-column>
-            <el-table-column
-              prop="volume"
-              label="手数"
-              align="center"
-              width="30px"
-            ></el-table-column>
-            <el-table-column prop="price" label="成交价" align="center"></el-table-column>
-            <el-table-column prop="tradingDay" label="交易日" align="center"></el-table-column>
-          </el-table>
-          <el-table v-show="moduleTab === 'dealRecord'" :data="dealRecords" height="100%">
+          <el-table
+            ref="dealTbl"
+            v-show="moduleTab === 'dealRecord'"
+            :data="dealRecords"
+            height="100%"
+          >
             <el-table-column
               prop="contractName"
               label="合约"
@@ -96,24 +88,22 @@
               align="center"
               width="30px"
             ></el-table-column>
-            <el-table-column
-              prop="openPrice"
-              label="开仓价"
-              align="center"
-              width="60px"
-            ></el-table-column>
-            <el-table-column
-              prop="closePrice"
-              label="平仓价"
-              align="center"
-              width="60px"
-            ></el-table-column>
-            <el-table-column
-              prop="closeProfit"
-              label="平仓盈亏"
-              align="center"
-              width="60px"
-            ></el-table-column>
+            <el-table-column prop="openPrice" label="开仓价" align="center"></el-table-column>
+            <el-table-column prop="closePrice" label="平仓价" align="center"></el-table-column>
+            <el-table-column prop="closeProfit" label="平仓盈亏" align="center"></el-table-column>
+            <el-table-column prop="tradingDay" label="交易日" align="center"></el-table-column>
+          </el-table>
+          <el-table
+            ref="tradeTbl"
+            v-show="moduleTab === 'tradeRecord'"
+            :data="tradeRecords"
+            height="100%"
+            max-height="100%"
+          >
+            <el-table-column prop="contractName" label="合约" align="center"></el-table-column>
+            <el-table-column prop="operation" label="操作" align="center"> </el-table-column>
+            <el-table-column prop="volume" label="手数" align="center"></el-table-column>
+            <el-table-column prop="price" label="成交价" align="center"></el-table-column>
             <el-table-column prop="tradingDay" label="交易日" align="center"></el-table-column>
           </el-table>
         </div>
@@ -168,7 +158,7 @@ export default {
   },
   data() {
     return {
-      moduleTab: 'holding',
+      moduleTab: 'dealRecord',
       activeTab: '',
       dialogVisible: false,
       dealRecords: [],
@@ -187,6 +177,21 @@ export default {
       if (val) {
         this.dialogVisible = val
         this.$nextTick(this.init)
+      }
+    },
+    moduleTab: function (val) {
+      console.log(val)
+      if (val === 'dealRecord') {
+        setTimeout(() => {
+          let table = this.$refs.dealTbl
+          table.bodyWrapper.scrollTop = table.bodyWrapper.scrollHeight
+        }, 50)
+      }
+      if (val === 'tradeRecord') {
+        setTimeout(() => {
+          let table = this.$refs.tradeTbl
+          table.bodyWrapper.scrollTop = table.bodyWrapper.scrollHeight
+        }, 50)
       }
     },
     dialogVisible: function (val) {
@@ -235,11 +240,20 @@ export default {
         this.totalCloseProfit = result.length
           ? result.map((i) => i.closeProfit).reduce((a, b) => a + b)
           : 0
+
+        this.$nextTick(() => {
+          let table = this.$refs.dealTbl
+          table.bodyWrapper.scrollTop = table.bodyWrapper.scrollHeight
+        })
       })
     },
     loadTradeRecord() {
       moduleApi.getModuleTradeRecords(this.moduleName).then((result) => {
         this.tradeRecords = result
+        this.$nextTick(() => {
+          let table = this.$refs.tradeTbl
+          table.bodyWrapper.scrollTop = table.bodyWrapper.scrollHeight
+        })
       })
     },
     loadRefData() {
@@ -280,8 +294,8 @@ export default {
 </script>
 
 <style scoped>
-.full-height {
-  height: 100%;
+.table-wrapper {
+  height: calc(100vh - 224px);
 }
 .kline-wrapper {
   height: 100%;
@@ -294,10 +308,13 @@ export default {
   display: flex;
 }
 .side-panel {
-  min-width: 420px;
+  min-width: 460px;
   border-top: 1px solid;
-  display: flex;
-  flex-direction: column;
+  flex: 1;
+}
+.cell-content {
+  height: 40px;
+  line-height: 40px;
 }
 .kline-body {
   height: calc(100% - 56px);
