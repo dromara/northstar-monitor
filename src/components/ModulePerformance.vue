@@ -58,12 +58,24 @@
         </div>
         <div class="table-wrapper">
           <el-table v-show="moduleTab === 'holding'" :data="holdingPositions" height="100%">
-            <el-table-column label="合约" align="center" width="60px"></el-table-column>
-            <el-table-column label="方向" align="center" width="40px"></el-table-column>
-            <el-table-column label="手数" align="center" width="30px"></el-table-column>
-            <el-table-column label="成本价" align="center"></el-table-column>
-            <el-table-column label="盈亏" align="center"></el-table-column>
-            <el-table-column label="操作" align="center"></el-table-column>
+            <el-table-column prop="unifiedSymbol" label="合约" align="center" width="60px">
+              <template slot-scope="scope">{{ scope.row.unifiedSymbol.split('@')[0] }}</template>
+            </el-table-column>
+            <el-table-column prop="positionDir" label="方向" align="center" width="40px"
+              ><template slot-scope="scope">{{
+                { PD_Long: '多', PD_Short: '空' }[scope.row.positionDir] || '未知'
+              }}</template></el-table-column
+            >
+            <el-table-column
+              prop="volume"
+              label="手数"
+              align="center"
+              width="30px"
+            ></el-table-column>
+            <el-table-column prop="openPrice" label="成本价" align="center"></el-table-column>
+            <el-table-column prop="stopLossPrice" label="止损价" align="center"></el-table-column>
+            <el-table-column prop="holdingProfit" label="盈亏" align="center"></el-table-column>
+            <el-table-column prop="" label="操作" align="center"></el-table-column>
           </el-table>
           <el-table
             ref="dealTbl"
@@ -163,6 +175,7 @@ export default {
       dialogVisible: false,
       dealRecords: [],
       tradeRecords: [],
+      holdingPositions: [],
       totalCloseProfit: 0,
       totalPositionProfit: 0,
       moduleState: '',
@@ -177,6 +190,7 @@ export default {
       if (val) {
         this.dialogVisible = val
         this.$nextTick(this.init)
+        this.loadRefData()
       }
     },
     moduleTab: function (val) {
@@ -224,7 +238,6 @@ export default {
       this.loadBasicInfo()
       this.loadDealRecord()
       this.loadTradeRecord()
-      this.loadRefData()
     },
     loadBasicInfo() {
       moduleApi.getModuleInfo(this.moduleName).then((result) => {
@@ -232,6 +245,9 @@ export default {
         this.moduleState = result.moduleState
         this.accountId = result.accountId
         this.moduleAvailable = result.moduleAvailable
+        let longPositions = Object.values(result.longPositions)
+        let shortPositions = Object.values(result.shortPositions)
+        this.holdingPositions = [...longPositions, ...shortPositions]
       })
     },
     loadDealRecord() {
