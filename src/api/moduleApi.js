@@ -31,8 +31,11 @@ export default {
   getModuleDataRef(name) {
     return baseService.get('/module/refdata?name=' + name)
   },
-  getModuleRecords(name) {
+  getModuleDealRecords(name) {
     return baseService.get('/module/records?name=' + name)
+  },
+  getModuleTradeRecords(name) {
+    return baseService.get('/module/records/trade?name=' + name)
   },
   removeModule(name) {
     return baseService.delete('/module?name=' + name)
