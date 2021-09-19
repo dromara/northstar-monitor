@@ -1,5 +1,6 @@
 <template>
   <el-dialog title="模组透视" :visible.sync="dialogVisible" fullscreen>
+    <ModulePositionForm :visible.sync="positionFormVisible" :data="curPosition" @save="onSave" />
     <div class="module-perf-wrapper">
       <div class="side-panel">
         <div class="basic-info">
@@ -75,7 +76,35 @@
             <el-table-column prop="openPrice" label="成本价" align="center"></el-table-column>
             <el-table-column prop="stopLossPrice" label="止损价" align="center"></el-table-column>
             <el-table-column prop="holdingProfit" label="盈亏" align="center"></el-table-column>
-            <el-table-column prop="" label="操作" align="center"></el-table-column>
+            <el-table-column label="操作" align="center">
+              <template slot="header">
+                <el-button
+                  class="compact"
+                  title="新建持仓"
+                  size="mini"
+                  icon="el-icon-plus"
+                  @click="createPosition"
+                ></el-button>
+              </template>
+              <template slot-scope="scope">
+                <el-button
+                  class="compact"
+                  title="修改持仓"
+                  size="mini"
+                  icon="el-icon-edit"
+                  @click="editPosition(scope.row)"
+                ></el-button>
+                <el-popconfirm class="ml-5" title="确定移除吗？" @confirm="delPosition(scope.row)">
+                  <el-button
+                    class="compact"
+                    title="移除持仓"
+                    size="mini"
+                    slot="reference"
+                    icon="el-icon-delete"
+                  ></el-button>
+                </el-popconfirm>
+              </template>
+            </el-table-column>
           </el-table>
           <el-table
             ref="dealTbl"
@@ -133,11 +162,12 @@
   </el-dialog>
 </template>
 <script>
+import ModulePositionForm from './ModulePositionForm.vue'
+import ReadonlyFieldValue from './ReadonlyFieldValue.vue'
 import { dispose, init } from 'klinecharts'
 import volumePure from '@/lib/indicator/volume-pure'
 import openInterestDelta from '@/lib/indicator/open-interest'
 import moduleApi from '@/api/moduleApi'
-import ReadonlyFieldValue from '@/components/ReadonlyFieldValue'
 import { mapGetters } from 'vuex'
 
 import { BarField } from '@/lib/xyz/redtorch/pb/core_field_pb'
@@ -156,6 +186,7 @@ const createFromBar = (bar) => {
 
 export default {
   components: {
+    ModulePositionForm,
     ReadonlyFieldValue
   },
   props: {
@@ -170,6 +201,8 @@ export default {
   },
   data() {
     return {
+      positionFormVisible: false,
+      curPosition: null,
       moduleTab: 'dealRecord',
       activeTab: '',
       dialogVisible: false,
@@ -293,6 +326,27 @@ export default {
 
         this.updateChart()
       })
+    },
+    createPosition() {
+      this.curPosition = null
+      this.positionFormVisible = true
+    },
+    editPosition(position) {
+      console.log(position)
+      this.curPosition = position
+      this.positionFormVisible = true
+    },
+    async delPosition(position) {
+      await moduleApi.removePosition(this.moduleName, position.unifiedSymbol, position.positionDir)
+      this.init()
+    },
+    async onSave(position) {
+      if (this.curPosition) {
+        await moduleApi.updatePosition(this.moduleName, position)
+      } else {
+        await moduleApi.createPosition(this.moduleName, position)
+      }
+      this.init()
     },
     updateChart() {
       this.chart.clearData()

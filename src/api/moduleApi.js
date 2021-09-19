@@ -37,6 +37,17 @@ export default {
   getModuleTradeRecords(name) {
     return baseService.get('/module/records/trade?name=' + name)
   },
+  createPosition(moduleName, position) {
+    return baseService.post(`/module/${moduleName}/position`, position)
+  },
+  updatePosition(moduleName, position) {
+    return baseService.put(`/module/${moduleName}/position`, position)
+  },
+  removePosition(moduleName, unifiedSymbol, dir) {
+    return baseService.delete(
+      `/module/${moduleName}/position?unifiedSymbol=${unifiedSymbol}&dir=${dir}`
+    )
+  },
   removeModule(name) {
     return baseService.delete('/module?name=' + name)
   }

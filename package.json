@@ -13,7 +13,7 @@
     "axios": "^0.21.1",
     "concurrently": "^6.2.0",
     "core-js": "^3.6.5",
-    "element-ui": "^2.15.1",
+    "element-ui": "^2.15.6",
     "google-protobuf": "^3.17.0-rc.1",
     "klinecharts": "^7.1.0",
     "moment": "^2.29.1",

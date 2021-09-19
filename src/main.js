@@ -6,6 +6,7 @@ import router from './router'
 import store from './store'
 
 import NumberFilter from '@/filter/number-filter'
+import '@/assets/style/index.css'
 
 console.log(NumberFilter)
 
@@ -23,7 +24,7 @@ Vue.config.errorHandler = function (e, v) {
     type: 'error',
     duration: 5 * 1000
   })
-  if(v){
+  if (v) {
     v.loading = false
   }
   console.error(e)
