@@ -1,26 +1,15 @@
 <template>
-  <el-dialog
-    width="300px"
-    title="合约查询"
-    :visible.sync="dialogVisible"
-    append-to-body
-    destroy-on-close
-  >
+  <el-dialog width="300px" title="合约查询" :visible.sync="dialogVisible" append-to-body>
     <el-form label-width="100px">
       <el-form-item label="网关列表">
         <el-select v-model="gateway" filterable>
-          <el-option
-            v-for="gw in gatewayList"
-            :label="gw"
-            :value="gw"
-            :key="gw"
-          ></el-option>
+          <el-option v-for="gw in gatewayList" :label="gw" :value="gw" :key="gw"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="合约列表">
         <el-select v-model="unifiedSymbol" filterable>
           <el-option
-            v-for="(c,i) in gwContractList"
+            v-for="(c, i) in gwContractList"
             :label="c.name"
             :value="c.unifiedSymbol"
             :value-key="c.unifiedSymbol"
@@ -31,10 +20,11 @@
       <el-form-item label="合约ID">
         <span ref="symbolText" class="text-selectable">{{ unifiedSymbol }}</span>
         <el-button
+          class="compact"
           size="mini"
+          title="复制"
           @click="copy"
           icon="el-icon-document-copy"
-          circle
           :disabled="!unifiedSymbol"
         ></el-button>
       </el-form-item>
@@ -63,7 +53,7 @@ export default {
     }
   },
   watch: {
-    gateway: function() {
+    gateway: function () {
       this.unifiedSymbol = ''
     },
     visible: function (val) {
@@ -78,14 +68,14 @@ export default {
       }
     }
   },
-  computed:{
-    gatewayList(){
+  computed: {
+    gatewayList() {
       const gatewayMap = {}
-      this.contractList.forEach(i => gatewayMap[i.gatewayId] = true)
+      this.contractList.forEach((i) => (gatewayMap[i.gatewayId] = true))
       return Object.keys(gatewayMap)
     },
-    gwContractList(){
-      return this.contractList.filter(i => i.gatewayId === this.gateway)
+    gwContractList() {
+      return this.contractList.filter((i) => i.gatewayId === this.gateway)
     }
   },
   created() {

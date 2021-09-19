@@ -71,8 +71,10 @@
           </el-table-column>
           <el-table-column label="撤单" align="center" width="65px">
             <template slot-scope="scope">
-              <el-button size="mini" icon="el-icon-delete" @click.native="cancelOrder(scope.row)">
-              </el-button>
+              <el-popconfirm title="确定撤单吗？" @confirm="cancelOrder(scope.row)">
+                <el-button class="compact" slot="reference" size="mini" icon="el-icon-delete">
+                </el-button>
+              </el-popconfirm>
             </template>
           </el-table-column> </el-table
       ></el-tab-pane>
@@ -198,8 +200,5 @@ export default {
   min-height: 300px;
   margin: 0 20px;
   overflow: hidden;
-}
-.el-button {
-  border: none;
 }
 </style>
