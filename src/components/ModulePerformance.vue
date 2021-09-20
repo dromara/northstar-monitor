@@ -244,7 +244,7 @@ export default {
     dialogVisible: function (val) {
       if (!val) {
         this.$emit('update:visible', val)
-        this.$nextTick(this.release)
+        this.$nextTick(this.close)
       }
     }
   },
@@ -356,7 +356,8 @@ export default {
       }
       this.chart.applyNewData(this.barDataMap[this.activeTab])
     },
-    release() {
+    close() {
+      Object.assign(this.$data, this.$options.data())
       dispose('module-k-line')
     }
   }
