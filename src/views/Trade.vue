@@ -85,11 +85,7 @@
           ></el-input>
         </div>
         <div class="ns-trade-action__item">
-          <el-input
-            v-model="stopPrice"
-            placeholder="止损价"
-            type="number"
-          ></el-input>
+          <el-input v-model="stopPrice" placeholder="止损价" type="number"></el-input>
         </div>
       </div>
       <div class="ns-trade-info">
@@ -242,16 +238,28 @@ export default {
       tradeOprApi.cancelOrder(this.currentAccountId, order.originorderid)
     },
     buyOpen() {
-      if(this.stopPrice >= this.bkPrice){
+      if (this.stopPrice && this.stopPrice >= this.bkPrice) {
         throw new Error('多开止损价需要少于开仓价')
       }
-      return tradeOprApi.buyOpen(this.currentAccountId, this.dealSymbol, this.bkPrice, this.dealVol, this.stopPrice)
+      return tradeOprApi.buyOpen(
+        this.currentAccountId,
+        this.dealSymbol,
+        this.bkPrice,
+        this.dealVol,
+        this.stopPrice
+      )
     },
     sellOpen() {
-      if(this.stopPrice <= this.skPrice){
+      if (this.stopPrice && this.stopPrice <= this.skPrice) {
         throw new Error('空开止损价需要大于开仓价')
       }
-      return tradeOprApi.sellOpen(this.currentAccountId, this.dealSymbol, this.skPrice, this.dealVol,this.stopPrice)
+      return tradeOprApi.sellOpen(
+        this.currentAccountId,
+        this.dealSymbol,
+        this.skPrice,
+        this.dealVol,
+        this.stopPrice
+      )
     },
     closePosition() {
       if (this.currentPosition.positiondirection === 2) {
