@@ -20,10 +20,18 @@
             </el-row>
             <el-row>
               <el-col span="8">
-                <ReadonlyFieldValue label="账户总额" label-width="60px" :value="accountBalance" />
+                <ReadonlyFieldValue
+                  label="账户总额"
+                  label-width="60px"
+                  :value="parseInt(accountBalance)"
+                />
               </el-col>
               <el-col span="8">
-                <ReadonlyFieldValue label="可用金额" label-width="60px" :value="moduleAvailable" />
+                <ReadonlyFieldValue
+                  label="可用金额"
+                  label-width="60px"
+                  :value="parseInt(moduleAvailable)"
+                />
               </el-col>
               <el-col span="8">
                 <ReadonlyFieldValue label="模组状态" label-width="60px" :value="positionState" />
@@ -31,20 +39,25 @@
             </el-row>
             <el-row>
               <el-col span="8">
-                <ReadonlyFieldValue label="平仓盈亏" label-width="60px" :value="totalCloseProfit" />
+                <ReadonlyFieldValue
+                  label="平仓盈亏"
+                  label-width="60px"
+                  :value="parseInt(totalCloseProfit)"
+                />
               </el-col>
               <el-col span="8">
                 <ReadonlyFieldValue
                   label="持仓盈亏"
                   label-width="60px"
-                  :value="totalPositionProfit"
+                  :value="parseInt(totalPositionProfit)"
                 />
               </el-col>
               <el-col span="8">
                 <ReadonlyFieldValue
                   label="总盈亏"
                   label-width="50px"
-                  :value="totalCloseProfit + totalPositionProfit"
+                  title="注意：手续费不算在总盈亏内"
+                  :value="parseInt(totalCloseProfit + totalPositionProfit)"
                 />
               </el-col>
             </el-row>
