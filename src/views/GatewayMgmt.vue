@@ -143,12 +143,18 @@
             :disabled="scope.row.connectionState !== 'DISCONNECTED'"
             >修改</el-button
           >
-          <el-button
-            size="mini"
-            type="danger"
-            @click="handleDelete(scope.$index, scope.row)"
-            :disabled="scope.row.connectionState !== 'DISCONNECTED'"
-            >删除</el-button
+          <el-popconfirm
+            class="ml-10"
+            title="确定移除吗？"
+            @confirm="handleDelete(scope.$index, scope.row)"
+          >
+            <el-button
+              size="mini"
+              type="danger"
+              slot="reference"
+              :disabled="scope.row.connectionState !== 'DISCONNECTED'"
+              >删除</el-button
+            ></el-popconfirm
           >
         </template>
       </el-table-column>
