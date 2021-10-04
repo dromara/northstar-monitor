@@ -92,12 +92,26 @@ export default {
   },
   methods: {
     savePosition() {
+      let flag =
+        this.assertTrue(this.form.unifiedSymbol, '未指定合约代码') &&
+        this.assertTrue(this.form.positionDir, '未指定持仓方向') &&
+        this.assertTrue(this.form.openPrice, '未设置开仓价') &&
+        this.assertTrue(this.form.volume, '未设置手数')
+      if (!flag) return
+
       this.$emit('save', this.form)
       this.dialogVisible = false
     },
     close() {
       this.$refs.positionInfo.resetFields()
       this.dialogVisible = false
+    },
+    assertTrue(expression, errMsg) {
+      if (!expression) {
+        this.$message.error(errMsg)
+        return false
+      }
+      return true
     }
   }
 }
