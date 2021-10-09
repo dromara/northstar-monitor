@@ -59,3 +59,10 @@ npm run start-mock
 
 目前的 Mock 数据还不完备，仅对少量接口提供了 mock 数据，可以自行添加  
 详细添加方法可参考 server/mock/api 下的例子
+
+
+## 参考项目
+[KLineChart](https://github.com/liihuu/KLineChart)，一个很牛逼的K线控件库。
+- 参考示例：https://liihuu.github.io/KLineChart/ （可能需要翻墙）
+- 代码示例：https://github.com/liihuu/KLineChartSample
+- 参考文档：https://www.yuque.com/liihuu/klinechart
