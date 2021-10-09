@@ -42,7 +42,7 @@ export default {
         let startDate = moment().subtract(7, 'days').format('YYYYMMDD')
         let now = moment()
         let endDate = moment()
-          .add(now.weekday() === 5 ? 54 : 6, 'hours')
+          .add(now.weekday() >= 5 ? 54 : 6, 'hours')
           .format('YYYYMMDD')
         dataSyncApi.loadHistoryBars(
           this.curMarketGatewayId,
