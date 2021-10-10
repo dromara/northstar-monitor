@@ -158,7 +158,11 @@
             <el-table-column prop="operation" label="操作" align="center"> </el-table-column>
             <el-table-column prop="volume" label="手数" align="center"></el-table-column>
             <el-table-column prop="price" label="成交价" align="center"></el-table-column>
-            <el-table-column prop="tradingDay" label="交易日" align="center"></el-table-column>
+            <el-table-column prop="tradingDay" label="成交时间" align="center" width="140px">
+              <template slot-scope="scope">
+                {{ new Date(scope.row.actionTime).toLocaleString('zh', { hour12: false }) }}
+              </template>
+            </el-table-column>
           </el-table>
         </div>
       </div>
