@@ -9,7 +9,7 @@
   >
     <ContractFinder :visible.sync="contractFinderVisible" />
     <el-alert
-      v-if="this.module"
+      v-if="this.module && !this.readOnly"
       class="mb-10"
       title="修改模组会重置模组除持仓状态外的所有属性状态，请知悉"
       type="warning"
