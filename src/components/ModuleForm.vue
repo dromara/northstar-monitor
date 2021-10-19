@@ -249,7 +249,7 @@ export default {
           componentMeta: {},
           initParams: []
         },
-        enabled: true,
+        enabled: false,
         type: ''
       }
     }
