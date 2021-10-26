@@ -6,5 +6,11 @@ export default {
   },
   getProcess(playId) {
     return baseService.get(`/pb/play/process?playId=${playId}`)
+  },
+  getPlaybackRecord(moduleName) {
+    return baseService.get(`/pb/record?moduleName=${moduleName}`)
+  },
+  getPlaybackReadiness() {
+    return baseService.get(`/pb/readiness`)
   }
 }

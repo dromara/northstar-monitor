@@ -17,7 +17,9 @@
         :picker-options="pickerOptions"
       >
       </el-date-picker>
-      <el-button class="btn-position ml-10" @click="startPlayback">开始回测</el-button>
+      <el-button class="btn-position ml-10" @click="startPlayback" :disabled="playbackRunning">
+        开始回测
+      </el-button>
     </el-row>
     <el-table
       :data="data"
@@ -29,12 +31,14 @@
       <el-table-column prop="moduleName" label="模组名称" width="120" align="center">
       </el-table-column>
       <el-table-column prop="name" label="回测进度" align="center">
-        <el-progress
-          :text-inside="true"
-          :stroke-width="22"
-          :percentage="80"
-          status="success"
-        ></el-progress>
+        <template slot-scope="scope">
+          <el-progress
+            :text-inside="true"
+            :stroke-width="22"
+            :percentage="scope.row.process || 0"
+            status="success"
+          ></el-progress>
+        </template>
       </el-table-column>
     </el-table>
     <div slot="footer"></div>
@@ -57,6 +61,7 @@ export default {
   data() {
     return {
       dialogVisible: false,
+      playbackRunning: false,
       dates: [],
       chosenModule: [],
       pickerOptions: {
@@ -67,10 +72,10 @@ export default {
     }
   },
   watch: {
-    visible: function (val) {
+    visible: async function (val) {
       if (val) {
         this.dialogVisible = val
-        console.log(this.data)
+        this.playbackRunning = await playbackApi.getPlaybackReadiness()
       }
     },
     dialogVisible: function (val) {
@@ -87,13 +92,24 @@ export default {
       if (!this.chosenModule.length) {
         throw new Error('未选中回测模组')
       }
+      this.playbackRunning = true
       const playIds = await playbackApi.startPlay(this.dates[0], this.dates[1], this.chosenModule)
-      // const checkProcess = () => {}
-      this.chosenModule.map((item, index) => {
-        item.playId = playIds[index]
-        item.playProcess = 0
-        return item
-      })
+      const checkProcessJobs = playIds.map(
+        (id, index) =>
+          new Promise((r) => {
+            const job = async () => {
+              const process = await playbackApi.getProcess(id)
+              this.chosenModule[index].process = process
+              if (process < 100) {
+                setTimeout(job, 3000)
+              } else {
+                r()
+              }
+            }
+            job()
+          })
+      )
+      Promise.all(checkProcessJobs).then(() => (this.playbackRunning = false))
     },
     handleSelectionChange(selection) {
       this.chosenModule = selection
