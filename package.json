@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "cross-env PORT=3000 concurrently 'node ./server/bin/server.js' 'npm run serve' -k -n 'backend,frontend' -c 'cyan.dim,yellow.dim'",
+    "start": "cross-env PORT=3000 concurrently \"node ./server/bin/server.js\" \"npm run serve\" -k -n \"backend,frontend\" -c \"cyan.dim,yellow.dim\"",
     "start-mock": "cross-env MOCK=true npm start",
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
