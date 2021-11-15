@@ -7,6 +7,7 @@ import store from './store'
 
 import NumberFilter from '@/filter/number-filter'
 import '@/assets/style/index.css'
+import './utils'
 
 console.log(NumberFilter)
 

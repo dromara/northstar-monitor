@@ -1,11 +1,21 @@
 import baseService from './baseRequest'
 
 export default {
-  startPlay(startDate, endDate, moduleNames) {
-    return baseService.post(`/pb/play?startDate=${startDate}&endDate=${endDate}`, moduleNames)
+  startPlay(startDate, endDate, moduleNames, playbackAccountInitialBalance, tickOfFee=0) {
+    return baseService.post(`/pb/play`, {
+      startDate,
+      endDate,
+      moduleNames,
+      playbackAccountInitialBalance,
+      tickOfFee,
+      precision: 'TICK'
+    })
   },
-  getProcess(playId) {
-    return baseService.get(`/pb/play/process?playId=${playId}`)
+  getProcess() {
+    return baseService.get(`/pb/play/process`)
+  },
+  getBalance(moduleName){
+    return baseService.get(`/pb/balance?moduleName=${moduleName}`)
   },
   getPlaybackRecord(moduleName) {
     return baseService.get(`/pb/record?moduleName=${moduleName}`)

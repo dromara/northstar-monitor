@@ -10,7 +10,7 @@
       :moduleName="curModule ? curModule.moduleName : ''"
       :visible.sync="modulePerfVisible"
     />
-    <ModulePlayback :visible.sync="modulePlaybackVisible" :data="playbackableList" />
+    <ModulePlayback :visible.sync="modulePlaybackVisible" :data="list" />
     <el-table height="100%" :data="list">
       <el-table-column label="模组名称" prop="moduleName" align="center" width="100px" />
       <el-table-column label="策略模式" prop="type" align="center" width="90px" />
@@ -82,11 +82,6 @@ export default {
       curTableIndex: -1,
       curModule: null,
       list: []
-    }
-  },
-  computed: {
-    playbackableList() {
-      return this.list.filter((i) => !i.enabled)
     }
   },
   mounted() {

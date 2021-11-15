@@ -4,9 +4,28 @@
     :visible.sync="dialogVisible"
     :close-on-click-modal="false"
     class="module-dialog"
-    width="600px"
+    width="500px"
   >
-    <div class="warning-text"><i class="el-icon-warning" /> 只有停用的模组才能进行回测</div>
+    <el-row class="mb-10" :gutter="10">
+      <el-col :span="10">
+        <el-input
+          type="number"
+          placeholder="回测账户初始金额"
+          prefix-icon="el-icon-money"
+          v-model="playbackAccountInitBalance"
+          clearable
+        ></el-input>
+      </el-col>
+      <el-col :span="8">
+        <el-input
+          type="number"
+          placeholder="手续费"
+          prefix-icon="el-icon-thumb"
+          v-model="playbackTickOfFee"
+          clearable
+        ></el-input>
+      </el-col>
+    </el-row>
     <el-row>
       <el-date-picker
         v-model="dates"
@@ -30,14 +49,11 @@
       <el-table-column type="selection" width="45" align="center"> </el-table-column>
       <el-table-column prop="moduleName" label="模组名称" width="120" align="center">
       </el-table-column>
-      <el-table-column prop="name" label="回测进度" align="center">
-        <template slot-scope="scope">
-          <el-progress
-            :text-inside="true"
-            :stroke-width="22"
-            :percentage="scope.row.process || 0"
-            status="success"
-          ></el-progress>
+      <el-table-column prop="playbackBalance" label="回测账户余额" align="center">
+      </el-table-column>
+      <el-table-column :label="`回测进度：${playbackProcess}%`" align="center">
+        <template>
+          <el-button :disabled="playbackProcess < 100 || playbackRunning">回测明细</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -62,6 +78,9 @@ export default {
     return {
       dialogVisible: false,
       playbackRunning: false,
+      playbackProcess: 0,
+      playbackAccountInitBalance: '',
+      playbackTickOfFee: '',
       dates: [],
       chosenModule: [],
       pickerOptions: {
@@ -75,7 +94,7 @@ export default {
     visible: async function (val) {
       if (val) {
         this.dialogVisible = val
-        this.playbackRunning = await playbackApi.getPlaybackReadiness()
+        this.playbackRunning = !(await playbackApi.getPlaybackReadiness())
       }
     },
     dialogVisible: function (val) {
@@ -92,24 +111,26 @@ export default {
       if (!this.chosenModule.length) {
         throw new Error('未选中回测模组')
       }
+      if (!this.playbackAccountInitBalance) {
+        throw new Error('未填入回测账户初始余额')
+      }
       this.playbackRunning = true
-      const playIds = await playbackApi.startPlay(this.dates[0], this.dates[1], this.chosenModule)
-      const checkProcessJobs = playIds.map(
-        (id, index) =>
-          new Promise((r) => {
-            const job = async () => {
-              const process = await playbackApi.getProcess(id)
-              this.chosenModule[index].process = process
-              if (process < 100) {
-                setTimeout(job, 3000)
-              } else {
-                r()
-              }
-            }
-            job()
-          })
+      await playbackApi.startPlay(
+        this.dates[0].format('yyyyMMdd'),
+        this.dates[1].format('yyyyMMdd'),
+        this.chosenModule.map((i) => i.moduleName),
+        this.playbackAccountInitBalance,
+        this.playbackTickOfFee
       )
-      Promise.all(checkProcessJobs).then(() => (this.playbackRunning = false))
+      const checkProcessJobs = async () => {
+        this.playbackProcess = await playbackApi.getProcess()
+        if (this.playbackProcess < 100) {
+          setTimeout(checkProcessJobs, 3000)
+        } else {
+          this.playbackRunning = false
+        }
+      }
+      checkProcessJobs()
     },
     handleSelectionChange(selection) {
       this.chosenModule = selection
