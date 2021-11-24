@@ -6,8 +6,10 @@
     class="module-dialog"
     width="500px"
   >
+    <div class="warning-text"><i class="el-icon-warning" /> 只有停用的模组才能进行回测</div>
+    <PlaybackPerformance :visible.sync="playbackPerformanceVisible" />
     <el-row class="mb-10" :gutter="10">
-      <el-col :span="10">
+      <el-col :span="9">
         <el-input
           type="number"
           placeholder="回测账户初始金额"
@@ -16,10 +18,10 @@
           clearable
         ></el-input>
       </el-col>
-      <el-col :span="8">
+      <el-col :span="9">
         <el-input
           type="number"
-          placeholder="手续费"
+          placeholder="每笔手续费（元）"
           prefix-icon="el-icon-thumb"
           v-model="playbackTickOfFee"
           clearable
@@ -52,8 +54,8 @@
       <el-table-column prop="playbackBalance" label="回测账户余额" align="center">
       </el-table-column>
       <el-table-column :label="`回测进度：${playbackProcess}%`" align="center">
-        <template>
-          <el-button :disabled="playbackProcess < 100 || playbackRunning">回测明细</el-button>
+        <template slot-scope="scope">
+          <el-button @click="playbackRecord(scope.row.moduleName)">回测明细</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -63,7 +65,11 @@
 
 <script>
 import playbackApi from '@/api/playbackApi'
+import PlaybackPerformance from './PlaybackPerformance.vue'
 export default {
+  components: {
+    PlaybackPerformance
+  },
   props: {
     data: {
       type: Array,
@@ -77,6 +83,7 @@ export default {
   data() {
     return {
       dialogVisible: false,
+      playbackPerformanceVisible: false,
       playbackRunning: false,
       playbackProcess: 0,
       playbackAccountInitBalance: '',
@@ -124,6 +131,11 @@ export default {
       )
       const checkProcessJobs = async () => {
         this.playbackProcess = await playbackApi.getProcess()
+        this.data.map((i) => {
+          playbackApi.getBalance(i.moduleName).then((balance) => {
+            i.playbackBalance = balance
+          })
+        })
         if (this.playbackProcess < 100) {
           setTimeout(checkProcessJobs, 3000)
         } else {
@@ -134,6 +146,10 @@ export default {
     },
     handleSelectionChange(selection) {
       this.chosenModule = selection
+    },
+    playbackRecord(moduleName) {
+      console.log('moduleName:' + moduleName)
+      this.playbackPerformanceVisible = true
     }
   }
 }

@@ -17,17 +17,8 @@
     >
       <el-row>
         <el-col :span="24">
-          <el-form-item
-            label="模拟交易双向手续费（单位：最小变动价位）："
-            :required="true"
-            prop="ticksOfCommission"
-          >
-            <el-input-number
-              v-model="settings.ticksOfCommission"
-              :min="0"
-              :max="5"
-              autocomplete="off"
-            ></el-input-number>
+          <el-form-item label="模拟交易每笔手续费（单位：元）：" :required="true" prop="fee">
+            <el-input v-model="settings.fee" type="number" autocomplete="off"></el-input>
           </el-form-item>
         </el-col>
       </el-row>
@@ -58,12 +49,10 @@ export default {
   data() {
     return {
       formRules: {
-        ticksOfCommission: [
-          { required: true, message: '不能为空', trigger: 'blur' }
-        ]
+        fee: [{ required: true, message: '不能为空', trigger: 'blur' }]
       },
       settings: {
-        ticksOfCommission: ''
+        fee: ''
       }
     }
   },
