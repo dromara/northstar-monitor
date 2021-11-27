@@ -54,7 +54,7 @@
                   <ReadonlyFieldValue
                     label="平均占用资金"
                     label-width="84px"
-                    :value="record.meanOfOccupiedMoney"
+                    :value="parseInt(record.meanOfOccupiedMoney || 0)"
                   />
                 </el-tooltip>
               </el-col>
@@ -71,7 +71,7 @@
                 <ReadonlyFieldValue
                   label="盈亏标准差"
                   label-width="70px"
-                  :value="record.stdOfProfit"
+                  :value="parseInt(record.stdOfProfit || 0)"
                 />
               </el-col>
               <el-col span="8">
@@ -86,15 +86,15 @@
               <el-col span="12">
                 <ReadonlyFieldValue
                   label="每5笔样本期望盈亏均值"
-                  label-width="192px"
-                  :value="record.meanOf5TransactionsAvgProfit"
+                  label-width="160px"
+                  :value="(record.meanOf5TransactionsAvgProfit || 0).toFixed(3)"
                 />
               </el-col>
               <el-col span="12">
                 <ReadonlyFieldValue
                   label="每5笔样本期望盈亏标准差"
-                  label-width="200px"
-                  :value="record.stdOf5TransactionsAvgProfit"
+                  label-width="180px"
+                  :value="(record.stdOf5TransactionsAvgProfit || 0).toFixed(3)"
                 />
               </el-col>
             </el-row>
@@ -102,15 +102,15 @@
               <el-col span="12">
                 <ReadonlyFieldValue
                   label="每5笔样本胜率均值"
-                  label-width="200px"
-                  :value="record.meanOf5TransactionsAvgWinningRate"
+                  label-width="160px"
+                  :value="((record.meanOf5TransactionsAvgWinningRate || 0) * 100).toFixed(2) + ' %'"
                 />
               </el-col>
               <el-col span="12">
                 <ReadonlyFieldValue
                   label="每5笔样本胜率标准差"
-                  label-width="200px"
-                  :value="record.stdOf5TransactionsAvgWinningRate"
+                  label-width="180px"
+                  :value="((record.stdOf5TransactionsAvgWinningRate || 0) * 100).toFixed(2) + ' %'"
                 />
               </el-col>
             </el-row>
@@ -118,15 +118,15 @@
               <el-col span="12">
                 <ReadonlyFieldValue
                   label="每10笔样本期望盈亏均值"
-                  label-width="200px"
-                  :value="record.meanOf10TransactionsAvgProfit"
+                  label-width="160px"
+                  :value="(record.meanOf10TransactionsAvgProfit || 0).toFixed(3)"
                 />
               </el-col>
               <el-col span="12">
                 <ReadonlyFieldValue
                   label="每10笔样本期望盈亏标准差"
-                  label-width="200px"
-                  :value="record.stdOf10TransactionsAvgProfit"
+                  label-width="180px"
+                  :value="(record.stdOf10TransactionsAvgProfit || 0).toFixed(3)"
                 />
               </el-col>
             </el-row>
@@ -134,15 +134,17 @@
               <el-col span="12">
                 <ReadonlyFieldValue
                   label="每10笔样本胜率均值"
-                  label-width="200px"
-                  :value="record.meanOf10TransactionsAvgWinningRate"
+                  label-width="160px"
+                  :value="
+                    ((record.meanOf10TransactionsAvgWinningRate || 0) * 100).toFixed(2) + ' %'
+                  "
                 />
               </el-col>
               <el-col span="12">
                 <ReadonlyFieldValue
                   label="每10笔样本胜率标准差"
-                  label-width="200px"
-                  :value="record.stdOf10TransactionsAvgWinningRate"
+                  label-width="180px"
+                  :value="((record.stdOf10TransactionsAvgWinningRate || 0) * 100).toFixed(2) + ' %'"
                 />
               </el-col>
             </el-row>
@@ -159,7 +161,7 @@
             ref="dealTbl"
             v-show="moduleTab === 'dealRecord'"
             :data="dealRecords"
-            height="360px"
+            height="350px"
           >
             <el-table-column
               prop="contractName"
@@ -187,7 +189,7 @@
             ref="tradeTbl"
             v-show="moduleTab === 'tradeRecord'"
             :data="tradeRecords"
-            height="400px"
+            height="350px"
           >
             <el-table-column prop="contractName" label="合约" align="center"></el-table-column>
             <el-table-column prop="operation" label="操作" align="center"> </el-table-column>
