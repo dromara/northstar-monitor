@@ -14,7 +14,9 @@
               </el-col>
               <el-col span="8"
                 ><div class="cell-content">
-                  <el-button @click="init">数据刷新</el-button>
+                  <el-button class="compact" icon="el-icon-refresh" @click="init"
+                    >刷新数据</el-button
+                  >
                 </div></el-col
               >
             </el-row>
@@ -383,7 +385,7 @@ export default {
 
 <style scoped>
 .table-wrapper {
-  height: calc(100vh - 224px);
+  height: calc(100vh - 192px);
 }
 .kline-wrapper {
   height: 100%;
@@ -401,8 +403,8 @@ export default {
   flex: 1;
 }
 .cell-content {
-  height: 40px;
-  line-height: 40px;
+  position: absolute;
+  bottom: 0;
 }
 .kline-body {
   height: calc(100% - 56px);

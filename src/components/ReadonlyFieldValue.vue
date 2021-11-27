@@ -1,7 +1,7 @@
 <template>
   <div class="ns-field">
     <div class="ns-field__label" :style="{ width: labelWidth }">{{ label }}</div>
-    <div class="ns-field__value">{{ value }}</div>
+    <div class="ns-field__value">{{ value || '-' }}</div>
   </div>
 </template>
 
@@ -29,7 +29,7 @@ export default {
   display: flex;
 }
 .ns-field div {
-  padding: 10px 0;
+  padding-top: 10px;
   padding-right: 10px;
 }
 .ns-field__value {

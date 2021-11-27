@@ -7,7 +7,10 @@
     width="500px"
   >
     <div class="warning-text"><i class="el-icon-warning" /> 只有停用的模组才能进行回测</div>
-    <PlaybackPerformance :visible.sync="playbackPerformanceVisible" />
+    <PlaybackPerformance
+      :visible.sync="playbackPerformanceVisible"
+      :moduleName="playbackDetailOf"
+    />
     <el-row class="mb-10" :gutter="10">
       <el-col :span="9">
         <el-input
@@ -88,6 +91,7 @@ export default {
       playbackProcess: 0,
       playbackAccountInitBalance: '',
       playbackTickOfFee: '',
+      playbackDetailOf: '',
       dates: [],
       chosenModule: [],
       pickerOptions: {
@@ -148,7 +152,7 @@ export default {
       this.chosenModule = selection
     },
     playbackRecord(moduleName) {
-      console.log('moduleName:' + moduleName)
+      this.playbackDetailOf = moduleName
       this.playbackPerformanceVisible = true
     }
   }
