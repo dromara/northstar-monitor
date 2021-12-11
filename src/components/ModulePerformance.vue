@@ -30,9 +30,9 @@
               </el-col>
               <el-col span="8">
                 <ReadonlyFieldValue
-                  label="可用金额"
+                  label="占用均额"
                   label-width="60px"
-                  :value="parseInt(moduleAvailable)"
+                  :value="parseInt(avgOccupiedAmount)"
                 />
               </el-col>
               <el-col span="8">
@@ -44,14 +44,14 @@
                 <ReadonlyFieldValue
                   label="平仓盈亏"
                   label-width="60px"
-                  :value="parseInt(totalCloseProfit)"
+                  :value="parseInt(totalCloseProfit) || '0'"
                 />
               </el-col>
               <el-col span="8">
                 <ReadonlyFieldValue
                   label="持仓盈亏"
                   label-width="60px"
-                  :value="parseInt(totalPositionProfit)"
+                  :value="parseInt(totalPositionProfit) || '0'"
                 />
               </el-col>
               <el-col span="8">
@@ -59,7 +59,53 @@
                   label="总盈亏"
                   label-width="50px"
                   title="注意：手续费不算在总盈亏内"
-                  :value="parseInt(totalCloseProfit + totalPositionProfit)"
+                  :value="parseInt(totalCloseProfit + totalPositionProfit) || '0'"
+                />
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col span="12">
+                <ReadonlyFieldValue
+                  label="近五次交易平均盈亏"
+                  label-width="140px"
+                  title="注意：手续费不算在总盈亏内"
+                  :value="
+                    meanProfitOf5Transactions ? parseInt(meanProfitOf5Transactions) : '数据不足'
+                  "
+                />
+              </el-col>
+              <el-col span="12">
+                <ReadonlyFieldValue
+                  label="近五次交易胜率"
+                  label-width="120px"
+                  :value="
+                    winningRateOf5Transactions < 0
+                      ? '数据不足'
+                      : parseInt(winningRateOf5Transactions * 100) + ' %'
+                  "
+                />
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col span="12">
+                <ReadonlyFieldValue
+                  label="近十次交易平均盈亏"
+                  label-width="140px"
+                  title="注意：手续费不算在总盈亏内"
+                  :value="
+                    meanProfitOf10Transactions ? parseInt(meanProfitOf10Transactions) : '数据不足'
+                  "
+                />
+              </el-col>
+              <el-col span="12">
+                <ReadonlyFieldValue
+                  label="近十次交易胜率"
+                  label-width="120px"
+                  :value="
+                    winningRateOf10Transactions < 0
+                      ? '数据不足'
+                      : parseInt(winningRateOf10Transactions * 100) + ' %'
+                  "
                 />
               </el-col>
             </el-row>
@@ -74,7 +120,7 @@
         </div>
         <div class="table-wrapper">
           <el-table v-show="moduleTab === 'holding'" :data="holdingPositions" height="100%">
-            <el-table-column prop="unifiedSymbol" label="合约" align="center" width="60px">
+            <el-table-column prop="unifiedSymbol" label="合约" align="center" width="100px">
               <template slot-scope="scope">{{ scope.row.unifiedSymbol.split('@')[0] }}</template>
             </el-table-column>
             <el-table-column prop="positionDir" label="方向" align="center" width="40px"
@@ -90,7 +136,6 @@
             ></el-table-column>
             <el-table-column prop="openPrice" label="成本价" align="center"></el-table-column>
             <el-table-column prop="stopLossPrice" label="止损价" align="center"></el-table-column>
-            <el-table-column prop="holdingProfit" label="盈亏" align="center"></el-table-column>
             <el-table-column label="操作" align="center">
               <template slot="header">
                 <el-button
@@ -131,7 +176,7 @@
               prop="contractName"
               label="合约"
               align="center"
-              width="60px"
+              width="100px"
             ></el-table-column>
             <el-table-column prop="direction" label="方向" align="center" width="40px">
               <template slot-scope="scope">{{
@@ -156,7 +201,12 @@
             height="100%"
             max-height="100%"
           >
-            <el-table-column prop="contractName" label="合约" align="center"></el-table-column>
+            <el-table-column
+              prop="contractName"
+              label="合约"
+              align="center"
+              width="100px"
+            ></el-table-column>
             <el-table-column prop="operation" label="操作" align="center"> </el-table-column>
             <el-table-column prop="volume" label="手数" align="center"></el-table-column>
             <el-table-column prop="price" label="成交价" align="center"></el-table-column>
@@ -222,7 +272,7 @@ export default {
     return {
       positionFormVisible: false,
       curPosition: null,
-      moduleTab: 'dealRecord',
+      moduleTab: 'holding',
       activeTab: '',
       dialogVisible: false,
       dealRecords: [],
@@ -232,7 +282,11 @@ export default {
       totalPositionProfit: 0,
       moduleState: '',
       accountId: '',
-      moduleAvailable: 0,
+      avgOccupiedAmount: 0,
+      meanProfitOf5Transactions: 0,
+      meanProfitOf10Transactions: 0,
+      winningRateOf5Transactions: 0,
+      winningRateOf10Transactions: 0,
       barDataMap: {},
       chart: null
     }
@@ -296,10 +350,14 @@ export default {
         this.totalPositionProfit = result.totalPositionProfit
         this.moduleState = result.moduleState
         this.accountId = result.accountId
-        this.moduleAvailable = result.moduleAvailable
+        this.avgOccupiedAmount = result.avgOccupiedAmount
         let longPositions = Object.values(result.longPositions)
         let shortPositions = Object.values(result.shortPositions)
         this.holdingPositions = [...longPositions, ...shortPositions]
+        this.meanProfitOf5Transactions = result.meanProfitOf5Transactions
+        this.meanProfitOf10Transactions = result.meanProfitOf10Transactions
+        this.winningRateOf5Transactions = result.winningRateOf5Transactions
+        this.winningRateOf10Transactions = result.winningRateOf10Transactions
       })
     },
     loadDealRecord() {
@@ -385,7 +443,7 @@ export default {
 
 <style scoped>
 .table-wrapper {
-  height: calc(100vh - 192px);
+  height: calc(100vh - 250px);
 }
 .kline-wrapper {
   height: 100%;
@@ -398,7 +456,7 @@ export default {
   display: flex;
 }
 .side-panel {
-  min-width: 460px;
+  min-width: 500px;
   border-top: 1px solid;
   flex: 1;
 }
