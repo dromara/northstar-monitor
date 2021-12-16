@@ -23,7 +23,7 @@
             <el-input
               v-model="form.gatewayId"
               autocomplete="off"
-              :disabled="isUpdateMode"
+              :disabled="isUpdateMode || gatewayUsage === 'MARKET_DATA'"
             ></el-input>
           </el-form-item>
         </el-col>
@@ -36,7 +36,12 @@
       <el-row>
         <el-col :span="8">
           <el-form-item :label="`${typeLabel}类型`" prop="gatewayType">
-            <el-select v-model="form.gatewayType" placeholder="未知" @change="onChooseGatewayType">
+            <el-select
+              v-model="form.gatewayType"
+              placeholder="未知"
+              @change="onChooseGatewayType"
+              :disabled="isUpdateMode"
+            >
               <el-option label="CTP" value="CTP"></el-option>
               <el-option label="CTP_SIM" value="CTP_SIM"></el-option>
               <el-option label="SIM" value="SIM"></el-option>
@@ -195,6 +200,9 @@ export default {
   methods: {
     onChooseGatewayType() {
       this.form.gatewayAdapterType = GATEWAY_ADAPTER[this.form.gatewayType]
+      if (this.gatewayUsage === 'MARKET_DATA') {
+        this.form.gatewayId = `${this.form.gatewayType}行情`
+      }
     },
     gatewaySettingConfig() {
       console.log(this.form)
