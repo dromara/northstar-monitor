@@ -32,6 +32,7 @@
                 <ReadonlyFieldValue
                   label="占用均额"
                   label-width="60px"
+                  title="采用交易所保证金的1.5倍估算"
                   :value="parseInt(avgOccupiedAmount)"
                 />
               </el-col>
@@ -68,7 +69,7 @@
                 <ReadonlyFieldValue
                   label="近五次交易平均盈亏"
                   label-width="140px"
-                  title="注意：手续费不算在总盈亏内"
+                  title="注意：手续费不算在盈亏内"
                   :value="
                     meanProfitOf5Transactions ? parseInt(meanProfitOf5Transactions) : '数据不足'
                   "
@@ -91,7 +92,7 @@
                 <ReadonlyFieldValue
                   label="近十次交易平均盈亏"
                   label-width="140px"
-                  title="注意：手续费不算在总盈亏内"
+                  title="注意：手续费不算在盈亏内"
                   :value="
                     meanProfitOf10Transactions ? parseInt(meanProfitOf10Transactions) : '数据不足'
                   "
