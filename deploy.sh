@@ -2,7 +2,7 @@
 
 set -e
 
-bash ./shutdown.sh
+[[ $(pgrep node | wc -l) > 0 ]] && bash ./shutdown.sh
 
 echo "准备环境依赖..."
 yum install git nodejs -y
