@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 bash ./shutdown.sh
 
 echo "准备环境依赖..."
