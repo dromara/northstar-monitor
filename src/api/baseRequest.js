@@ -5,7 +5,7 @@ import store from '../store'
 // create an axios instance
 const service = axios.create({
   withCredentials: true, // send cookies when cross-domain requests
-  timeout: 3000 // 请求的超时时间
+  timeout: 30000 // 请求的超时时间
 })
 
 service.interceptors.request.use(

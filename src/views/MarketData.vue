@@ -1,5 +1,9 @@
 <template>
-  <div class="ns-mktdata">
+  <div
+    class="ns-mktdata"
+    v-loading.fullscreen.lock="fullscreenLoading"
+    element-loading-background="rgba(0, 0, 0, 0.5)"
+  >
     <div id="update-k-line" class="ns-mktdata__body">
       {{ !kLineChart ? '未有数据，请先选择合约' : '' }}
     </div>
@@ -127,7 +131,8 @@ export default {
   name: 'UpdateKLineChart',
   data() {
     return {
-      kLineChart: null
+      kLineChart: null,
+      fullscreenLoading: false
     }
   },
   mounted: function () {},
@@ -157,6 +162,7 @@ export default {
         let endDate = moment()
           .add(now.weekday() >= 5 ? 54 : 6, 'hours')
           .format('YYYYMMDD')
+        this.fullscreenLoading = true
         const barDataList = await dataSyncApi.loadHistoryBars(
           this.curMarketGatewayId,
           this.curUnifiedSymbol,
@@ -169,6 +175,7 @@ export default {
             .map((data) => BarField.deserializeBinary(data).toObject())
             .map((bar) => createFromBar(bar))
         )
+        this.fullscreenLoading = false
       }
     }
   },
