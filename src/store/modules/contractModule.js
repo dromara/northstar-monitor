@@ -29,9 +29,11 @@ const contractModule = {
         }
       }
       try {
-        state.gatewayContractMap[gatewayId][
-          PRODUCT_CLASS_TYPE[contract.productclass]
-        ].set(contract.unifiedsymbol, contract)
+        if(PRODUCT_CLASS_TYPE[contract.productclass]){
+          state.gatewayContractMap[gatewayId][
+            PRODUCT_CLASS_TYPE[contract.productclass]
+          ].set(contract.unifiedsymbol, contract)
+        }
       } catch (e) {
         console.error(e)
         console.warn(contract.productclass)
