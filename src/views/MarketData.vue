@@ -163,19 +163,24 @@ export default {
           .add(now.weekday() >= 5 ? 54 : 6, 'hours')
           .format('YYYYMMDD')
         this.fullscreenLoading = true
-        const barDataList = await dataSyncApi.loadHistoryBars(
-          this.curMarketGatewayId,
-          this.curUnifiedSymbol,
-          startDate,
-          endDate
-        )
+        try {
+          const barDataList = await dataSyncApi.loadHistoryBars(
+            this.curMarketGatewayId,
+            this.curUnifiedSymbol,
+            startDate,
+            endDate
+          )
 
-        this.kLineChart.applyNewData(
-          barDataList
-            .map((data) => BarField.deserializeBinary(data).toObject())
-            .map((bar) => createFromBar(bar))
-        )
-        this.fullscreenLoading = false
+          this.kLineChart.applyNewData(
+            barDataList
+              .map((data) => BarField.deserializeBinary(data).toObject())
+              .map((bar) => createFromBar(bar))
+          )
+        } catch (e) {
+          this.$message.error(e.message)
+        } finally {
+          this.fullscreenLoading = false
+        }
       }
     }
   },

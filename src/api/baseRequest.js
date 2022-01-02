@@ -1,11 +1,11 @@
 /* eslint-disable */
 // import axios from 'axios'
-import store from '../store'
+import { Message } from 'element-ui';
 
 // create an axios instance
 const service = axios.create({
   withCredentials: true, // send cookies when cross-domain requests
-  timeout: 30000 // 请求的超时时间
+  timeout: 15000 // 请求的超时时间
 })
 
 service.interceptors.request.use(
