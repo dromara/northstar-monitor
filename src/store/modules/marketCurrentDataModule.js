@@ -1,19 +1,6 @@
 /**
  * 保存最近一次的tick与bar数据
  */
-
-const createFromBar = (bar) => {
-  return {
-    open: bar.openprice,
-    low: bar.lowprice,
-    high: bar.highprice,
-    close: bar.closeprice,
-    volume: bar.volumedelta,
-    openInterestDelta: bar.openinterestdelta,
-    timestamp: bar.actiontimestamp
-  }
-}
-
 const marketCurrentDataModule = {
   state: () => ({
     curMarketGatewayId: '',
@@ -26,14 +13,8 @@ const marketCurrentDataModule = {
       lastprice: 0,
       volumedelta: 0
     },
-    chart: null,
-    chartReady: false,
-    loadingHisBar: false,
-    barBuf: [],
-    hisBars: [],
     lastBar: null,
-    curBarH: 0,
-    curBarL: 0
+    curBar: null,
   }),
   mutations: {
     resetMarketCurrentDataModule(state) {
@@ -57,58 +38,32 @@ const marketCurrentDataModule = {
         return
       }
       state.curTick = tick
-    },
-    updateKLineChart(state, kLineChart) {
-      state.chart = kLineChart
-      console.log('updateKLineChart', state.chart)
-    },
-    updateHisBar(state, bar) {
-      if (!state.chart) {
-        return
-      }
-      if (
-        state.curMarketGatewayId !== bar.gatewayid ||
-        state.curUnifiedSymbol !== bar.unifiedsymbol
-      ) {
-        return
-      }
-      if (!bar.closeprice) {
-        state.chart.applyNewData(state.hisBars)
-        state.hisBars = []
-
-        if (state.barBuf.length) {
-          state.barBuf.forEach((b) => state.chart.updateData(createFromBar(b)))
-          state.barBuf = []
+      if(!state.lastBar){
+        state.lastBar = {
+          openprice: tick.lastprice,
+          closeprice: tick.lastprice,
+          openinterest: tick.openinterest,
+          volume: tick.volume
         }
-
-        state.loadingHisBar = false
-        state.chartReady = true
-        return
       }
-      state.loadingHisBar = true
-      state.hisBars.push(createFromBar(bar))
-      state.lastBar = bar
-      state.curBarH = bar.closeprice
-      state.curBarL = bar.closeprice
+      state.curBar = {
+        openprice: state.lastBar.closeprice,
+        closeprice: tick.lastprice,
+        highprice: state.curBar ? Math.max(tick.lastprice, state.curBar.highprice) : tick.lastprice,
+        lowprice: state.curBar ? Math.min(tick.lastprice, state.curBar.lowprice) : tick.lastprice,
+        volumedelta: tick.volume - state.lastBar.volume,
+        openinterestdelta: tick.openinterest - state.lastBar.openinterest,
+        actiontimestamp: tick.actiontimestamp - tick.actiontimestamp % 60000
+      }
     },
     updateBar(state, bar) {
-      if (!state.chart) {
-        return
-      }
       if (
         state.curMarketGatewayId !== bar.gatewayid ||
         state.curUnifiedSymbol !== bar.unifiedsymbol
       ) {
         return
       }
-      if (state.loadingHisBar) {
-        state.barBuf.push(bar)
-      } else {
-        state.chart.updateData(createFromBar(bar))
-        state.lastBar = bar
-        state.curBarH = bar.closeprice
-        state.curBarL = bar.closeprice
-      }
+      state.lastBar = bar
     }
   },
   actions: {},

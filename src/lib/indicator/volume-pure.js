@@ -10,23 +10,21 @@ var _default = {
   series: 'volume',
   shouldCheckParamCount: false,
   shouldFormatBigNumber: false,
-  precision: 0,
-  baseValue: 0,
-  minValue: 0,
   plots: [
     {
       key: 'volume',
       title: 'VOLUME: ',
       type: 'bar',
+      baseValue: 0,
+      minValue: 0,
       color: function color(data, options) {
-        var kLineData = data.currentData.kLineData || {}
+        var kLineData = data.current.kLineData || {}
 
         if (kLineData.close > kLineData.open) {
           return options.bar.upColor
         } else if (kLineData.close < kLineData.open) {
           return options.bar.downColor
         }
-
         return options.bar.noChangeColor
       }
     }

@@ -15,7 +15,7 @@
     "core-js": "^3.6.5",
     "element-ui": "^2.15.6",
     "google-protobuf": "^3.17.0-rc.1",
-    "klinecharts": "^7.1.0",
+    "klinecharts": "^8.1.1",
     "moment": "^2.29.1",
     "socket.io-client": "^2.3.0",
     "vue": "^2.6.11",

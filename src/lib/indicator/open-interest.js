@@ -10,15 +10,14 @@ var _default = {
   series: 'volume',
   shouldCheckParamCount: false,
   shouldFormatBigNumber: false,
-  // precision: 0,
-  baseValue: 0,
   plots: [
     {
       key: 'openInterestDelta',
       title: 'OpDif: ',
       type: 'bar',
+      baseValue: 0,
       color: function color(data, options) {
-        var currentData = data.currentData
+        var currentData = data.current
         if (currentData.technicalIndicatorData.openInterestDelta > 0) {
           return options.bar.downColor
         } else if (currentData.technicalIndicatorData.openInterestDelta < 0) {

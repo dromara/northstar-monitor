@@ -15,6 +15,114 @@ import dataSyncApi from '@/api/dataSyncApi'
 import { mapGetters } from 'vuex'
 import moment from 'moment'
 
+import { BarField } from '@/lib/xyz/redtorch/pb/core_field_pb'
+
+const textColorDark = '#929AA5'
+const gridColorDark = '#292929'
+const axisLineColorDark = '#333333'
+const crossTextBackgroundColorDark = '#373a40'
+
+const textColorLight = '#76808F'
+const gridColorLight = '#ededed'
+const axisLineColorLight = '#DDDDDD'
+const crossTextBackgroundColorLight = '#686d76'
+
+function getThemeOptions(theme) {
+  const textColor = theme === 'dark' ? textColorDark : textColorLight
+  const gridColor = theme === 'dark' ? gridColorDark : gridColorLight
+  const axisLineColor = theme === 'dark' ? axisLineColorDark : axisLineColorLight
+  const crossLineColor = theme === 'dark' ? axisLineColorDark : axisLineColorLight
+  const crossTextBackgroundColor =
+    theme === 'dark' ? crossTextBackgroundColorDark : crossTextBackgroundColorLight
+  return {
+    grid: {
+      horizontal: {
+        color: gridColor
+      },
+      vertical: {
+        color: gridColor
+      }
+    },
+    candle: {
+      priceMark: {
+        high: {
+          color: textColor
+        },
+        low: {
+          color: textColor
+        }
+      },
+      tooltip: {
+        text: {
+          color: textColor
+        }
+      }
+    },
+    technicalIndicator: {
+      tooltip: {
+        text: {
+          color: textColor
+        }
+      }
+    },
+    xAxis: {
+      axisLine: {
+        color: axisLineColor
+      },
+      tickLine: {
+        color: axisLineColor
+      },
+      tickText: {
+        color: textColor
+      }
+    },
+    yAxis: {
+      axisLine: {
+        color: axisLineColor
+      },
+      tickLine: {
+        color: axisLineColor
+      },
+      tickText: {
+        color: textColor
+      }
+    },
+    separator: {
+      color: axisLineColor
+    },
+    crosshair: {
+      horizontal: {
+        line: {
+          color: crossLineColor
+        },
+        text: {
+          backgroundColor: crossTextBackgroundColor
+        }
+      },
+      vertical: {
+        line: {
+          color: crossLineColor
+        },
+        text: {
+          backgroundColor: crossTextBackgroundColor
+        }
+      }
+    }
+  }
+}
+
+const createFromBar = (bar) => {
+  return {
+    open: bar.openprice,
+    low: bar.lowprice,
+    high: bar.highprice,
+    close: bar.closeprice,
+    volume: bar.volumedelta,
+    openInterestDelta: bar.openinterestdelta,
+    timestamp: bar.actiontimestamp
+  }
+}
+
 export default {
   name: 'UpdateKLineChart',
   data() {
@@ -27,15 +135,20 @@ export default {
     ...mapGetters(['curMarketGatewayId', 'curUnifiedSymbol'])
   },
   watch: {
-    '$store.state.marketCurrentDataModule.curUnifiedSymbol': function (val) {
+    '$store.state.marketCurrentDataModule.curBar': function (bar) {
+      this.kLineChart.updateData(createFromBar(bar))
+    },
+    '$store.state.marketCurrentDataModule.curUnifiedSymbol': async function (val) {
+      console.log(this)
       if (!this.kLineChart) {
         const kLineChart = init('update-k-line')
-        kLineChart.addCustomTechnicalIndicator(volumePure)
-        kLineChart.addCustomTechnicalIndicator(openInterestDelta)
+        kLineChart.addTechnicalIndicatorTemplate(volumePure)
+        kLineChart.addTechnicalIndicatorTemplate(openInterestDelta)
         kLineChart.createTechnicalIndicator('CJL', false)
         kLineChart.createTechnicalIndicator('OpDif', false)
-        this.$store.commit('updateKLineChart', kLineChart)
+        // this.$store.commit('updateKLineChart', kLineChart)
         this.kLineChart = kLineChart
+        kLineChart.setStyleOptions(getThemeOptions('dark'))
       }
       if (val) {
         this.kLineChart.clearData()
@@ -44,11 +157,17 @@ export default {
         let endDate = moment()
           .add(now.weekday() >= 5 ? 54 : 6, 'hours')
           .format('YYYYMMDD')
-        dataSyncApi.loadHistoryBars(
+        const barDataList = await dataSyncApi.loadHistoryBars(
           this.curMarketGatewayId,
           this.curUnifiedSymbol,
           startDate,
           endDate
+        )
+
+        this.kLineChart.applyNewData(
+          barDataList
+            .map((data) => BarField.deserializeBinary(data).toObject())
+            .map((bar) => createFromBar(bar))
         )
       }
     }
