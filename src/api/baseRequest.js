@@ -36,7 +36,7 @@ service.interceptors.response.use(
   },
   (error) => {
     console.log('err' + error) // for debug
-    return Promise.reject(new Error('网络出错'))
+    return Promise.reject(new Error('请求超时或网络出错'))
   }
 )
 
