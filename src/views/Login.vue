@@ -1,6 +1,6 @@
 <template>
   <div class="wrapper">
-    <div class="logo"><img width="300px" height="300px" src="../assets/logo.svg"/></div>
+    <div class="logo"><img width="700px" src="../assets/logo.png" /></div>
     <div class="panel" v-on:keydown.enter="login">
       <el-form :model="userForm" status-icon label-width="80px" class="demo-userForm">
         <el-form-item label="用户名">
@@ -45,11 +45,9 @@ export default {
   /* width: 20%; */
   width: 300px;
   min-width: 300px;
-  margin: 20px 0;
+  margin: auto;
 }
 .logo {
-  width: 300px;
-  height: 300px;
 }
 .wrapper {
   display: flex;
