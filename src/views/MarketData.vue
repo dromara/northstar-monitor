@@ -154,6 +154,9 @@ export default {
         kLineChart.setStyleOptions(getThemeOptions('dark'))
 
         kLineChart.loadMore(async (timestamp) => {
+          if(!(timestamp instanceof Number)){
+            return
+          }
           await new Promise((r) => setTimeout(r, 1000))
           const data = await this.loadBars(timestamp)
           kLineChart.applyMoreData(data || [], !!data)
