@@ -17,7 +17,6 @@ import openInterestDelta from '@/lib/indicator/open-interest'
 
 import dataSyncApi from '@/api/dataSyncApi'
 import { mapGetters } from 'vuex'
-import moment from 'moment'
 
 import { BarField } from '@/lib/xyz/redtorch/pb/core_field_pb'
 
@@ -151,40 +150,40 @@ export default {
         kLineChart.addTechnicalIndicatorTemplate(openInterestDelta)
         kLineChart.createTechnicalIndicator('CJL', false)
         kLineChart.createTechnicalIndicator('OpDif', false)
-        // this.$store.commit('updateKLineChart', kLineChart)
         this.kLineChart = kLineChart
         kLineChart.setStyleOptions(getThemeOptions('dark'))
+
+        kLineChart.loadMore(async (timestamp) => {
+          await new Promise((r) => setTimeout(r, 1000))
+          kLineChart.applyMoreData(await this.loadBars(timestamp), true)
+        })
       }
       if (val) {
         this.kLineChart.clearData()
-        let startDate = moment().subtract(7, 'days').format('YYYYMMDD')
-        let now = moment()
-        let endDate = moment()
-          .add(now.weekday() >= 5 ? 54 : 6, 'hours')
-          .format('YYYYMMDD')
-        this.fullscreenLoading = true
-        try {
-          const barDataList = await dataSyncApi.loadHistoryBars(
-            this.curMarketGatewayId,
-            this.curUnifiedSymbol,
-            startDate,
-            endDate
-          )
-
-          this.kLineChart.applyNewData(
-            barDataList
-              .map((data) => BarField.deserializeBinary(data).toObject())
-              .map((bar) => createFromBar(bar))
-          )
-        } catch (e) {
-          this.$message.error(e.message)
-        } finally {
-          this.fullscreenLoading = false
-        }
+        this.kLineChart.applyNewData(await this.loadBars(new Date().getTime()))
       }
     }
   },
-  methods: {},
+  methods: {
+    async loadBars(timestamp) {
+      this.fullscreenLoading = true
+      try {
+        const barDataList = await dataSyncApi.loadHistoryBars(
+          this.curMarketGatewayId,
+          this.curUnifiedSymbol,
+          timestamp
+        )
+
+        return barDataList
+          .map((data) => BarField.deserializeBinary(data).toObject())
+          .map((bar) => createFromBar(bar))
+      } catch (e) {
+        this.$message.error(e.message)
+      } finally {
+        this.fullscreenLoading = false
+      }
+    }
+  },
   destroyed: function () {
     dispose('update-k-line')
   }

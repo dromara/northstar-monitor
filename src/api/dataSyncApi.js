@@ -5,12 +5,12 @@ export default {
     return baseService.get('/data/sync')
   },
 
-  loadHistoryBars(gatewayId, unifiedSymbol, startDate, endDate) {
+  loadHistoryBars(gatewayId, unifiedSymbol, startRefTime) {
     console.log(
-      `查询网关${gatewayId} 合约${unifiedSymbol} 从${startDate}到${endDate}的数据`
+      `查询网关${gatewayId} 合约${unifiedSymbol} ${new Date(startRefTime).toLocaleString()}的数据`
     )
     return baseService.get(
-      `/data/his/bar?gatewayId=${gatewayId}&unifiedSymbol=${unifiedSymbol}&startDate=${startDate}&endDate=${endDate}`
+      `/data/his/bar?gatewayId=${gatewayId}&unifiedSymbol=${unifiedSymbol}&startRefTime=${startRefTime}`
     )
   },
 
