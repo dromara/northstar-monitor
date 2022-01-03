@@ -5,7 +5,7 @@ import { Message } from 'element-ui';
 // create an axios instance
 const service = axios.create({
   withCredentials: true, // send cookies when cross-domain requests
-  timeout: 15000 // 请求的超时时间
+  timeout: 0 // 请求不设超时时间
 })
 
 service.interceptors.request.use(
@@ -36,7 +36,7 @@ service.interceptors.response.use(
   },
   (error) => {
     console.log('err' + error) // for debug
-    return Promise.reject(new Error('请求超时或网络出错'))
+    return Promise.reject(new Error('网络出错'))
   }
 )
 

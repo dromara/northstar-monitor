@@ -155,12 +155,13 @@ export default {
 
         kLineChart.loadMore(async (timestamp) => {
           await new Promise((r) => setTimeout(r, 1000))
-          kLineChart.applyMoreData(await this.loadBars(timestamp), true)
+          const data = await this.loadBars(timestamp)
+          kLineChart.applyMoreData(data || [], !!data)
         })
       }
       if (val) {
         this.kLineChart.clearData()
-        this.kLineChart.applyNewData(await this.loadBars(new Date().getTime()))
+        this.kLineChart.applyNewData((await this.loadBars(new Date().getTime())) || [])
       }
     }
   },
