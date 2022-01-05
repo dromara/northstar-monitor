@@ -143,7 +143,6 @@ export default {
       this.kLineChart.updateData(createFromBar(bar))
     },
     '$store.state.marketCurrentDataModule.curUnifiedSymbol': async function (val) {
-      console.log(this)
       if (!this.kLineChart) {
         const kLineChart = init('update-k-line')
         kLineChart.addTechnicalIndicatorTemplate(volumePure)
@@ -154,7 +153,9 @@ export default {
         kLineChart.setStyleOptions(getThemeOptions('dark'))
 
         kLineChart.loadMore(async (timestamp) => {
-          if(!(timestamp instanceof Number)){
+          console.log('加载更多数据')
+          if (!(timestamp instanceof Number)) {
+            console.warn('忽略一个不是数值的时间戳: ' + timestamp)
             return
           }
           await new Promise((r) => setTimeout(r, 1000))
