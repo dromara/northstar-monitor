@@ -135,7 +135,7 @@ export default {
       )
       const checkProcessJobs = async () => {
         this.playbackProcess = await playbackApi.getProcess()
-        this.data.map((i) => {
+        this.chosenModule.map((i) => {
           playbackApi.getBalance(i.moduleName).then((balance) => {
             i.playbackBalance = balance
           })
