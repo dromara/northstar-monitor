@@ -154,7 +154,7 @@ export default {
 
         kLineChart.loadMore(async (timestamp) => {
           console.log('加载更多数据')
-          if (!(timestamp instanceof Number)) {
+          if (typeof timestamp !== 'number') {
             console.warn('忽略一个不是数值的时间戳: ' + timestamp)
             return
           }
