@@ -1,0 +1,59 @@
+version: '1.0'
+name: pipeline-20220108
+displayName: pipeline-20220108
+triggers:
+  push:
+    commitMessages:
+      include:
+        - 版本发布
+stages:
+  - name: stage-cd1653f2
+    displayName: 前端构建
+    strategy: naturally
+    trigger: auto
+    executor:
+      - KevinHuangwl
+    steps:
+      - step: build@nodejs
+        name: build_nodejs
+        displayName: Nodejs 构建
+        nodeVersion: 14.16.0
+        artifacts:
+          - name: BUILD_ARTIFACT
+            path:
+              - ./dist
+        commands:
+          - npm install && rm -rf ./dist && npm run build
+  - name: stage-d15bbfd9
+    displayName: 后端构建
+    strategy: naturally
+    trigger: auto
+    executor:
+      - KevinHuangwl
+    steps:
+      - step: build@nodejs
+        name: build_nodejs
+        displayName: Nodejs 构建
+        nodeVersion: 14.16.0
+        artifacts:
+          - name: BUILD_ARTIFACT
+            path:
+              - ./dist
+        commands:
+          - cd server && npm install && npm run build
+  - name: stage-13b22f08
+    displayName: 上传
+    strategy: naturally
+    trigger: auto
+    executor:
+      - KevinHuangwl
+    steps:
+      - step: publish@general_artifacts
+        name: publish_general_artifacts
+        displayName: 上传制品
+        dependArtifact: BUILD_ARTIFACT
+        artifactRepository: default
+        artifactName: northstar_monitor
+permissions:
+  - role: admin
+    members: []
