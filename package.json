@@ -1,6 +1,6 @@
 {
   "name": "northstar-monitor",
-  "version": "2.2.0",
+  "version": "2.2.2",
   "private": true,
   "scripts": {
     "start": "cross-env PORT=3000 concurrently \"node ./server/bin/server.js\" \"npm run serve\" -k -n \"backend,frontend\" -c \"cyan.dim,yellow.dim\"",
