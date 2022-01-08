@@ -1,6 +1,6 @@
 version: '1.0'
-name: pipeline-20220108
-displayName: pipeline-20220108
+name: pipeline-20220109
+displayName: pipeline-20220109
 triggers:
   push:
     commitMessages:
